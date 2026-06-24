@@ -21,6 +21,8 @@ python -m claude_agent_prompting lint-tools recipes/agentic_search.json
 python -m claude_agent_prompting eval evals/examples/search_answer.json
 python -m claude_agent_prompting review-trace evals/examples/agent_trace_good.json
 python -m claude_agent_prompting normalize-claude evals/examples/claude_messages.json
+python -m claude_agent_prompting trace-suite evals/suites/agent_trace_suite.json
+python -m claude_agent_prompting audit-agent evals/examples/agent_audit_bundle.json --markdown
 python -m claude_agent_prompting judge-prompt evals/examples/search_answer.json
 ```
 
@@ -43,6 +45,8 @@ Claude prompt engineering docs:
 - small realistic eval sets, LLM judge rubrics, and manual review
 - examples added only after failures show where they help
 - ordered trace review for reasoning, tool calls, tool outputs, and final answers
+- trace regression suites for keeping known-good and known-bad cases stable
+- agent audit bundles that review a tool inventory plus representative traces
 
 ## Layout
 
@@ -52,6 +56,8 @@ claude_agent_prompting/
   suitability.py     # agent task-fit scoring
   evals.py           # offline answer, tool-use, and final-state evals
   trace_review.py    # ordered trace review for tools and reasoning
+  trace_suite.py     # regression suites for repeated trace review
+  agent_audit.py     # review tools and traces in one bundle
   adapters.py        # transcript normalizers for provider content blocks
   cli.py             # render, score, lint-tools, eval, judge-prompt
 recipes/             # ready-to-edit agent recipes
@@ -71,6 +77,8 @@ python -m unittest discover -s tests -q
 python -m claude_agent_prompting eval evals/examples/search_answer.json
 python -m claude_agent_prompting review-trace evals/examples/agent_trace_good.json
 python -m claude_agent_prompting normalize-claude evals/examples/claude_messages.json
+python -m claude_agent_prompting trace-suite evals/suites/agent_trace_suite.json
+python -m claude_agent_prompting audit-agent evals/examples/agent_audit_bundle.json
 ```
 
 ## Sources

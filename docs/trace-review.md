@@ -20,6 +20,9 @@ python -m claude_agent_prompting review-trace evals/examples/agent_trace_good.js
 python -m claude_agent_prompting review-trace evals/examples/agent_trace_bad.json
 python -m claude_agent_prompting trace-judge-prompt evals/examples/agent_trace_good.json
 python -m claude_agent_prompting normalize-claude evals/examples/claude_messages.json
+python -m claude_agent_prompting trace-suite evals/suites/agent_trace_suite.json
+python -m claude_agent_prompting trace-suite evals/suites/agent_trace_suite.json --markdown
+python -m claude_agent_prompting audit-agent evals/examples/agent_audit_bundle.json --markdown
 ```
 
 ## What To Score
@@ -81,3 +84,41 @@ Ask an agent owner to export one JSON file per run:
 ```
 
 That is enough to review most agent failures without coupling this repo to the agent runtime.
+
+## Regression Suites
+
+Use a trace suite when you want to keep a fixed set of agent behaviors stable. A suite can include
+known-good traces that must pass and known-bad traces that must fail below a score threshold. This is
+useful after prompt edits because it checks both sides of the gate.
+
+```json
+{
+  "name": "agent trace regression suite",
+  "cases": [
+    {"name": "good trace passes", "trace": "../examples/agent_trace_good.json", "expect_passed": true},
+    {"name": "bad trace fails", "trace": "../examples/agent_trace_bad.json", "expect_passed": false, "max_score": 0.75}
+  ]
+}
+```
+
+## Agent Audit Bundles
+
+Use an audit bundle when someone gives you a tool inventory and representative traces. The bundle
+first lints tool names and descriptions, then reviews each trace against its rubric.
+
+```json
+{
+  "name": "sample research agent audit",
+  "tools": [
+    {
+      "name": "web_search",
+      "purpose": "Find candidate sources and fresh facts from the public web.",
+      "use_when": "Use for unknown, current, or broad questions where source discovery is required.",
+      "avoid_when": "Avoid when a known source URL should be fetched directly."
+    }
+  ],
+  "traces": [
+    {"name": "representative run", "trace": "agent_trace_good.json"}
+  ]
+}
+```

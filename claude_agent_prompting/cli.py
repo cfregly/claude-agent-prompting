@@ -8,9 +8,14 @@ from pathlib import Path
 import sys
 
 from .adapters import claude_messages_to_trace, load_json
+from .agent_audit import (
+    render_agent_audit_markdown,
+    review_agent_bundle,
+)
 from .evals import build_judge_prompt, evaluate_case, load_eval_case
 from .prompt_builder import lint_tools, load_recipe, render_prompt
 from .suitability import score_use_case
+from .trace_suite import render_suite_markdown, run_trace_suite
 from .trace_review import build_trace_judge_prompt, load_trace, review_trace
 
 
@@ -47,6 +52,17 @@ def main(argv: list[str] | None = None) -> int:
         help="normalize Claude Messages API blocks into an agent trace",
     )
     normalize_parser.add_argument("messages", type=Path)
+
+    suite_parser = subparsers.add_parser("trace-suite", help="run a trace regression suite")
+    suite_parser.add_argument("suite", type=Path)
+    suite_parser.add_argument("--markdown", action="store_true", help="print a Markdown report")
+
+    audit_parser = subparsers.add_parser(
+        "audit-agent",
+        help="review a tool inventory and related agent traces",
+    )
+    audit_parser.add_argument("bundle", type=Path)
+    audit_parser.add_argument("--markdown", action="store_true", help="print a Markdown report")
 
     args = parser.parse_args(argv)
 
@@ -88,6 +104,22 @@ def main(argv: list[str] | None = None) -> int:
         trace = claude_messages_to_trace(load_json(args.messages))
         print(json.dumps(trace, indent=2, sort_keys=True))
         return 0
+
+    if args.command == "trace-suite":
+        result = run_trace_suite(args.suite)
+        if args.markdown:
+            sys.stdout.write(render_suite_markdown(result))
+        else:
+            print(json.dumps(result, indent=2, sort_keys=True))
+        return 0 if result["passed"] else 1
+
+    if args.command == "audit-agent":
+        result = review_agent_bundle(args.bundle)
+        if args.markdown:
+            sys.stdout.write(render_agent_audit_markdown(result))
+        else:
+            print(json.dumps(result, indent=2, sort_keys=True))
+        return 0 if result["passed"] else 1
 
     parser.error(f"unknown command: {args.command}")
     return 2

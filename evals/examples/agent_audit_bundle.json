@@ -1,0 +1,29 @@
+{
+  "name": "sample research agent audit",
+  "tools": [
+    {
+      "avoid_when": "Avoid when a known source URL should be fetched directly.",
+      "name": "web_search",
+      "purpose": "Find candidate sources and fresh facts from the public web.",
+      "use_when": "Use for unknown, current, or broad questions where source discovery is required."
+    },
+    {
+      "avoid_when": "Avoid for broad discovery across many possible sources.",
+      "name": "web_fetch",
+      "purpose": "Read a known source URL in enough detail to ground an answer.",
+      "use_when": "Use after search identifies a promising source or the user provides a URL."
+    },
+    {
+      "avoid_when": "Avoid when the final answer is purely qualitative.",
+      "name": "calculator",
+      "purpose": "Run arithmetic, unit conversion, and deterministic calculations.",
+      "use_when": "Use when the answer depends on math that should not be done from memory."
+    }
+  ],
+  "traces": [
+    {
+      "name": "banana estimate trace",
+      "trace": "agent_trace_good.json"
+    }
+  ]
+}

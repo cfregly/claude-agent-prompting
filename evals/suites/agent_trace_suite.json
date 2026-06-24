@@ -1,0 +1,17 @@
+{
+  "cases": [
+    {
+      "expect_passed": true,
+      "min_score": 1.0,
+      "name": "good trace passes",
+      "trace": "../examples/agent_trace_good.json"
+    },
+    {
+      "expect_passed": false,
+      "max_score": 0.75,
+      "name": "bad trace fails",
+      "trace": "../examples/agent_trace_bad.json"
+    }
+  ],
+  "name": "agent trace regression suite"
+}

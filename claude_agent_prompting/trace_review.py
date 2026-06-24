@@ -268,22 +268,32 @@ def _tool_use_findings(steps: list[dict[str, Any]], rubric: dict[str, Any]) -> l
 def _reasoning_findings(steps: list[dict[str, Any]], rubric: dict[str, Any]) -> list[TraceFinding]:
     findings: list[TraceFinding] = []
     if rubric.get("require_reasoning_before_first_tool", True):
+        has_reasoning = _has_reasoning_before_first_tool(steps)
         findings.append(
             TraceFinding(
                 "reasoning.before_first_tool",
-                _has_reasoning_before_first_tool(steps),
-                "reasoning appears before the first tool call",
+                has_reasoning,
+                (
+                    "reasoning appears before the first tool call"
+                    if has_reasoning
+                    else "reasoning is missing before the first tool call"
+                ),
                 "medium",
             )
         )
 
     if rubric.get("require_reasoning_after_tool_results", True):
         for result_index in _tool_result_indexes(steps):
+            has_reasoning = _has_reasoning_before_next_action(steps, result_index)
             findings.append(
                 TraceFinding(
                     "reasoning.after_tool_result",
-                    _has_reasoning_before_next_action(steps, result_index),
-                    f"tool result at step {result_index} is followed by reasoning before next action",
+                    has_reasoning,
+                    (
+                        f"tool result at step {result_index} is followed by reasoning before next action"
+                        if has_reasoning
+                        else f"tool result at step {result_index} is not followed by reasoning before next action"
+                    ),
                     "high",
                 )
             )
@@ -291,11 +301,16 @@ def _reasoning_findings(steps: list[dict[str, Any]], rubric: dict[str, Any]) -> 
     if rubric.get("require_result_quality_assessment", True):
         for result_index in _tool_result_indexes(steps):
             reasoning = _reasoning_between_result_and_next_action(steps, result_index)
+            has_quality_assessment = _contains_any(reasoning, QUALITY_TERMS)
             findings.append(
                 TraceFinding(
                     "reasoning.result_quality_assessment",
-                    _contains_any(reasoning, QUALITY_TERMS),
-                    f"reasoning after result at step {result_index} assesses quality or evidence",
+                    has_quality_assessment,
+                    (
+                        f"reasoning after result at step {result_index} assesses quality or evidence"
+                        if has_quality_assessment
+                        else f"reasoning after result at step {result_index} does not assess quality or evidence"
+                    ),
                     "medium",
                 )
             )
@@ -303,11 +318,16 @@ def _reasoning_findings(steps: list[dict[str, Any]], rubric: dict[str, Any]) -> 
     if rubric.get("require_error_recovery_reasoning", True):
         for result_index in _error_result_indexes(steps):
             reasoning = _reasoning_between_result_and_next_action(steps, result_index)
+            has_recovery = _contains_any(reasoning, ERROR_TERMS)
             findings.append(
                 TraceFinding(
                     "reasoning.error_recovery",
-                    _contains_any(reasoning, ERROR_TERMS),
-                    f"error result at step {result_index} has recovery reasoning",
+                    has_recovery,
+                    (
+                        f"error result at step {result_index} has recovery reasoning"
+                        if has_recovery
+                        else f"error result at step {result_index} is missing recovery reasoning"
+                    ),
                     "high",
                 )
             )
@@ -326,11 +346,16 @@ def _final_findings(steps: list[dict[str, Any]], rubric: dict[str, Any]) -> list
         )
     ]
     for text in rubric.get("required_final_contains", []):
+        contains_text = text.lower() in final_text.lower()
         findings.append(
             TraceFinding(
                 "final.required_text",
-                text.lower() in final_text.lower(),
-                f"final answer contains {text!r}",
+                contains_text,
+                (
+                    f"final answer contains {text!r}"
+                    if contains_text
+                    else f"final answer is missing {text!r}"
+                ),
                 "medium",
             )
         )

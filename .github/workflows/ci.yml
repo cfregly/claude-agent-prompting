@@ -19,3 +19,5 @@ jobs:
       - run: python -m claude_agent_prompting eval evals/examples/search_answer.json
       - run: python -m claude_agent_prompting review-trace evals/examples/agent_trace_good.json
       - run: python -m claude_agent_prompting normalize-claude evals/examples/claude_messages.json
+      - run: python -m claude_agent_prompting trace-suite evals/suites/agent_trace_suite.json
+      - run: python -m claude_agent_prompting audit-agent evals/examples/agent_audit_bundle.json
