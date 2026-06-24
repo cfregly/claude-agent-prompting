@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "claude-agent-prompting"
+name = "claude-agent-harness-optimization"
 version = "0.1.0"
-description = "Prompt kit and Claude-backed audit harness for Claude-style agents"
+description = "Eval-driven harness optimizer for agent tools, traces, and model matrices"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -13,4 +13,6 @@ authors = [{ name = "Contributors" }]
 dependencies = []
 
 [project.scripts]
+claude-agent-harness-optimization = "claude_agent_prompting.cli:main"
+agent-harness-optimization = "claude_agent_prompting.cli:main"
 claude-agent-prompting = "claude_agent_prompting.cli:main"

@@ -1,6 +1,6 @@
-# claude-agent-prompting
+# claude-agent-harness-optimization
 
-[![ci](https://github.com/cfregly/claude-agent-prompting/actions/workflows/ci.yml/badge.svg)](https://github.com/cfregly/claude-agent-prompting/actions/workflows/ci.yml)
+[![ci](https://github.com/cfregly/claude-agent-harness-optimization/actions/workflows/ci.yml/badge.svg)](https://github.com/cfregly/claude-agent-harness-optimization/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A runnable prompt kit for Claude-style agents: decide whether a task deserves an agent, render a

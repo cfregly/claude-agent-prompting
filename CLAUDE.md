@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Conventions for any agent working on `claude-agent-prompting`. Read this first.
+Conventions for any agent working on `claude-agent-harness-optimization`. Read this first.
 
 ## What this is
 

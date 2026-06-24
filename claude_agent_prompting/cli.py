@@ -36,7 +36,7 @@ from .trace_review import build_trace_judge_prompt, load_trace, review_trace
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="claude-agent-prompting")
+    parser = argparse.ArgumentParser(prog="claude-agent-harness-optimization")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     render_parser = subparsers.add_parser("render", help="render a system prompt from a recipe")
