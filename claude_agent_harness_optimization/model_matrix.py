@@ -84,6 +84,7 @@ def run_model_matrix(
 ) -> dict[str, Any]:
     matrix = load_matrix(matrix_path)
     matrix["_base_dir"] = str(Path(matrix_path).parent)
+    matrix["_matrix_path"] = str(matrix_path)
     return run_model_matrix_data(
         matrix,
         matrix_name=matrix.get("name", str(matrix_path)),
@@ -137,12 +138,17 @@ def run_model_matrix_data(
             results.append(_run_live_case(run, env, require_live=require_live))
 
     return {
+        "case_definitions": _case_definitions(selected),
         "cells": _cell_summary(results),
+        "description": matrix.get("description", ""),
         "filters": _filters_to_dict(filters or MatrixFilters()),
         "live": live,
         "matrix": matrix_name,
+        "matrix_path": matrix.get("_matrix_path", ""),
+        "max_cases": max_cases,
         "passed": _matrix_passed(results, live=live, require_live=require_live),
         "results": results,
+        "source": matrix.get("source", {}),
         "summary": _summary(results, live=live),
     }
 
@@ -763,6 +769,35 @@ def _cell_summary(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         )
     return cells
+
+
+def _case_definitions(selected: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    cases: list[dict[str, Any]] = []
+    for run in selected:
+        case = run.get("case", {})
+        if not isinstance(case, dict):
+            continue
+        name = str(case.get("name", ""))
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        cases.append(
+            {
+                key: case[key]
+                for key in (
+                    "allow_no_tool",
+                    "expected_args_contains",
+                    "expected_tools",
+                    "forbidden_tools",
+                    "name",
+                    "task",
+                    "valid_tool_paths",
+                )
+                if key in case
+            }
+        )
+    return cases
 
 
 def _statuses(results: list[dict[str, Any]]) -> set[str]:

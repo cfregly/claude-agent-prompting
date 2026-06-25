@@ -17,11 +17,14 @@ from prose. Treat "adversarially-confirmed to add value" as the pass bar.
 4. If the user asks about a new model, provider, reasoning mode, `CLAUDE.md`, or skill tuning, use `model-matrix`.
 5. If matrix failures repeat across a harness or provider, use `grind-harness` with target cases,
    held-out cases, a live run, a minimum improvement threshold, and a call cap.
-6. If the user provides a regression suite, use `trace-suite`.
-7. If the user provides one normalized trace, use `review-trace`.
-8. If the user provides Claude Messages API content blocks, use `normalize-claude`, then review the normalized trace.
-9. If the user provides raw prose or screenshots, ask for exported JSON unless a small manual trace can be built without guessing.
-10. If an audit bundle lacks `value_bar`, treat it as failed until the value claim, baseline,
+6. If the user asks for upstream pull requests or maintainer-ready evidence, run `upstream-pr-packet`
+   after the matrix result is saved.
+7. If the user asks what other harness checks to run, use `harness-checks`.
+8. If the user provides a regression suite, use `trace-suite`.
+9. If the user provides one normalized trace, use `review-trace`.
+10. If the user provides Claude Messages API content blocks, use `normalize-claude`, then review the normalized trace.
+11. If the user provides raw prose or screenshots, ask for exported JSON unless a small manual trace can be built without guessing.
+12. If an audit bundle lacks `value_bar`, treat it as failed until the value claim, baseline,
    candidate, threshold, and adversarial review are supplied.
 
 ## Commands
@@ -44,6 +47,8 @@ python -m claude_agent_harness_optimization review-trace <trace.json> --claude-j
 python -m claude_agent_harness_optimization normalize-claude <messages.json>
 python -m claude_agent_harness_optimization normalize-runtime <events.json>
 python -m claude_agent_harness_optimization trace-judge-prompt <trace.json>
+python -m claude_agent_harness_optimization harness-checks --markdown
+python -m claude_agent_harness_optimization upstream-pr-packet <matrix-result.json> --matrix <matrix.json> --target-name "<project>" --baseline-variant <baseline> --candidate-variant <candidate> --out-dir /tmp/upstream-pr
 ```
 
 Use JSON output when another program will consume the result. Use `--markdown` when reporting to a
@@ -64,7 +69,9 @@ human.
    summaries, tool outputs, tool descriptions, selection cases, final grounding, and value over baseline.
 9. Recommend prompt or tool changes only when they map directly to a failed check or Claude judge
    finding.
-10. Use `trace-judge-prompt` only when you need a portable judge prompt instead of a live Claude API
+10. If an upstream project should receive a pull request, generate an `upstream-pr-packet` with
+   source pins, exact examples, score deltas, and reproduction commands.
+11. Use `trace-judge-prompt` only when you need a portable judge prompt instead of a live Claude API
    call.
 
 ## What To Look For
@@ -89,6 +96,8 @@ human.
   missing continue or stop decision.
 - Final answer: unsupported claims, missing uncertainty, failure to use gathered evidence.
 - Value bar: missing value claim, missing baseline, weak delta, no adversarial challenge, open objections.
+- Upstream PR packet: missing source pin, missing exact example, missing reproduction command,
+  missing baseline or candidate score, missing delta, or no link to the full evidence.
 
 ## Reporting
 

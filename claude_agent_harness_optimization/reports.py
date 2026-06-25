@@ -177,9 +177,12 @@ def _backing_data_lines(payload: dict[str, Any]) -> list[str]:
         lines.extend(_value_bar_lines(value_bar))
     source = payload.get("source")
     if isinstance(source, dict):
-        pin = source.get("local_mcp_server") or source.get("version") or source.get("commit")
-        if pin:
-            lines.append(f"source pin: {pin}")
+        source_parts = []
+        for key in ("package", "version", "repo", "commit", "local_mcp_server", "docs"):
+            if source.get(key):
+                source_parts.append(f"{key}={source[key]}")
+        if source_parts:
+            lines.append("source pin: " + ", ".join(source_parts))
     cells = payload.get("cells")
     if isinstance(cells, list) and cells:
         lines.extend(_cell_lines(cells))

@@ -63,6 +63,9 @@ class ModelMatrixTests(unittest.TestCase):
         self.assertFalse(result["live"])
         self.assertEqual(2, result["summary"]["total"])
         self.assertEqual("planned", result["results"][0]["status"])
+        self.assertEqual("coding file-tool selection matrix", result["matrix"])
+        self.assertTrue(result["matrix_path"].endswith("coding_tool_selection.json"))
+        self.assertEqual(2, len(result["case_definitions"]))
 
     def test_dry_run_model_matrix_filters_cases(self):
         result = run_model_matrix(
@@ -113,6 +116,7 @@ class ModelMatrixTests(unittest.TestCase):
         self.assertFalse(result["live"])
         self.assertEqual(2, result["summary"]["total"])
         self.assertEqual("planned", result["results"][0]["status"])
+        self.assertEqual(2, len(result["case_definitions"]))
 
     def test_github_mcp_matrix_plans_selected_cells(self):
         result = run_model_matrix(
@@ -130,6 +134,8 @@ class ModelMatrixTests(unittest.TestCase):
         self.assertFalse(result["live"])
         self.assertEqual(2, result["summary"]["total"])
         self.assertEqual("planned", result["results"][0]["status"])
+        self.assertEqual("https://github.com/github/github-mcp-server", result["source"]["repo"])
+        self.assertEqual(2, len(result["case_definitions"]))
 
     def test_public_mcp_sweep_matrices_plan_selected_cells(self):
         cases = [

@@ -130,6 +130,21 @@ request with new matrix results or tool-description changes. Summaries should in
 counts, scores, deltas, baseline and candidate variants, source pins, failed cases, and the command
 or artifact path used.
 
+For upstream projects, generate a reproducible pull request packet:
+
+```bash
+python -m claude_agent_harness_optimization upstream-pr-packet /tmp/harness-matrix.json \
+  --matrix evals/model_matrix/firecrawl_mcp_tool_selection.json \
+  --target-name "Firecrawl MCP" \
+  --target-repo https://github.com/firecrawl/firecrawl-mcp-server \
+  --baseline-variant legacy_firecrawl_mcp \
+  --candidate-variant tuned_firecrawl_mcp_boundaries \
+  --out-dir /tmp/upstream-pr
+```
+
+The packet includes a pull request body, reproduction notes, and an evidence JSON file with source
+pins, exact examples, score deltas, and the matrix result.
+
 ## What To Optimize
 
 Optimize the smallest surface that explains the failure:
@@ -157,3 +172,15 @@ python -m claude_agent_harness_optimization grind-harness evals/model_matrix/cod
 ```
 
 Keep the candidate only when it clears the configured improvement threshold and held-out checks.
+
+## Harness Check Catalog
+
+Use the check catalog when deciding what failure class a candidate proves:
+
+```bash
+python -m claude_agent_harness_optimization harness-checks --markdown
+```
+
+The catalog covers adjacent tool boundaries, no-tool safety, argument quality, error recovery,
+output budget, resource versus tool routing, directed thinking, harness parity, and
+reproducibility.

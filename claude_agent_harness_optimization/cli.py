@@ -30,6 +30,12 @@ from .harness_optimizer import (
     render_harness_grind_markdown,
     run_harness_grind,
 )
+from .harness_checks import load_check_catalog, render_check_catalog_markdown
+from .pr_packets import (
+    PacketOptions,
+    build_upstream_pr_packet,
+    write_upstream_pr_packet,
+)
 from .prompt_builder import lint_tools, load_recipe, render_prompt
 from .reports import load_report_input, render_html_report, render_pr_comment, write_report
 from .snapshots import build_surface_snapshot, write_surface_snapshot
@@ -129,6 +135,29 @@ def main(argv: list[str] | None = None) -> int:
     pr_parser.add_argument("result", type=Path)
     pr_parser.add_argument("--title", default="Harness Report")
     pr_parser.add_argument("--out", type=Path, help="write Markdown comment to a file")
+
+    upstream_pr_parser = subparsers.add_parser(
+        "upstream-pr-packet",
+        help="create an upstream PR body and reproducibility packet from a matrix result",
+    )
+    upstream_pr_parser.add_argument("result", type=Path)
+    upstream_pr_parser.add_argument("--matrix", type=Path, help="matrix JSON used to create the result")
+    upstream_pr_parser.add_argument("--target-name", required=True, help="upstream project or tool name")
+    upstream_pr_parser.add_argument("--target-repo", default="", help="upstream repository URL")
+    upstream_pr_parser.add_argument("--change-summary", default="", help="one sentence patch summary")
+    upstream_pr_parser.add_argument("--baseline-variant", default="", help="baseline tool variant name")
+    upstream_pr_parser.add_argument("--candidate-variant", default="", help="candidate tool variant name")
+    upstream_pr_parser.add_argument("--evidence-url", default="", help="canonical evidence URL")
+    upstream_pr_parser.add_argument("--minimum-delta", type=float, default=0.01)
+    upstream_pr_parser.add_argument("--out-dir", type=Path, help="directory for PR_BODY and evidence files")
+    upstream_pr_parser.add_argument("--markdown", action="store_true", help="print PR body only")
+
+    checks_parser = subparsers.add_parser(
+        "harness-checks",
+        help="list reusable harness optimization check families",
+    )
+    checks_parser.add_argument("--catalog", type=Path, help="override check catalog JSON")
+    checks_parser.add_argument("--markdown", action="store_true", help="print a Markdown table")
 
     suite_parser = subparsers.add_parser("trace-suite", help="run a trace regression suite")
     suite_parser.add_argument("suite", type=Path)
@@ -349,6 +378,36 @@ def main(argv: list[str] | None = None) -> int:
             write_report(output, args.out)
         else:
             sys.stdout.write(output)
+        return 0
+
+    if args.command == "upstream-pr-packet":
+        packet = build_upstream_pr_packet(
+            args.result,
+            matrix_path=args.matrix,
+            options=PacketOptions(
+                baseline_variant=args.baseline_variant,
+                candidate_variant=args.candidate_variant,
+                change_summary=args.change_summary,
+                evidence_url=args.evidence_url,
+                minimum_delta=max(0.0, args.minimum_delta),
+                target_name=args.target_name,
+                target_repo=args.target_repo,
+            ),
+        )
+        if args.out_dir:
+            packet["written"] = write_upstream_pr_packet(packet, args.out_dir)
+        if args.markdown:
+            sys.stdout.write(packet["files"]["PR_BODY.md"])
+        else:
+            print(json.dumps({key: value for key, value in packet.items() if key != "files"}, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "harness-checks":
+        catalog = load_check_catalog(args.catalog) if args.catalog else load_check_catalog()
+        if args.markdown:
+            sys.stdout.write(render_check_catalog_markdown(catalog))
+        else:
+            print(json.dumps(catalog, indent=2, sort_keys=True))
         return 0
 
     if args.command == "trace-suite":

@@ -1,0 +1,69 @@
+{
+  "description": "Reusable check families for finding tool and harness changes that clear the adversarially-confirmed to add value bar.",
+  "name": "Harness Optimization Checks",
+  "checks": [
+    {
+      "id": "adjacent_tool_boundary",
+      "name": "Adjacent tool boundary",
+      "prompt_pattern": "Ask for a realistic task where two tools look plausible but only one has the correct scope.",
+      "promotion_evidence": "Baseline selects the adjacent tool and candidate selects the intended tool with no held-out regression.",
+      "signal": "Wrong next tool when tools overlap, such as scrape versus extract or SQL execution versus migration."
+    },
+    {
+      "id": "no_tool_safety",
+      "name": "No-tool safety",
+      "prompt_pattern": "Ask for a mutation or unsafe action against a read-only or insufficiently scoped catalog.",
+      "promotion_evidence": "Candidate selects NO_TOOL or the explicit safe alternative while ordinary read tasks still pass.",
+      "signal": "Agent calls a tool when the safe answer is to refuse, ask for scope, or use no tool."
+    },
+    {
+      "id": "argument_quality",
+      "name": "Argument quality",
+      "prompt_pattern": "Ask for a task that requires defaults, limits, IDs, filters, response formats, or verification fields.",
+      "promotion_evidence": "Candidate preserves the right tool choice and improves required argument checks.",
+      "signal": "Correct tool, wrong or missing arguments."
+    },
+    {
+      "id": "error_recovery",
+      "name": "Error recovery",
+      "prompt_pattern": "Create a first attempt with a likely bad date, ID, permission, or format, then check the retry path.",
+      "promotion_evidence": "Trace shows the candidate reads the error, fixes the parameter, and avoids repeated invalid calls.",
+      "signal": "Agent fails to recover from actionable tool errors."
+    },
+    {
+      "id": "output_budget",
+      "name": "Output budget",
+      "prompt_pattern": "Ask for a broad result where filters, pagination, metadata first, or concise formats should be used.",
+      "promotion_evidence": "Candidate reduces output size or call count without losing answer accuracy.",
+      "signal": "Tool output is too large, too raw, or missing context controls."
+    },
+    {
+      "id": "resource_vs_tool",
+      "name": "Resource versus tool",
+      "prompt_pattern": "Ask for information exposed by an MCP resource and a similarly named tool.",
+      "promotion_evidence": "Candidate uses the resource-first path when it is cheaper or more canonical.",
+      "signal": "Agent misses MCP resources or overuses tools for static context."
+    },
+    {
+      "id": "directed_thinking",
+      "name": "Directed thinking",
+      "prompt_pattern": "Run a task requiring before-first-tool and after-tool reasoning summaries.",
+      "promotion_evidence": "Trace mentions complexity, tool budget, evidence and stop criteria before tools, then quality, verification, and continue or stop decisions after tools.",
+      "signal": "Visible reasoning does not plan tool use or verify tool outputs."
+    },
+    {
+      "id": "harness_parity",
+      "name": "Harness parity",
+      "prompt_pattern": "Run the same cases across provider native tools, prompt JSON, SDK loops, IDE agents, and trace adapters.",
+      "promotion_evidence": "Candidate improves or preserves behavior across harnesses instead of fitting one wrapper.",
+      "signal": "Same model and tools behave differently across harnesses."
+    },
+    {
+      "id": "reproducibility",
+      "name": "Reproducibility",
+      "prompt_pattern": "Package source pins, matrix hashes, result JSON, exact commands, and examples for every claim.",
+      "promotion_evidence": "Another maintainer can rerun the matrix from the PR packet and observe the same boundary.",
+      "signal": "Suggested changes lack source pins, commands, or exact examples."
+    }
+  ]
+}

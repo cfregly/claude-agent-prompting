@@ -116,6 +116,10 @@ versions, reasoning settings, harnesses, `CLAUDE.md`, and skills. The grind loop
 target cases, held-out cases, a minimum improvement threshold, and an experiment log. Promote only
 when the candidate clears the value bar.
 
+Use `harness-checks` to select the next failure class to test. The catalog includes adjacent tool
+boundaries, no-tool safety, argument quality, error recovery, output budget, resource versus tool
+routing, directed thinking, harness parity, and reproducibility.
+
 ## Repo Commands
 
 ```bash
@@ -124,4 +128,5 @@ python -m claude_agent_harness_optimization optimize-tools evals/examples/agent_
 python -m claude_agent_harness_optimization audit-agent evals/examples/agent_audit_bundle.json --claude-judge
 python -m claude_agent_harness_optimization model-matrix evals/model_matrix/coding_tool_selection.json --env-file .env --live --markdown
 python -m claude_agent_harness_optimization grind-harness evals/model_matrix/coding_tool_selection.json --env-file .env --live --heldout-cases "find python files,read known file" --min-improvement 0.05 --markdown
+python -m claude_agent_harness_optimization harness-checks --markdown
 ```

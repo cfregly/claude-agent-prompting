@@ -80,6 +80,8 @@ Claude prompt engineering docs:
 - surface snapshots for the exact matrix, tool catalog, skill, and prompt files under evaluation
 - read-oriented credentialed E2E specs for service-backed MCP and harness checks
 - static HTML and PR-comment reports with backing data from audit, matrix, grind, snapshot, and E2E JSON
+- upstream PR packets with source pins, exact examples, reproduction commands, and result evidence
+- reusable harness check families for boundary, safety, argument, recovery, output, resource, thinking, parity, and reproducibility failures
 - autoresearch-style harness grinding that turns matrix failures into candidate variants, checks
   held-out cases, logs keep or reject decisions, and promotes only live improvements
 - value-bar enforcement for baseline comparison, minimum improvement, and adversarial confirmation
@@ -101,12 +103,15 @@ claude_agent_harness_optimization/
   snapshots.py        # pin tool, matrix, skill, and file versions under eval
   e2e.py              # read-oriented credentialed service and harness checks
   reports.py          # HTML and PR-comment rendering for JSON results
+  pr_packets.py       # upstream PR packets with pins, examples, and reproduction commands
+  harness_checks.py   # reusable harness optimization check catalog
   tool_selection.py  # tool description and selection optimizer
   value_bar.py       # adversarially-confirmed value-bar checks
   adapters.py        # transcript normalizers for provider and runtime event exports
   cli.py             # render, score, lint-tools, eval, judge-prompt
 recipes/             # ready-to-edit agent recipes
 evals/examples/      # small local eval cases
+evals/checks/        # reusable harness optimization check families
 evals/model_matrix/  # cross-provider model matrix configs
 prompts/             # reusable prompt snippets
 docs/                # technique map and source map
@@ -127,6 +132,8 @@ ClickHouse, and Zymtrace.
 Use [docs/confirmed-improvements.md](docs/confirmed-improvements.md) for the pinned ledger of
 confirmed tuning wins, guardrails without promotion, and the upstream MCP versions those results
 apply to.
+Use [docs/upstream-pr-flywheel.md](docs/upstream-pr-flywheel.md) when turning a confirmed matrix win
+into an upstream pull request packet with reproducible evidence.
 Use [docs/firecrawl-mcp-tool-tuning.md](docs/firecrawl-mcp-tool-tuning.md) for the confirmed
 Firecrawl scrape-versus-extract description optimization.
 Use [docs/supabase-mcp-tool-tuning.md](docs/supabase-mcp-tool-tuning.md) for the confirmed
@@ -272,6 +279,8 @@ python -m claude_agent_harness_optimization model-matrix evals/model_matrix/harn
 python -m claude_agent_harness_optimization model-matrix evals/model_matrix/harness_trace_adapters.json --providers trace_fixture --harnesses agent_sdk_trace --max-cases 1 --out /tmp/harness-matrix.json
 python -m claude_agent_harness_optimization render-report /tmp/harness-matrix.json --out /tmp/harness-matrix.html
 python -m claude_agent_harness_optimization pr-comment /tmp/harness-matrix.json --out /tmp/harness-matrix.md
+python -m claude_agent_harness_optimization harness-checks --markdown
+python -m claude_agent_harness_optimization upstream-pr-packet /tmp/harness-matrix.json --target-name "Example MCP" --baseline-variant stock --candidate-variant tuned --out-dir /tmp/upstream-pr
 python -m claude_agent_harness_optimization grind-harness evals/model_matrix/coding_tool_selection.json
 python scripts/probe_service_keys.py --env-file .env --no-fail
 python scripts/check_value_bar.py
