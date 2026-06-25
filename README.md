@@ -111,6 +111,9 @@ tool-selection baseline across Anthropic, OpenAI, Gemini, native tools, and prom
 Use [docs/public-mcp-sweep.md](docs/public-mcp-sweep.md) for the broader public MCP sweep across
 GitHub, Playwright, Slack, Filesystem, Postgres MCP Pro, Firecrawl, Context7, Supabase, and
 ClickHouse.
+Use [docs/confirmed-improvements.md](docs/confirmed-improvements.md) for the pinned ledger of
+confirmed tuning wins, guardrails without promotion, and the upstream MCP versions those results
+apply to.
 Use [docs/firecrawl-mcp-tool-tuning.md](docs/firecrawl-mcp-tool-tuning.md) for the confirmed
 Firecrawl scrape-versus-extract description optimization.
 Use [docs/supabase-mcp-tool-tuning.md](docs/supabase-mcp-tool-tuning.md) for the confirmed

@@ -4,6 +4,8 @@
   "source": {
     "repo": "https://github.com/supabase/mcp",
     "commit": "100565f26d7eec6d314a08597ded22da63045923",
+    "package": "@supabase/mcp-server-supabase",
+    "version": "0.8.2",
     "database_tools": "packages/mcp-server-supabase/src/tools/database-operation-tools.ts",
     "server_instructions": "packages/mcp-server-supabase/src/server.ts",
     "docs": "https://supabase.com/docs/guides/ai-tools/mcp"

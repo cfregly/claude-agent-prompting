@@ -4,6 +4,8 @@
   "source": {
     "repo": "https://github.com/firecrawl/firecrawl-mcp-server",
     "commit": "e744bba494c0e77086d66af838d7a64fab52f138",
+    "package": "firecrawl-mcp",
+    "version": "3.22.0",
     "legacy_descriptions": "src/legacy/index.md",
     "current_descriptions": "src/index.ts",
     "docs": "README.md#how-to-choose-a-tool"

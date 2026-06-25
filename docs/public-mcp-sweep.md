@@ -45,6 +45,9 @@ Supabase produced a confirmed improvement:
 This is the useful pattern: do not broadly rewrite a tool catalog. Identify one ambiguous boundary,
 write a realistic prompt that isolates it, and prove the tuned wording changes the next tool call.
 
+The pinned improvement ledger lives in [confirmed-improvements.md](confirmed-improvements.md). Use
+that page when you need the exact upstream MCP version or commit attached to each result.
+
 ## Live Results
 
 Firecrawl full Anthropic prompt-JSON run:

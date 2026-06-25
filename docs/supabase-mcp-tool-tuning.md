@@ -29,6 +29,13 @@ It compares:
   harnesses.
 - `tuned_supabase_database_boundaries`: explicit DDL, migration, and raw-query boundaries.
 
+The upstream version pin for this result is:
+
+- package: `@supabase/mcp-server-supabase` 0.8.2
+- repository: `https://github.com/supabase/mcp`
+- commit: `100565f26d7eec6d314a08597ded22da63045923`
+- checked: 2026-06-25
+
 The adversarial cases are:
 
 - `ddl create table uses migration`

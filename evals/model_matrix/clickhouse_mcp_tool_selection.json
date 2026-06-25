@@ -3,6 +3,9 @@
   "description": "Compare stock and tuned descriptions for the official ClickHouse MCP read-only database tools.",
   "source": {
     "repo": "https://github.com/clickhouse/mcp-clickhouse",
+    "commit": "ccef141dbd4e482111c8b8803962339b1f3bf1d7",
+    "package": "mcp-clickhouse",
+    "version": "0.4.0",
     "docs": "https://clickhouse.com/docs/use-cases/AI/MCP",
     "docker_hub": "https://hub.docker.com/mcp/server/clickhouse"
   },

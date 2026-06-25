@@ -28,6 +28,13 @@ It compares:
 - `legacy_firecrawl_mcp`: older/legacy-style descriptions.
 - `tuned_firecrawl_mcp_boundaries`: boundary descriptions that match current Firecrawl guidance.
 
+The upstream version pin for this result is:
+
+- package: `firecrawl-mcp` 3.22.0
+- repository: `https://github.com/firecrawl/firecrawl-mcp-server`
+- commit: `e744bba494c0e77086d66af838d7a64fab52f138`
+- checked: 2026-06-25
+
 The most important case is:
 
 ```text
