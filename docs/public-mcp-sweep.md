@@ -212,6 +212,23 @@ python -m claude_agent_harness_optimization model-matrix evals/model_matrix/zymt
   --markdown
 ```
 
+This baseline-versus-candidate command is expected to exit nonzero while `stock_zymtrace_mcp`
+fails. Use it to confirm the delta. Use the tuned-only command as the passing merge gate:
+
+```bash
+python -m claude_agent_harness_optimization model-matrix evals/model_matrix/zymtrace_mcp_tool_selection.json \
+  --env-file .env \
+  --live \
+  --require-live \
+  --providers anthropic,openai,gemini \
+  --harnesses prompt_json \
+  --variants tuned_zymtrace_mcp_boundaries \
+  --instruction-variants zymtrace_host_and_skill_rules \
+  --cases "default project metrics discovery skips search,cpu rank first containerized apps,gpu inference workflow starts with metrics,gpu call tree uses hot traces,selected trace drilldown is bounded" \
+  --concurrency 3 \
+  --markdown
+```
+
 Live full Anthropic check:
 
 ```bash
