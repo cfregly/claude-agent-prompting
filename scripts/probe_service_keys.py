@@ -30,6 +30,7 @@ def main() -> int:
         probe_firecrawl(env, args.timeout),
         probe_github(env, args.timeout),
         probe_cloudflare(env, args.timeout),
+        probe_cloudflare_r2(env, args.timeout),
         probe_clickhouse_cloud(env, args.timeout),
         probe_stripe(env, args.timeout),
     ]
@@ -99,19 +100,51 @@ def probe_cloudflare(env: dict[str, str], timeout: int) -> dict[str, str]:
         return skipped("cloudflare", "missing CLOUDFLARE_API_TOKEN")
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     verify = get_json("https://api.cloudflare.com/client/v4/user/tokens/verify", headers, timeout)
-    if not verify["ok"]:
-        return failed("cloudflare", verify)
     account_id = env.get("CLOUDFLARE_ACCOUNT_ID")
-    if not account_id:
+    if verify["ok"] and not account_id:
         return passed("cloudflare", "token verified, missing CLOUDFLARE_ACCOUNT_ID")
-    account = get_json(
-        f"https://api.cloudflare.com/client/v4/accounts/{account_id}",
-        headers,
+    if account_id:
+        account = get_json(
+            f"https://api.cloudflare.com/client/v4/accounts/{account_id}",
+            headers,
+            timeout,
+        )
+        if account["ok"]:
+            if verify["ok"]:
+                return passed("cloudflare", "user token verified and account readable")
+            return passed(
+                "cloudflare",
+                "account readable, user-token verify rejected this token type",
+            )
+        if verify["ok"]:
+            return failed("cloudflare", account)
+    return failed("cloudflare", verify)
+
+
+def probe_cloudflare_r2(env: dict[str, str], timeout: int) -> dict[str, str]:
+    account_id = env.get("CLOUDFLARE_ACCOUNT_ID")
+    token = env.get("CLOUDFLARE_R2_API_TOKEN") or env.get("CLOUDFLARE_API_TOKEN")
+    if not account_id or not token:
+        return skipped("cloudflare_r2", "missing CLOUDFLARE_ACCOUNT_ID or R2 token")
+    response = get_json(
+        f"https://api.cloudflare.com/client/v4/accounts/{account_id}/r2/buckets",
+        {"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         timeout,
     )
-    if not account["ok"]:
-        return failed("cloudflare", account)
-    return passed("cloudflare", "token verified and account readable")
+    if not response["ok"]:
+        detail = summarize_error(response["payload"])
+        if "10042" in detail or "enable R2" in detail:
+            return {
+                "detail": "account token works, but R2 is not enabled or not entitled on this account",
+                "service": "cloudflare_r2",
+                "status": "fail",
+            }
+        return failed("cloudflare_r2", response)
+    payload = response["payload"]
+    result = payload.get("result") if isinstance(payload, dict) else None
+    buckets = result.get("buckets") if isinstance(result, dict) else result
+    count = len(buckets) if isinstance(buckets, list) else "unknown"
+    return passed("cloudflare_r2", f"R2 buckets readable, count={count}")
 
 
 def probe_clickhouse_cloud(env: dict[str, str], timeout: int) -> dict[str, str]:
