@@ -65,7 +65,9 @@ Highest-value harnesses for this repo:
 | Prompt JSON | Cheap cross-provider control harness that makes tool-choice output explicit. | Live matrix supported. |
 | Codex CLI / app-server / SDK | Real coding-agent runtime with AGENTS.md, skills, MCP, hooks, sandbox, command execution, and JSONL traces. | Fixture and live `codex exec --json` adapter covered. |
 | Claude Code / Claude API skill | Anthropic coding-agent runtime and bundled migration skill. | Live `claude -p --output-format stream-json --verbose` adapter covered. |
-| OpenAI Agents SDK | Common multi-agent SDK with handoffs, MCP, traces, and guardrails. | Fixture adapter supported. |
+| Claude Agent SDK | Library harness that exposes Claude Code's loop and capabilities. | Live latest-package `claude-agent-sdk` smoke covered. |
+| OpenAI Agents SDK | Common multi-agent SDK with handoffs, MCP, traces, and guardrails. | Live latest-package `openai-agents` smoke covered. |
+| Google ADK | Google's Agent Development Kit for code-first agent development. | Live latest-package `google-adk` smoke covered. |
 | Cursor-style IDE agents | Popular IDE harness with hidden/system rules and codebase tools. | Fixture adapter supported. Live Cursor Agent currently auth-failed locally. |
 | LangGraph / LangSmith | Common production orchestration and trace-review stack. | Adapter aliases supported. Deeper schema fixtures needed. |
 | OpenCode | Popular terminal coding harness with provider-backed model selection and command logs. | Live text-log adapter covered. |
@@ -117,6 +119,7 @@ and fixtures for each provider's breaking API changes.
 ## Gaps To Close Next
 
 - Add directed-reasoning instrumentation cases to the live headless CLI suite.
+- Add deeper SDK cases for approvals, hooks, handoffs, sessions, tracing, and MCP servers.
 - Authenticate Cursor Agent locally and rerun the live Cursor cell.
 - Add model-migration fixtures for unsupported sampling parameters, prefill replacement, thinking
   config removal, refusal stop details, and provider-specific model IDs.

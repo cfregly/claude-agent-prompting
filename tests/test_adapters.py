@@ -170,6 +170,52 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(["reasoning", "tool_call", "tool_result", "reasoning", "final"], [s["type"] for s in trace["steps"]])
         self.assertTrue(review_trace(trace).passed)
 
+    def test_markdown_decision_note_blocks_keep_their_body(self):
+        trace = normalize_run_export(
+            {
+                "adapter": "runtime_events",
+                "events": [
+                    {
+                        "type": "final",
+                        "text": (
+                            "**DECISION_NOTE_BEFORE:**\n"
+                            "- **Complexity**: Low.\n"
+                            "- **Tool Budget**: One call.\n"
+                            "- **Evidence Needed**: pwd output.\n"
+                            "- **Stop Criteria**: successful output."
+                        ),
+                    },
+                    {
+                        "arguments": {"command": "pwd"},
+                        "id": "call_1",
+                        "tool_name": "pwd_tool",
+                        "type": "tool_call",
+                    },
+                    {"output": "/tmp/repo", "tool_call_id": "call_1", "type": "tool_result"},
+                    {
+                        "type": "final",
+                        "text": (
+                            "**DECISION_NOTE_AFTER:**\n"
+                            "- **Quality**: direct evidence.\n"
+                            "- **Verification**: verified path.\n"
+                            "- **Stop Decision**: stop and final.\n\n"
+                            "HARNESS_OK sdk /tmp/repo"
+                        ),
+                    },
+                ],
+                "rubric": {
+                    "expected_call_args": [{"args_contains": {"command": "pwd"}, "name": "pwd_tool"}],
+                    "required_final_contains": ["HARNESS_OK sdk"],
+                    "required_tools": ["pwd_tool"],
+                },
+            }
+        )
+
+        reasoning = [step["summary"] for step in trace["steps"] if step["type"] == "reasoning"]
+        self.assertIn("Complexity", reasoning[0])
+        self.assertIn("Verification", reasoning[1])
+        self.assertTrue(review_trace(trace).passed)
+
     def test_cli_normalize_runtime(self):
         result = subprocess.run(
             [

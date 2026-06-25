@@ -1,0 +1,59 @@
+{
+  "name": "latest SDK agent live smoke",
+  "checked_at": "2026-06-25T16:07:22Z",
+  "command": "python -m claude_agent_harness_optimization live-harness evals/live_harnesses/sdk_agent_smoke.json --env-file .env --out-dir /tmp/aho-sdk-live-v2/artifacts --out /tmp/aho-sdk-live-v2/result.json",
+  "raw_result_path": "/tmp/aho-sdk-live-v2/result.json",
+  "raw_artifact_root": "/tmp/aho-sdk-live-v2/artifacts",
+  "summary": {
+    "directed_thinking_visible": 3,
+    "errors": 0,
+    "failed": 0,
+    "not_installed": 0,
+    "passed": 3,
+    "planned": 0
+  },
+  "passed": true,
+  "cells": [
+    {
+      "harness": "claude_agent_sdk_python_latest",
+      "package": "claude-agent-sdk",
+      "version": "0.2.110",
+      "case": "sdk custom pwd tool directed smoke",
+      "status": "passed",
+      "exit_code": 0,
+      "tool": "mcp__aho__pwd_tool",
+      "tool_use_passed": true,
+      "directed_thinking_passed": true,
+      "tool_call_count": 1
+    },
+    {
+      "harness": "openai_agents_sdk_python_latest",
+      "package": "openai-agents",
+      "version": "0.17.7",
+      "case": "sdk custom pwd tool directed smoke",
+      "status": "passed",
+      "exit_code": 0,
+      "tool": "pwd_tool",
+      "tool_use_passed": true,
+      "directed_thinking_passed": true,
+      "tool_call_count": 1
+    },
+    {
+      "harness": "google_adk_python_latest",
+      "package": "google-adk",
+      "version": "2.3.0",
+      "case": "sdk custom pwd tool directed smoke",
+      "status": "passed",
+      "exit_code": 0,
+      "tool": "pwd_tool",
+      "tool_use_passed": true,
+      "directed_thinking_passed": true,
+      "tool_call_count": 1
+    }
+  ],
+  "source_spec": "evals/live_harnesses/sdk_agent_smoke.json",
+  "value_bar": {
+    "claim": "Latest SDK harnesses can be tested directly through their Python packages, not only through CLI products.",
+    "adversarial_result": "The run uses uvx --refresh-package for each SDK, records exact resolved versions, and requires real tool dispatch plus strict directed reasoning."
+  }
+}

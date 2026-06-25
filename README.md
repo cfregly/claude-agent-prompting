@@ -41,6 +41,7 @@ python -m claude_agent_harness_optimization model-matrix evals/model_matrix/harn
 python -m claude_agent_harness_optimization model-matrix evals/model_matrix/coding_tool_selection.json --env-file .env --live --concurrency 8 --markdown
 python -m claude_agent_harness_optimization grind-harness evals/model_matrix/coding_tool_selection.json --env-file .env --live --concurrency 8 --heldout-cases "find python files,read known file" --markdown
 python -m claude_agent_harness_optimization live-harness evals/live_harnesses/headless_cli_smoke.json --env-file .env --out-dir /tmp/aho-live --markdown
+python -m claude_agent_harness_optimization live-harness evals/live_harnesses/sdk_agent_smoke.json --env-file .env --out-dir /tmp/aho-sdk-live --markdown
 python -m claude_agent_harness_optimization render-report /tmp/harness-matrix.json --out /tmp/harness-matrix.html
 python -m claude_agent_harness_optimization pr-comment /tmp/harness-matrix.json --out /tmp/harness-matrix.md
 python scripts/probe_service_keys.py --env-file .env --no-fail
@@ -85,6 +86,7 @@ Claude prompt engineering docs:
 - reusable harness check families for boundary, safety, argument, recovery, output, resource, thinking, parity, and reproducibility failures
 - live headless CLI harness probes for Codex, Claude Code, Gemini CLI, Cursor Agent, and OpenCode,
   with redacted artifacts, version pins, normalized traces, and directed-thinking visibility status
+- live latest-package SDK probes for Claude Agent SDK, OpenAI Agents SDK, and Google ADK
 - autoresearch-style harness grinding that turns matrix failures into candidate variants, checks
   held-out cases, logs keep or reject decisions, and promotes only live improvements
 - value-bar enforcement for baseline comparison, minimum improvement, and adversarial confirmation
@@ -152,6 +154,8 @@ Use [docs/repeatable-harness-lab.md](docs/repeatable-harness-lab.md) to import a
 pin the tested surfaces, run credentialed read checks, and produce review artifacts.
 Use [docs/live-harness-hardening.md](docs/live-harness-hardening.md) when testing Codex, Claude
 Code, Gemini CLI, Cursor Agent, OpenCode, or another installed harness as the system under test.
+Use [docs/sdk-harness-coverage.md](docs/sdk-harness-coverage.md) when testing Claude Agent SDK,
+OpenAI Agents SDK, Google ADK, or another SDK harness directly.
 
 ## Claude Code Skill
 

@@ -518,22 +518,36 @@ def _normalize_decision_note_steps(steps: list[dict[str, Any]]) -> list[dict[str
 
 
 def _steps_from_visible_text(text: str, *, source: str) -> list[dict[str, Any]]:
-    decision_lines: list[str] = []
+    decision_blocks: list[list[str]] = []
+    active_decision: list[str] | None = None
     final_lines: list[str] = []
     for line in text.splitlines():
         if _looks_like_decision_note(line):
-            decision_lines.append(line)
+            if active_decision:
+                decision_blocks.append(active_decision)
+            active_decision = [line]
+        elif active_decision is not None:
+            if "HARNESS_OK" in line:
+                decision_blocks.append(active_decision)
+                active_decision = None
+                final_lines.append(line)
+            else:
+                active_decision.append(line)
         else:
             final_lines.append(line)
+    if active_decision:
+        decision_blocks.append(active_decision)
     steps: list[dict[str, Any]] = []
-    if decision_lines:
-        steps.append(
-            {
-                "source": source,
-                "summary": "\n".join(decision_lines).strip(),
-                "type": "reasoning",
-            }
-        )
+    for decision_lines in decision_blocks:
+        summary = "\n".join(decision_lines).strip()
+        if summary:
+            steps.append(
+                {
+                    "source": source,
+                    "summary": summary,
+                    "type": "reasoning",
+                }
+            )
     final_text = "\n".join(final_lines).strip()
     if final_text:
         steps.append({"text": final_text, "type": "final"})
@@ -541,7 +555,9 @@ def _steps_from_visible_text(text: str, *, source: str) -> list[dict[str, Any]]:
 
 
 def _looks_like_decision_note(text: str) -> bool:
-    upper = text.strip().upper()
+    cleaned = re.sub(r"^[\s>*_`#-]+", "", text.strip())
+    cleaned = cleaned.replace("*", "").replace("`", "").strip()
+    upper = cleaned.upper()
     return upper.startswith("DECISION_NOTE") or upper.startswith("DECISION NOTE")
 
 

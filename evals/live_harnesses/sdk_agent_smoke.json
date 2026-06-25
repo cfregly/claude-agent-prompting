@@ -1,0 +1,128 @@
+{
+  "name": "latest SDK agent live smoke",
+  "description": "Live SDK harness coverage for Anthropic Claude Agent SDK, OpenAI Agents SDK, and Google Agent Development Kit. Each command resolves the latest package with uvx --refresh-package, executes a custom pwd_tool through the SDK agent loop, emits normalized runtime events, and records whether directed decision notes survive the trace.",
+  "source": {
+    "checked_on": "2026-06-25",
+    "claude_agent_sdk_overview": "https://code.claude.com/docs/en/agent-sdk/overview",
+    "claude_agent_sdk_python": "https://code.claude.com/docs/en/agent-sdk/python",
+    "claude_agent_sdk_migration": "https://code.claude.com/docs/en/agent-sdk/migration-guide",
+    "openai_agents_sdk": "https://developers.openai.com/api/docs/guides/agents",
+    "openai_agents_python": "https://openai.github.io/openai-agents-python/agents/",
+    "google_adk": "https://adk.dev/",
+    "google_adk_cloud": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk"
+  },
+  "value_bar": {
+    "claim": "SDK harness coverage adds value only when the actual latest SDK package is executed live and normalized into the same trace contract as CLI harnesses.",
+    "baseline": "CLI-only coverage cannot prove whether the library harnesses dispatch tools, preserve intermediate messages, or expose enough trace data for optimization.",
+    "minimum_improvement": "Each SDK cell must report the resolved package version, call pwd_tool, return HARNESS_OK, and expose whether strict directed thinking is reviewable.",
+    "adversarial_check": "The suite must fail or mark a cell failed when the SDK is missing credentials, cannot import, does not call the required tool, omits the marker, or cannot normalize the trace."
+  },
+  "cases": [
+    {
+      "name": "sdk custom pwd tool directed smoke",
+      "shell_command": "pwd",
+      "prompt_template": "Run the selected SDK smoke. The script prompt requires DECISION_NOTE_BEFORE, pwd_tool(command='pwd'), DECISION_NOTE_AFTER, and HARNESS_OK {marker}.",
+      "required_marker_template": "HARNESS_OK {marker}",
+      "expected_args_contains": {
+        "command": "pwd"
+      },
+      "min_tool_calls": 1,
+      "max_tool_calls": 1
+    }
+  ],
+  "harnesses": [
+    {
+      "name": "claude_agent_sdk_python_latest",
+      "marker": "claude_agent_sdk",
+      "adapter": "runtime_events",
+      "command": [
+        "uvx",
+        "--refresh-package",
+        "claude-agent-sdk",
+        "--from",
+        "claude-agent-sdk",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "claude-agent-sdk"
+      ],
+      "version_command": [
+        "uvx",
+        "--refresh-package",
+        "claude-agent-sdk",
+        "--from",
+        "claude-agent-sdk",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "claude-agent-sdk",
+        "--version-only"
+      ],
+      "expected_tool": "mcp__aho__pwd_tool",
+      "expected_args_contains": {
+        "command": "pwd"
+      },
+      "timeout_seconds": 240
+    },
+    {
+      "name": "openai_agents_sdk_python_latest",
+      "marker": "openai_agents_sdk",
+      "adapter": "runtime_events",
+      "command": [
+        "uvx",
+        "--refresh-package",
+        "openai-agents",
+        "--from",
+        "openai-agents",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "openai-agents"
+      ],
+      "version_command": [
+        "uvx",
+        "--refresh-package",
+        "openai-agents",
+        "--from",
+        "openai-agents",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "openai-agents",
+        "--version-only"
+      ],
+      "expected_tool": "pwd_tool",
+      "expected_args_contains": {
+        "command": "pwd"
+      },
+      "timeout_seconds": 180
+    },
+    {
+      "name": "google_adk_python_latest",
+      "marker": "google_adk",
+      "adapter": "runtime_events",
+      "command": [
+        "uvx",
+        "--refresh-package",
+        "google-adk",
+        "--from",
+        "google-adk",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "google-adk"
+      ],
+      "version_command": [
+        "uvx",
+        "--refresh-package",
+        "google-adk",
+        "--from",
+        "google-adk",
+        "python",
+        "scripts/live_sdk_smoke.py",
+        "google-adk",
+        "--version-only"
+      ],
+      "expected_tool": "pwd_tool",
+      "expected_args_contains": {
+        "command": "pwd"
+      },
+      "timeout_seconds": 180
+    }
+  ]
+}

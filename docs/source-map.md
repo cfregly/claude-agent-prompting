@@ -77,6 +77,25 @@ Checked on 2026-06-25.
 - [OpenCode CLI docs](https://opencode.ai/docs/cli/)
   - Used for OpenCode `run`, model selection, and log capture coverage.
 
+## Live SDK Harness Docs
+
+- [Claude Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview)
+  - Used for the distinction between Claude Code as a product and Claude Agent SDK as the library
+    harness that exposes Claude Code's loop and capabilities.
+- [Migrate to Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/migration-guide)
+  - Used for the rename from Claude Code SDK to Claude Agent SDK.
+- [Claude Agent SDK Python reference](https://code.claude.com/docs/en/agent-sdk/python)
+  - Used for `query`, `ClaudeAgentOptions`, custom tools, and in-process MCP server coverage.
+- [OpenAI Agents SDK guide](https://developers.openai.com/api/docs/guides/agents)
+  - Used for OpenAI's equivalent agent SDK coverage and its role as an orchestration layer over
+    model calls and tools.
+- [OpenAI Agents SDK Python reference](https://openai.github.io/openai-agents-python/agents/)
+  - Used for `Agent`, `Runner`, and function-tool smoke coverage.
+- [Google Agent Development Kit](https://adk.dev/)
+  - Used for Google's equivalent SDK coverage and supported language scope.
+- [Google ADK Cloud docs](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk)
+  - Used for Google ADK positioning as an enterprise-scale agent development framework.
+
 ## Anthropic Engineering
 
 - [Writing effective tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
