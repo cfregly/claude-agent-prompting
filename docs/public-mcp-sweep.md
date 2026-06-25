@@ -45,6 +45,15 @@ Supabase produced a confirmed improvement:
 - Rationale: Supabase schema changes should be tracked as migrations. `execute_sql` is for regular
   SQL that does not change schema.
 
+Zymtrace produced a confirmed improvement:
+
+- Stock descriptions with the Zymtrace skill rules chose the right tools for the held-out cases but
+  missed required default-project and bounded-drilldown arguments.
+- Tuned descriptions passed the same held-out default-project, GPU metrics-first, CPU rank-first,
+  GPU call-tree, and selected-trace drilldown cases across Anthropic, OpenAI, and Gemini prompt JSON.
+- Rationale: the live Zymtrace MCP server has resource-first/default-project rules, and the
+  installed CPU/GPU skills add workflow constraints that must be present in the tool surface.
+
 This is the useful pattern: do not broadly rewrite a tool catalog. Identify one ambiguous boundary,
 write a realistic prompt that isolates it, and prove the tuned wording changes the next tool call.
 
@@ -80,6 +89,14 @@ Supabase adversarial DDL run:
 - Gemini native tools: terse 0/3, tuned 3/3.
 - Gemini prompt JSON: terse 0/3, tuned 3/3.
 
+Zymtrace held-out tool/skill boundary run:
+
+- Anthropic prompt JSON: stock 2/5, tuned 5/5.
+- OpenAI prompt JSON: stock 2/5, tuned 5/5.
+- Gemini prompt JSON: stock 2/5, tuned 5/5.
+- The stock failures were default project UUIDs on project metrics calls and missing
+  `meta_only=false` on selected full-trace drilldown. Tuned descriptions passed all held-out cells.
+
 ClickHouse adds a safety-oriented prompt-JSON matrix:
 
 - Standard read-only tasks route to `list_databases`, `list_tables`, or `run_select_query`.
@@ -89,27 +106,26 @@ ClickHouse adds a safety-oriented prompt-JSON matrix:
 - This is not yet a credentialed database execution result. The ClickHouse Cloud API key proves
   control-plane access. End-to-end MCP query traces also need database host/user/password.
 
-Zymtrace adds a profiling-analysis matrix against the locally installed `zymtrace-mcp` 26.6.1
-surface and the installed Zymtrace optimization skills:
+Zymtrace adds a profiling-analysis matrix against an inspected `zymtrace-mcp` 26.6.1 surface and
+the installed Zymtrace optimization skills:
 
-- The live MCP endpoint advertises 25 tools at `http://localhost:8080/mcp`.
+- The live MCP endpoint advertises 25 tools.
 - The live MCP endpoint advertises 3 resources: `topfunctions`, `topentities`, and `flamegraph`.
 - The rerun found a real tuning miss in the first Zymtrace matrix: the live server says to prefer
   resources before same-named tools, use default project
   `00000000-0000-0000-0000-000000000000` unless the user explicitly asks for another project, and
   reserve `projects_search` for project listing/search/switching.
 - The installed Zymtrace CPU/GPU skills add workflow boundaries: CPU rank-first requests start with
-  `topentities`/`topfunctions`; GPU/inference investigations start with metric discovery; call-tree
-  analysis prefers first-pass `hot_traces` with `meta_only=true`; full trace drilldown requires a
-  selected `prefix_hash`, `meta_only=false`, and `limit=1`.
+  `topentities` or `topfunctions`. GPU and inference investigations start with metric discovery.
+  Call-tree analysis prefers first-pass `hot_traces` with `meta_only=true`. Full trace drilldown
+  requires a selected `prefix_hash`, `meta_only=false`, and `limit=1`.
 - The tuned variant now encodes those boundaries plus metrics discovery before metrics query,
   high-level versus project JSON flamegraphs, recommendations, and raw event APIs only when
   explicitly requested.
-- The local profiler is CPU/eBPF-ready. GPU profiling is not treated as available until the
+- The inspected profiler is CPU/eBPF-ready. GPU profiling is not treated as available until the
   Zymtrace license reports GPU support.
-- No tuned Zymtrace wording is promoted as a confirmed live provider win yet because this environment
-  has no Anthropic/OpenAI/Gemini keys. The matrix is now the regression harness for proving the
-  discovered tool/skill boundaries once provider credentials are present.
+- The held-out live run promoted the tuned Zymtrace wording as a confirmed provider win across
+  Anthropic, OpenAI, and Gemini prompt JSON cells.
 
 ## Commands
 
@@ -190,7 +206,8 @@ python -m claude_agent_harness_optimization model-matrix evals/model_matrix/zymt
   --providers anthropic,openai,gemini \
   --harnesses prompt_json \
   --variants stock_zymtrace_mcp,tuned_zymtrace_mcp_boundaries \
-  --instruction-variants zymtrace_host_rules,zymtrace_host_and_skill_rules \
+  --instruction-variants zymtrace_host_and_skill_rules \
+  --cases "default project metrics discovery skips search,cpu rank first containerized apps,gpu inference workflow starts with metrics,gpu call tree uses hot traces,selected trace drilldown is bounded" \
   --concurrency 3 \
   --markdown
 ```
@@ -242,9 +259,6 @@ python -m claude_agent_harness_optimization model-matrix evals/model_matrix/fire
 - `https://clickhouse.com/docs/use-cases/AI/MCP`
 - `https://docs.zymtrace.com/getting-started/`
 - `https://docs.zymtrace.com/category/model-context-protocol-mcp/`
-- local `zymtrace-mcp` 26.6.1 `initialize`, `resources/list`, `tools/list`, and `get_date_time`
-  MCP responses from `http://localhost:8080/mcp`
-- local Zymtrace skill cache:
-  `~/.codex/plugins/cache/zymtrace-skills/zymtrace/26.6.0/skills/optimize-cpu-workloads/SKILL.md`
-- local Zymtrace skill cache:
-  `~/.codex/plugins/cache/zymtrace-skills/zymtrace/26.6.0/skills/optimize-gpu-workloads/SKILL.md`
+- `zymtrace-mcp` 26.6.1 `initialize`, `resources/list`, `tools/list`, and `get_date_time` MCP
+  responses from the inspected endpoint
+- Zymtrace skills plugin 26.6.0 `optimize-cpu-workloads` and `optimize-gpu-workloads`
