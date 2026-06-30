@@ -6,13 +6,15 @@ surface become an eval or regression case later.
 
 When a new surface appears, add it here with an owner path, a gate, and retained material. If the
 new surface is only scratch work, do not commit it. If it is useful enough to keep, make it testable.
+The checker expands these patterns against tracked files, so a new committed file must match at
+least one owner or retained-material pattern.
 
 ## Inventory
 
 | Surface | Owned Paths | Required Gates | Regression Material |
 |---|---|---|---|
 | Project Instructions | `AGENTS.md`, `CLAUDE.md` | `python scripts/check_project_instructions.py` | `CLAUDE.md`, `AGENTS.md` |
-| Package Metadata And Imports | `pyproject.toml`, `.gitignore`, `claude_agent_harness_opt/*.py` | `python scripts/check_package_surface.py`, `python -m compileall claude_agent_harness_opt scripts`, `python -m unittest discover -s tests -q` | `tests/test_check_package_surface_script.py`, `tests/test_cli.py` |
+| Package Metadata And Imports | `pyproject.toml`, `LICENSE`, `.gitignore`, `claude_agent_harness_opt/*.py` | `python scripts/check_package_surface.py`, `python -m compileall claude_agent_harness_opt scripts`, `python -m unittest discover -s tests -q` | `tests/test_check_package_surface_script.py`, `tests/test_cli.py` |
 | CLI And Command Examples | `claude_agent_harness_opt/cli.py`, `README.md`, `docs/**/*.md`, `.github/workflows/ci.yml` | `python scripts/check_command_surfaces.py`, `python scripts/check_cli_coverage.py` | `tests/test_check_command_surfaces_script.py`, `tests/test_check_cli_coverage_script.py` |
 | Prompt And Recipe Assets | `recipes/*.json`, `prompts/*.md` | `python scripts/check_prompt_recipe_surfaces.py` | `tests/test_check_prompt_recipe_surfaces_script.py`, `evals/examples/search_answer.json` |
 | Project Skill Assets | `.claude/skills/agent-audit/SKILL.md`, `.claude/skills/agent-audit/agents/openai.yaml` | `python scripts/check_skill_surfaces.py` | `tests/test_check_skill_surfaces_script.py`, `evals/model_matrix/agent_audit_skill_selection.json` |
@@ -26,6 +28,8 @@ new surface is only scratch work, do not commit it. If it is useful enough to ke
 | Tracked Demo Artifact | `demo.gif`, `demo.tape`, `docs/tool_tuning_demo_sample.txt` | `python scripts/check_artifact_surfaces.py` | `demo.gif`, `tests/test_check_artifact_surfaces_script.py` |
 | Value Bar Ledger | `docs/confirmed-improvements.md`, `evals/examples/agent_audit_bundle.json`, `evals/examples/agent_audit_missing_value_bar.json` | `python scripts/check_value_bar.py` | `tests/test_check_value_bar_script.py`, `evals/examples/agent_audit_missing_value_bar.json` |
 | Surface Inventory | `docs/surface-inventory.md`, `scripts/check_surface_inventory.py` | `python scripts/check_surface_inventory.py` | `tests/test_check_surface_inventory_script.py` |
+| Gate Scripts And Utilities | `scripts/*.py` | `python -m compileall claude_agent_harness_opt scripts`, `python -m unittest discover -s tests -q` | `tests/test_check_command_surfaces_script.py`, `tests/test_optimize_mcp_script.py` |
+| Test Suite | `tests/*.py` | `python -m unittest discover -s tests -q` | `tests/test_check_surface_inventory_script.py`, `tests/test_cli.py` |
 
 ## Hill Descent Inputs
 

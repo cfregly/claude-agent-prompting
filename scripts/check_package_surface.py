@@ -44,6 +44,7 @@ def check_package_surface(
 ) -> list[str]:
     failures: list[str] = []
     failures.extend(_check_pyproject(root))
+    failures.extend(_check_license_file(root))
     failures.extend(_check_package_tree(root))
     failures.extend(_check_gitignore(root))
     tracked = tracked_paths if tracked_paths is not None else _git_tracked_paths(root)
@@ -77,10 +78,28 @@ def _check_pyproject(root: Path = ROOT) -> list[str]:
         failures.append("pyproject.toml: project.readme must be README.md")
     if project.get("requires-python") != ">=3.11":
         failures.append("pyproject.toml: requires-python must be >=3.11")
+    license_info = project.get("license", {})
+    if not isinstance(license_info, dict) or license_info.get("text") != "MIT":
+        failures.append("pyproject.toml: project.license.text must be MIT")
 
     scripts = project.get("scripts", {})
     if scripts.get(CONSOLE_SCRIPT) != CONSOLE_TARGET:
         failures.append(f"pyproject.toml: console script {CONSOLE_SCRIPT} must target {CONSOLE_TARGET}")
+    return failures
+
+
+def _check_license_file(root: Path = ROOT) -> list[str]:
+    path = root / "LICENSE"
+    if not path.exists():
+        return ["LICENSE: missing"]
+    text = path.read_text(encoding="utf-8")
+    failures: list[str] = []
+    if not text.startswith("MIT License\n"):
+        failures.append("LICENSE: must start with MIT License")
+    if "Copyright (c) 2026 Contributors" not in text:
+        failures.append("LICENSE: missing expected copyright holder")
+    if "Permission is hereby granted, free of charge" not in text:
+        failures.append("LICENSE: missing MIT permission grant")
     return failures
 
 

@@ -59,6 +59,20 @@ class CheckSurfaceInventoryScriptTests(unittest.TestCase):
         self.assertIn("Package Metadata And Imports: missing gate token `python scripts/check_package_surface.py`", joined)
         self.assertIn("missing eval root `evals/new_root`", joined)
 
+    def test_rejects_file_outside_inventory_patterns(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            _write_minimal_repo(root)
+            _touch(root / "unowned" / "surface.txt")
+
+            failures = check_surface_inventory(root)
+
+        joined = "\n".join(failures)
+        self.assertIn(
+            "unowned/surface.txt: tracked file is not covered by docs/surface-inventory.md",
+            joined,
+        )
+
 
 def _write_minimal_repo(root: Path) -> None:
     all_paths: set[str] = set()

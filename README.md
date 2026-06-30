@@ -149,7 +149,7 @@ keys from E2E specs, model matrices, and probe scripts, then checks `.env.exampl
 `scripts/check_surface_inventory.py` protects the full retained-surface crosswalk. It validates
 `docs/surface-inventory.md`, requires every surface family to name owned paths, gates, and
 regression material, checks every discovered gate script is listed, and fails when a new `evals/*`
-root is not represented.
+root or tracked file family is not represented.
 
 `scripts/check_docs_navigation.py` protects the public navigation surface. It verifies repo-local
 GitHub links point at existing files or folders, every docs page is reachable from the README,

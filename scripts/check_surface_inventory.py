@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import re
+import subprocess
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,7 +33,7 @@ REQUIRED_SURFACES = (
     ),
     SurfaceContract(
         name="Package Metadata And Imports",
-        paths=("pyproject.toml", ".gitignore", "claude_agent_harness_opt/*.py"),
+        paths=("pyproject.toml", "LICENSE", ".gitignore", "claude_agent_harness_opt/*.py"),
         gates=(
             "python scripts/check_package_surface.py",
             "python -m compileall claude_agent_harness_opt scripts",
@@ -143,6 +144,18 @@ REQUIRED_SURFACES = (
         gates=("python scripts/check_surface_inventory.py",),
         artifacts=("tests/test_check_surface_inventory_script.py",),
     ),
+    SurfaceContract(
+        name="Gate Scripts And Utilities",
+        paths=("scripts/*.py",),
+        gates=("python -m compileall claude_agent_harness_opt scripts", "python -m unittest discover -s tests -q"),
+        artifacts=("tests/test_check_command_surfaces_script.py", "tests/test_optimize_mcp_script.py"),
+    ),
+    SurfaceContract(
+        name="Test Suite",
+        paths=("tests/*.py",),
+        gates=("python -m unittest discover -s tests -q",),
+        artifacts=("tests/test_check_surface_inventory_script.py", "tests/test_cli.py"),
+    ),
 )
 
 
@@ -171,6 +184,7 @@ def check_surface_inventory(root: Path = ROOT) -> list[str]:
     failures.extend(_check_discovered_gate_scripts(root, text))
     failures.extend(_check_eval_roots(root, text))
     failures.extend(_check_gate_locations(root, _contract_gates()))
+    failures.extend(_check_tracked_file_coverage(root))
     return failures
 
 
@@ -289,8 +303,53 @@ def _check_gate_locations(root: Path, gates: set[str]) -> list[str]:
     return failures
 
 
+def _check_tracked_file_coverage(root: Path) -> list[str]:
+    covered = {path.as_posix() for path in _covered_paths(root)}
+    failures: list[str] = []
+    for path in _tracked_files(root):
+        rel = path.as_posix()
+        if rel not in covered:
+            failures.append(f"{rel}: tracked file is not covered by {INVENTORY} owner or artifact patterns")
+    return failures
+
+
 def _contract_gates() -> set[str]:
     return {gate for contract in REQUIRED_SURFACES for gate in contract.gates}
+
+
+def _covered_paths(root: Path) -> set[Path]:
+    paths: set[Path] = set()
+    for contract in REQUIRED_SURFACES:
+        for pattern in contract.paths + contract.artifacts:
+            if pattern.startswith("python "):
+                continue
+            for match in _matches(root, pattern):
+                if match.is_file():
+                    paths.add(match.relative_to(root))
+    return paths
+
+
+def _tracked_files(root: Path) -> list[Path]:
+    if (root / ".git").exists():
+        result = subprocess.run(
+            ["git", "ls-files"],
+            cwd=root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            return [Path(line) for line in result.stdout.splitlines() if line.strip()]
+
+    files: list[Path] = []
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(root)
+        if ".git" in rel.parts or "__pycache__" in rel.parts:
+            continue
+        files.append(rel)
+    return sorted(files)
 
 
 def _matches(root: Path, pattern: str) -> list[Path]:

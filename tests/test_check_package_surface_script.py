@@ -45,6 +45,7 @@ class CheckPackageSurfaceScriptTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (root / "pyproject.toml").write_text(_valid_pyproject(), encoding="utf-8")
+            (root / "LICENSE").write_text(_valid_license(), encoding="utf-8")
             (package / "__init__.py").write_text("", encoding="utf-8")
             (package / "__main__.py").write_text(
                 "from .cli import main\n\nif __name__ == '__main__':\n    raise SystemExit(main())\n",
@@ -75,6 +76,7 @@ class CheckPackageSurfaceScriptTests(unittest.TestCase):
                     name = "claude-agent-harness-optimization"
                     readme = "docs/readme.md"
                     requires-python = ">=3.10"
+                    license = { text = "Apache-2.0" }
 
                     [project.scripts]
                     claude-agent-harness-opt = "missing:main"
@@ -100,6 +102,8 @@ class CheckPackageSurfaceScriptTests(unittest.TestCase):
 
         joined = "\n".join(failures)
         self.assertIn("pyproject.toml: project.name must be claude-agent-harness-opt", joined)
+        self.assertIn("pyproject.toml: project.license.text must be MIT", joined)
+        self.assertIn("LICENSE: missing", joined)
         self.assertIn("pyproject.toml: console script claude-agent-harness-opt must target", joined)
         self.assertIn("claude_agent_harness_opt/__main__.py: must delegate to cli.main", joined)
         self.assertIn("claude_agent_harness_optimization: stale package source must not be present", joined)
@@ -121,11 +125,26 @@ def _valid_pyproject() -> str:
         version = "0.1.0"
         readme = "README.md"
         requires-python = ">=3.11"
+        license = { text = "MIT" }
 
         [project.scripts]
         claude-agent-harness-opt = "claude_agent_harness_opt.cli:main"
         """
     )
+
+
+def _valid_license() -> str:
+    return textwrap.dedent(
+        """
+        MIT License
+
+        Copyright (c) 2026 Contributors
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction.
+        """
+    ).lstrip()
 
 
 if __name__ == "__main__":
