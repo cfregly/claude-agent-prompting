@@ -110,6 +110,11 @@ matrix-shaped targets under `evals/targets`.
 example fixture, dry-runs every read-only E2E spec, dry-runs every live harness spec without
 credentials, runs every trace suite, and validates the harness-check catalogs.
 
+`scripts/check_prompt_recipe_surfaces.py` keeps reusable prompt and recipe assets retained as eval
+surfaces too. It renders every recipe, lints the recipe tool boundaries, checks use-case suitability,
+requires the core operating-loop and value-bar sections in the rendered prompt, and fails new prompt
+templates unless they have an explicit surface contract.
+
 | Target | Result | Packet |
 |---|---|---|
 | InsForge | Confirmed improvement | [InsForge](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge) |
@@ -497,6 +502,7 @@ python -m claude_agent_harness_opt model-matrix evals/model_matrix/codex_harness
 python scripts/deslop_check.py
 python -m compileall claude_agent_harness_opt scripts
 python -m unittest discover -s tests -q
+python scripts/check_prompt_recipe_surfaces.py
 python -m claude_agent_harness_opt eval evals/examples/search_answer.json
 python -m claude_agent_harness_opt review-trace evals/examples/agent_trace_good.json
 python -m claude_agent_harness_opt normalize-claude evals/examples/claude_messages.json
