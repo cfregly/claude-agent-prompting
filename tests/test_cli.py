@@ -54,6 +54,25 @@ class CliTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertIn('"matrix": "coding file-tool selection matrix"', result.stdout)
 
+    def test_model_matrix_command_rejects_zero_selected_cells(self):
+        result = self.run_cli(
+            "model-matrix",
+            "evals/model_matrix/coding_tool_selection.json",
+            "--providers",
+            "anthropic",
+            "--harnesses",
+            "native_tools",
+            "--variants",
+            "typo_variant",
+            "--instruction-variants",
+            "boundary_rules",
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertIn("model matrix selected zero cells", result.stderr)
+        self.assertIn("variants requested [typo_variant]", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
     def test_matrix_coverage_command(self):
         result = self.run_cli(
             "matrix-coverage",
@@ -93,6 +112,25 @@ class CliTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertIn('"baseline_variant": "baseline_short"', result.stdout)
         self.assertIn('"projected_live_calls": 2', result.stdout)
+
+    def test_grind_harness_command_rejects_zero_selected_cells(self):
+        result = self.run_cli(
+            "grind-harness",
+            "evals/model_matrix/coding_tool_selection.json",
+            "--providers",
+            "anthropic",
+            "--harnesses",
+            "native_tools",
+            "--instruction-variants",
+            "typo_rules",
+            "--cases",
+            "investigate trace review flow",
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertIn("model matrix selected zero cells", result.stderr)
+        self.assertIn("instruction_variants requested [typo_rules]", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
 
     def test_live_harness_command_with_fake_local_harness(self):
         fake_events = [

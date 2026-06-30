@@ -405,6 +405,10 @@ make optimize mcp=screenpipe
 make optimize url=https://github.com/screenpipe/screenpipe
 ```
 
+`model-matrix` and `grind-harness` fail when filters select zero cells. A typoed provider, harness,
+tool variant, instruction variant, or case name is not a passing empty run. The error prints the
+requested values and the available matrix values so CI logs point to the missing surface directly.
+
 The included matrix tests Claude Code style `Task`, `Glob`, `Grep`, and `Read` tool selection across
 Anthropic, OpenAI, and Gemini. It compares short descriptions against tuned boundary descriptions,
 and it compares native provider tool calling against a standardized JSON-choice harness.

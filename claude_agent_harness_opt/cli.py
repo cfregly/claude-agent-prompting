@@ -34,6 +34,7 @@ from .matrix_coverage import (
 )
 from .model_matrix import (
     MatrixFilters,
+    ModelMatrixError,
     render_model_matrix_markdown,
     run_model_matrix,
 )
@@ -504,21 +505,25 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if result["passed"] else 1
 
     if args.command == "model-matrix":
-        result = run_model_matrix(
-            args.matrix,
-            live=args.live,
-            env_file=args.env_file,
-            require_live=args.require_live,
-            filters=MatrixFilters(
-                providers=_csv_set(args.providers),
-                harnesses=_csv_set(args.harnesses),
-                variants=_csv_set(args.variants),
-                instruction_variants=_csv_set(args.instruction_variants),
-                cases=_csv_set(args.cases),
-            ),
-            max_cases=args.max_cases,
-            concurrency=max(1, args.concurrency),
-        )
+        try:
+            result = run_model_matrix(
+                args.matrix,
+                live=args.live,
+                env_file=args.env_file,
+                require_live=args.require_live,
+                filters=MatrixFilters(
+                    providers=_csv_set(args.providers),
+                    harnesses=_csv_set(args.harnesses),
+                    variants=_csv_set(args.variants),
+                    instruction_variants=_csv_set(args.instruction_variants),
+                    cases=_csv_set(args.cases),
+                ),
+                max_cases=args.max_cases,
+                concurrency=max(1, args.concurrency),
+            )
+        except ModelMatrixError as exc:
+            sys.stderr.write(f"error: {exc}\n")
+            return 2
         output = (
             render_model_matrix_markdown(result)
             if args.markdown
@@ -563,27 +568,31 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if args.strict and not result["passed"] else 0
 
     if args.command == "grind-harness":
-        result = run_harness_grind(
-            args.matrix,
-            HarnessGrindOptions(
-                baseline_variant=args.baseline_variant,
-                concurrency=max(1, args.concurrency),
-                env_file=args.env_file,
-                filters=MatrixFilters(
-                    providers=_csv_set(args.providers),
-                    harnesses=_csv_set(args.harnesses),
-                    instruction_variants=_csv_set(args.instruction_variants),
-                    cases=_csv_set(args.cases),
+        try:
+            result = run_harness_grind(
+                args.matrix,
+                HarnessGrindOptions(
+                    baseline_variant=args.baseline_variant,
+                    concurrency=max(1, args.concurrency),
+                    env_file=args.env_file,
+                    filters=MatrixFilters(
+                        providers=_csv_set(args.providers),
+                        harnesses=_csv_set(args.harnesses),
+                        instruction_variants=_csv_set(args.instruction_variants),
+                        cases=_csv_set(args.cases),
+                    ),
+                    heldout_cases=_csv_set(args.heldout_cases),
+                    live=args.live,
+                    max_cases=args.max_cases,
+                    max_iterations=max(1, args.max_iterations),
+                    max_live_calls=max(1, args.max_live_calls),
+                    min_improvement=max(0.0, args.min_improvement),
+                    require_live=args.require_live,
                 ),
-                heldout_cases=_csv_set(args.heldout_cases),
-                live=args.live,
-                max_cases=args.max_cases,
-                max_iterations=max(1, args.max_iterations),
-                max_live_calls=max(1, args.max_live_calls),
-                min_improvement=max(0.0, args.min_improvement),
-                require_live=args.require_live,
-            ),
-        )
+            )
+        except ModelMatrixError as exc:
+            sys.stderr.write(f"error: {exc}\n")
+            return 2
         output = (
             render_harness_grind_markdown(result)
             if args.markdown

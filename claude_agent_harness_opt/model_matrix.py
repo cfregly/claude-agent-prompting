@@ -140,7 +140,10 @@ def run_model_matrix_data(
     validate_matrix(matrix)
     env = os.environ.copy()
     env.update(load_env_file(env_file))
-    selected = _selected_runs(matrix, filters or MatrixFilters(), max_cases)
+    active_filters = filters or MatrixFilters()
+    selected = _selected_runs(matrix, active_filters, max_cases)
+    if not selected:
+        raise ModelMatrixError(_empty_selection_message(matrix, active_filters))
     results = []
 
     if not live:
@@ -170,7 +173,7 @@ def run_model_matrix_data(
         "case_definitions": _case_definitions(selected),
         "cells": _cell_summary(results),
         "description": matrix.get("description", ""),
-        "filters": _filters_to_dict(filters or MatrixFilters()),
+        "filters": _filters_to_dict(active_filters),
         "live": live,
         "matrix": matrix_name,
         "matrix_path": matrix.get("_matrix_path", ""),
@@ -858,6 +861,62 @@ def _first_reasoning_summary(trace: dict[str, Any]) -> str:
 
 def _matches(allowed: set[str] | None, value: Any) -> bool:
     return allowed is None or str(value) in allowed
+
+
+def _empty_selection_message(matrix: dict[str, Any], filters: MatrixFilters) -> str:
+    available = _available_selection_values(matrix)
+    requested = _filters_to_dict(filters)
+    details = []
+    for key in ("providers", "harnesses", "variants", "instruction_variants", "cases"):
+        requested_values = requested.get(key)
+        if requested_values is None:
+            continue
+        details.append(
+            "{key} requested [{requested}] available [{available}]".format(
+                available=", ".join(available[key]) or "none",
+                key=key,
+                requested=", ".join(requested_values) or "none",
+            )
+        )
+    suffix = "; " + "; ".join(details) if details else ""
+    return f"model matrix selected zero cells{suffix}"
+
+
+def _available_selection_values(matrix: dict[str, Any]) -> dict[str, list[str]]:
+    profiles = matrix.get("profiles", [])
+    instructions = matrix.get("instruction_variants") or [{"name": "default"}]
+    return {
+        "cases": sorted(
+            str(case.get("name", ""))
+            for case in matrix.get("cases", [])
+            if str(case.get("name", ""))
+        ),
+        "harnesses": sorted(
+            {
+                str(harness)
+                for profile in profiles
+                for harness in (profile.get("harnesses") or ["prompt_json"])
+            }
+        ),
+        "instruction_variants": sorted(
+            str(item.get("name", ""))
+            for item in instructions
+            if str(item.get("name", ""))
+        ),
+        "providers": sorted(
+            {
+                str(value)
+                for profile in profiles
+                for value in (profile.get("provider"), profile.get("name"))
+                if value
+            }
+        ),
+        "variants": sorted(
+            str(variant.get("name", ""))
+            for variant in matrix.get("tool_variants", [])
+            if str(variant.get("name", ""))
+        ),
+    }
 
 
 def _default_api_key_env(provider: str) -> str:

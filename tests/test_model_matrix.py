@@ -150,6 +150,26 @@ class ModelMatrixTests(unittest.TestCase):
         self.assertEqual(1, result["summary"]["total"])
         self.assertEqual("read known file", result["results"][0]["case"])
 
+    def test_model_matrix_rejects_filters_that_select_zero_cells(self):
+        with self.assertRaisesRegex(
+            ModelMatrixError,
+            "model matrix selected zero cells",
+        ) as context:
+            run_model_matrix(
+                ROOT / "evals" / "model_matrix" / "coding_tool_selection.json",
+                filters=MatrixFilters(
+                    providers={"anthropic"},
+                    harnesses={"native_tools"},
+                    variants={"typo_variant"},
+                    instruction_variants={"boundary_rules"},
+                ),
+            )
+
+        message = str(context.exception)
+        self.assertIn("variants requested [typo_variant]", message)
+        self.assertIn("baseline_short", message)
+        self.assertIn("tuned_boundaries", message)
+
     def test_trace_fixture_matrix_evaluates_named_harnesses(self):
         result = run_model_matrix(
             ROOT / "evals" / "model_matrix" / "harness_trace_adapters.json",
