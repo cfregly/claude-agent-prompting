@@ -103,7 +103,8 @@ required result, evidence, and reproduction sections, is listed in the index and
 points only at local evidence artifacts that still exist, and validates committed PR packet
 `evidence.json` files against their promoted live matrix results. It also validates committed
 `evals/results` receipts so JSON and Markdown evidence stays structured enough to rerun as eval
-fixtures later.
+fixtures later, and audits every retained matrix surface under `evals/model_matrix` plus
+matrix-shaped targets under `evals/targets`.
 
 | Target | Result | Packet |
 |---|---|---|
@@ -242,7 +243,7 @@ Run a corpus audit before claiming the matrix is broad enough:
 
 ```bash
 python -m claude_agent_harness_opt matrix-coverage evals/model_matrix/zymtrace_mcp_tool_selection.json --markdown
-python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix --markdown
+python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix evals/targets/gstack/gstack_skill_selection_matrix.json --markdown
 ```
 
 `matrix-coverage` checks the matrix as an eval corpus before any provider call:
@@ -278,14 +279,15 @@ candidate evidence, and Markdown review sections so future agents can use them a
 fixtures.
 
 For the full repository, the current ledger is stored at
-`evals/results/model_matrix_coverage_suite_2026-06-30.md`: it audits 18 matrices, 152 tools, 199
-cases, 49 profile surfaces, 21 instruction variants, 805 boundary pairs, and 3 value bars. All stored
-matrices now pass the strict structural coverage contract with zero case expectation gaps, zero
-identity gaps, and zero value-bar gaps. That proves catalog coverage, negative coverage, argument
-assertions, quality checks, and family labels are present, that each matrix's required family
-contract is covered, that argument checks map to expected tool schemas, that value-bar metadata is
-complete where present, and that variant tool surfaces have parity. It does not prove every live
-model will choose correctly, so promoted behavioral claims still need live `model-matrix` results.
+`evals/results/model_matrix_coverage_suite_2026-06-30.md`: it audits 19 matrices, 182 tools, 230
+cases, 57 profile surfaces, 23 instruction variants, 866 boundary pairs, and 4 value bars. All stored
+model matrices plus the gstack target matrix now pass the strict structural coverage contract with
+zero case expectation gaps, zero identity gaps, and zero value-bar gaps. That proves catalog
+coverage, negative coverage, argument assertions, quality checks, and family labels are present,
+that each matrix's required family contract is covered, that argument checks map to expected tool
+schemas, that value-bar metadata is complete where present, and that variant tool surfaces have
+parity. It does not prove every live model will choose correctly, so promoted behavioral claims
+still need live `model-matrix` results.
 
 After baseline failures repeat, the "hill climb" part starts:
 
@@ -414,7 +416,7 @@ provider, reasoning mode, or harness:
 ```bash
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/coding_tool_selection.json --markdown
 python -m claude_agent_harness_opt matrix-coverage evals/model_matrix/zymtrace_mcp_tool_selection.json --markdown
-python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix --markdown --out /tmp/model-matrix-coverage.md
+python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix evals/targets/gstack/gstack_skill_selection_matrix.json --markdown --out /tmp/model-matrix-coverage.md
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/coding_tool_selection.json --env-file .env --live --concurrency 8 --markdown
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/agent_audit_skill_selection.json --env-file .env --live --require-live --providers anthropic --harnesses prompt_json --variants thin_workflow_tools --instruction-variants no_skill,agent_audit_skill --markdown
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/github_mcp_tool_selection.json --env-file .env --live --require-live --providers anthropic,openai,gemini --harnesses native_tools,prompt_json --variants stock_github_mcp,tuned_github_mcp_boundaries --instruction-variants github_mcp_host_rules --concurrency 4 --markdown
@@ -510,7 +512,7 @@ python -m claude_agent_harness_opt model-matrix evals/model_matrix/firecrawl_mcp
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/supabase_mcp_database_tool_selection.json --providers anthropic --harnesses prompt_json --variants tuned_supabase_database_boundaries --instruction-variants supabase_database_host_rules --max-cases 2
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/clickhouse_mcp_tool_selection.json --providers anthropic --harnesses prompt_json --variants tuned_clickhouse_readonly_boundaries --instruction-variants clickhouse_host_rules --max-cases 2
 python -m claude_agent_harness_opt matrix-coverage evals/model_matrix/zymtrace_mcp_tool_selection.json --strict --out /tmp/zymtrace-coverage.json
-python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix --out /tmp/model-matrix-coverage-suite.json
+python -m claude_agent_harness_opt matrix-coverage-suite evals/model_matrix evals/targets/gstack/gstack_skill_selection_matrix.json --out /tmp/model-matrix-coverage-suite.json
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/zymtrace_mcp_tool_selection.json --providers anthropic --harnesses prompt_json --variants tuned_zymtrace_mcp_boundaries --instruction-variants zymtrace_host_and_skill_rules --max-cases 2
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/harness_trace_adapters.json --live --require-live --providers trace_fixture
 python -m claude_agent_harness_opt model-matrix evals/model_matrix/codex_harness_trace_adapter.json --live --require-live --providers trace_fixture

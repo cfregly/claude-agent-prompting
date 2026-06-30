@@ -47,6 +47,7 @@ BOUNDARY_NOTES = {
 
 
 CASES = [
+    ("browser-compat-alias", "Use the legacy gstack workflow alias for a quick headless browser dogfood run against http://localhost:3000.", "gstack_gstack", ["gstack_browse", "gstack_connect_chrome"]),
     ("browser-headless", "Open http://localhost:3000, click through the signup flow, and capture screenshots of any bug evidence.", "gstack_browse", ["gstack_gstack", "gstack_connect_chrome", "gstack_qa"]),
     ("qa-fix", "QA this staging site, fix the bugs you find, add regression tests, and commit each fix atomically.", "gstack_qa", ["gstack_qa_only", "gstack_browse"]),
     ("qa-report-only", "Test this app and give me a bug report with repro steps, but do not edit any files.", "gstack_qa_only", ["gstack_qa", "gstack_browse"]),
@@ -78,6 +79,41 @@ CASES = [
     ("upgrade-gstack", "Upgrade gstack to the latest version and show me what changed.", "gstack_upgrade", ["gstack_ship", "gstack_setup_deploy"]),
     ("no-tool-general-answer", "Explain what a monorepo is in two paragraphs. Do not run a workflow.", "NO_TOOL", []),
 ]
+
+
+CASE_FAMILIES = {
+    "auth-cookies": "environment_setup",
+    "auto-plan-review": "plan_review_boundary",
+    "browser-compat-alias": "compat_alias",
+    "browser-headless": "browser_boundary",
+    "careful-mode": "safety_guardrail",
+    "ceo-scope-review": "plan_review_boundary",
+    "configure-deploy": "release_ops",
+    "design-plan-review": "design_boundary",
+    "design-system": "design_boundary",
+    "design-variants": "design_boundary",
+    "docs-after-release": "documentation_boundary",
+    "engineering-plan-review": "plan_review_boundary",
+    "freeze-edits": "safety_guardrail",
+    "full-guard-mode": "safety_guardrail",
+    "implemented-design-polish": "design_boundary",
+    "land-and-deploy": "release_ops",
+    "no-tool-general-answer": "no_tool_safety",
+    "performance-regression": "runtime_monitoring",
+    "post-deploy-monitor": "runtime_monitoring",
+    "pre-landing-review": "code_review_boundary",
+    "product-brainstorm": "product_planning",
+    "qa-fix": "qa_boundary",
+    "qa-report-only": "qa_boundary",
+    "real-chrome": "environment_setup",
+    "root-cause-debug": "code_review_boundary",
+    "security-audit": "security_boundary",
+    "ship-pr": "release_ops",
+    "spec-plus-browser-validation": "product_planning",
+    "unfreeze-edits": "safety_guardrail",
+    "upgrade-gstack": "maintenance",
+    "weekly-retro": "documentation_boundary",
+}
 
 
 def main() -> int:
@@ -209,6 +245,9 @@ def _build_matrix(tools: list[dict[str, Any]], source: dict[str, Any]) -> dict[s
     cases = [_case(name, task, expected, forbidden, tool_names) for name, task, expected, forbidden in CASES]
     return {
         "cases": cases,
+        "coverage": {
+            "required_check_families": sorted(set(CASE_FAMILIES.values())),
+        },
         "description": "Cross-provider skill-routing matrix for the pinned gstack Codex-compatible skill catalog.",
         "instruction_variants": [
             {
@@ -317,10 +356,17 @@ def _build_matrix(tools: list[dict[str, Any]], source: dict[str, Any]) -> dict[s
             {"name": "gstack_boundary_tuned_skill_descriptions", "tools": tools},
         ],
         "value_bar": {
-            "adversarial_check": "Adjacent gstack skills must not be interchangeable: qa versus qa-only, browse versus connect-chrome, review versus cso, ship versus land-and-deploy, and careful versus freeze versus guard.",
-            "baseline": "Unvalidated skill catalogs can route requests to broad aliases or adjacent workflows.",
+            "adversarial_review": {
+                "challenge": "Adjacent gstack skills must not be interchangeable: qa versus qa-only, browse versus connect-chrome, review versus cso, ship versus land-and-deploy, and careful versus freeze versus guard.",
+                "failed_to_disprove": True,
+                "open_objections": [],
+                "reviewer": "gstack skills-as-tools matrix",
+            },
+            "baseline": {"score": 0.0, "source": "unvalidated skill catalogs can route requests to broad aliases or adjacent workflows"},
+            "candidate": {"score": 1.0, "source": "generated gstack skill-routing matrix with adjacent-boundary and NO_TOOL cases"},
             "claim": "The matrix adds value if it exposes or confirms skill-routing boundaries across providers and harnesses for a pinned gstack version.",
-            "minimum_improvement": "Boundary-tuned descriptions should match or outperform stock descriptions without masking NO_TOOL safety cases.",
+            "metric": "model_matrix.score",
+            "minimum_delta": 0.01,
         },
     }
 
@@ -382,11 +428,15 @@ def _build_bundle(tools: list[dict[str, Any]], source: dict[str, Any]) -> dict[s
 
 def _case(name: str, task: str, expected: str, forbidden: list[str], tool_names: list[str]) -> dict[str, Any]:
     forbidden_tools = [item for item in forbidden if item in tool_names or item == "NO_TOOL"]
+    expected_tools = [expected]
     if expected == "NO_TOOL":
         forbidden_tools = tool_names
-    return {
+        expected_tools = []
+    case = {
+        "allow_no_tool": expected == "NO_TOOL",
+        "check_family": CASE_FAMILIES.get(name, "workflow_boundary"),
         "expected_outcome": f"The selected tool is {expected}.",
-        "expected_tools": [expected],
+        "expected_tools": expected_tools,
         "forbidden_tools": forbidden_tools,
         "name": name,
         "rationale": f"The request should route to {expected}.",
@@ -396,6 +446,13 @@ def _case(name: str, task: str, expected: str, forbidden: list[str], tool_names:
             "type": "flexible_text",
         },
     }
+    if expected != "NO_TOOL":
+        case["expected_args_contains"] = {"request": _argument_anchor(task)}
+    return case
+
+
+def _argument_anchor(task: str) -> str:
+    return " ".join(task.split()[:6])
 
 
 def _frontmatter(text: str) -> dict[str, Any]:

@@ -39,11 +39,23 @@ def evaluate_value_bar(value_bar: dict[str, Any] | None) -> ValueBarResult:
     checks.append(bool(metric))
     details.append(f"metric present: {metric}" if metric else "metric missing")
 
-    baseline_score = _score(value_bar.get("baseline"))
-    candidate_score = _score(value_bar.get("candidate"))
-    minimum_delta = float(value_bar.get("minimum_delta", 0.0))
+    baseline_score, baseline_ok, baseline_detail = _score(value_bar.get("baseline"), "baseline")
+    checks.append(baseline_ok)
+    details.append(baseline_detail)
+
+    candidate_score, candidate_ok, candidate_detail = _score(value_bar.get("candidate"), "candidate")
+    checks.append(candidate_ok)
+    details.append(candidate_detail)
+
+    minimum_delta, minimum_ok, minimum_detail = _number(
+        value_bar.get("minimum_delta", 0.0),
+        "minimum_delta",
+    )
+    checks.append(minimum_ok)
+    details.append(minimum_detail)
+
     delta = round(candidate_score - baseline_score, 3)
-    improved = delta >= minimum_delta
+    improved = baseline_ok and candidate_ok and minimum_ok and delta >= minimum_delta
     checks.append(improved)
     details.append(
         f"candidate improved by {delta:.3f}, minimum required delta is {minimum_delta:.3f}"
@@ -81,7 +93,18 @@ def evaluate_value_bar(value_bar: dict[str, Any] | None) -> ValueBarResult:
     )
 
 
-def _score(value: Any) -> float:
+def _score(value: Any, label: str) -> tuple[float, bool, str]:
+    if value is None:
+        return 0.0, False, f"{label} score missing"
     if isinstance(value, dict):
-        return float(value.get("score", 0.0))
-    return float(value or 0.0)
+        value = value.get("score")
+    return _number(value, f"{label} score")
+
+
+def _number(value: Any, label: str) -> tuple[float, bool, str]:
+    if value is None or value == "":
+        return 0.0, False, f"{label} missing"
+    try:
+        return float(value), True, f"{label} present"
+    except (TypeError, ValueError):
+        return 0.0, False, f"{label} must be numeric"

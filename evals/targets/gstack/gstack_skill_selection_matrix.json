@@ -1,6 +1,37 @@
 {
   "cases": [
     {
+      "allow_no_tool": false,
+      "check_family": "compat_alias",
+      "expected_args_contains": {
+        "request": "Use the legacy gstack workflow alias"
+      },
+      "expected_outcome": "The selected tool is gstack_gstack.",
+      "expected_tools": [
+        "gstack_gstack"
+      ],
+      "forbidden_tools": [
+        "gstack_browse",
+        "gstack_connect_chrome"
+      ],
+      "name": "browser-compat-alias",
+      "rationale": "The request should route to gstack_gstack.",
+      "task": "Use the legacy gstack workflow alias for a quick headless browser dogfood run against http://localhost:3000.",
+      "verifier": {
+        "must_include_any": [
+          [
+            "gstack_gstack"
+          ]
+        ],
+        "type": "flexible_text"
+      }
+    },
+    {
+      "allow_no_tool": false,
+      "check_family": "browser_boundary",
+      "expected_args_contains": {
+        "request": "Open http://localhost:3000, click through the signup"
+      },
       "expected_outcome": "The selected tool is gstack_browse.",
       "expected_tools": [
         "gstack_browse"
@@ -23,6 +54,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "qa_boundary",
+      "expected_args_contains": {
+        "request": "QA this staging site, fix the"
+      },
       "expected_outcome": "The selected tool is gstack_qa.",
       "expected_tools": [
         "gstack_qa"
@@ -44,6 +80,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "qa_boundary",
+      "expected_args_contains": {
+        "request": "Test this app and give me"
+      },
       "expected_outcome": "The selected tool is gstack_qa_only.",
       "expected_tools": [
         "gstack_qa_only"
@@ -65,6 +106,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "design_boundary",
+      "expected_args_contains": {
+        "request": "Audit the implemented dashboard UI for"
+      },
       "expected_outcome": "The selected tool is gstack_design_review.",
       "expected_tools": [
         "gstack_design_review"
@@ -86,6 +132,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "design_boundary",
+      "expected_args_contains": {
+        "request": "Review this UI plan before implementation"
+      },
       "expected_outcome": "The selected tool is gstack_plan_design_review.",
       "expected_tools": [
         "gstack_plan_design_review"
@@ -107,6 +158,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "design_boundary",
+      "expected_args_contains": {
+        "request": "Create a design system and DESIGN.md"
+      },
       "expected_outcome": "The selected tool is gstack_design_consultation.",
       "expected_tools": [
         "gstack_design_consultation"
@@ -128,6 +184,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "design_boundary",
+      "expected_args_contains": {
+        "request": "Show me several visual directions for"
+      },
       "expected_outcome": "The selected tool is gstack_design_shotgun.",
       "expected_tools": [
         "gstack_design_shotgun"
@@ -149,6 +210,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "product_planning",
+      "expected_args_contains": {
+        "request": "I have an idea for a"
+      },
       "expected_outcome": "The selected tool is gstack_office_hours.",
       "expected_tools": [
         "gstack_office_hours"
@@ -170,6 +236,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "product_planning",
+      "expected_args_contains": {
+        "request": "Turn this rough feature request into"
+      },
       "expected_outcome": "The selected tool is gstack_spec_qa.",
       "expected_tools": [
         "gstack_spec_qa"
@@ -191,6 +262,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "plan_review_boundary",
+      "expected_args_contains": {
+        "request": "Rethink this plan from a founder"
+      },
       "expected_outcome": "The selected tool is gstack_plan_ceo_review.",
       "expected_tools": [
         "gstack_plan_ceo_review"
@@ -212,6 +288,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "plan_review_boundary",
+      "expected_args_contains": {
+        "request": "Review the architecture, data flow, edge"
+      },
       "expected_outcome": "The selected tool is gstack_plan_eng_review.",
       "expected_tools": [
         "gstack_plan_eng_review"
@@ -233,6 +314,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "plan_review_boundary",
+      "expected_args_contains": {
+        "request": "Run CEO, design, and engineering plan"
+      },
       "expected_outcome": "The selected tool is gstack_autoplan.",
       "expected_tools": [
         "gstack_autoplan"
@@ -254,6 +340,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "code_review_boundary",
+      "expected_args_contains": {
+        "request": "Review this PR before merge for"
+      },
       "expected_outcome": "The selected tool is gstack_review.",
       "expected_tools": [
         "gstack_review"
@@ -275,6 +366,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "code_review_boundary",
+      "expected_args_contains": {
+        "request": "Debug why this job started failing"
+      },
       "expected_outcome": "The selected tool is gstack_investigate.",
       "expected_tools": [
         "gstack_investigate"
@@ -296,6 +392,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "security_boundary",
+      "expected_args_contains": {
+        "request": "Run an infrastructure-first security audit with"
+      },
       "expected_outcome": "The selected tool is gstack_cso.",
       "expected_tools": [
         "gstack_cso"
@@ -317,6 +418,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "release_ops",
+      "expected_args_contains": {
+        "request": "Sync main, run tests, update changelog,"
+      },
       "expected_outcome": "The selected tool is gstack_ship.",
       "expected_tools": [
         "gstack_ship"
@@ -338,6 +444,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "release_ops",
+      "expected_args_contains": {
+        "request": "Merge the approved PR, wait for"
+      },
       "expected_outcome": "The selected tool is gstack_land_and_deploy.",
       "expected_tools": [
         "gstack_land_and_deploy"
@@ -359,6 +470,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "release_ops",
+      "expected_args_contains": {
+        "request": "Detect our deploy platform and write"
+      },
       "expected_outcome": "The selected tool is gstack_setup_deploy.",
       "expected_tools": [
         "gstack_setup_deploy"
@@ -380,6 +496,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "runtime_monitoring",
+      "expected_args_contains": {
+        "request": "Watch the live app after deploy"
+      },
       "expected_outcome": "The selected tool is gstack_canary.",
       "expected_tools": [
         "gstack_canary"
@@ -401,6 +522,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "runtime_monitoring",
+      "expected_args_contains": {
+        "request": "Establish a page-load and Core Web"
+      },
       "expected_outcome": "The selected tool is gstack_benchmark.",
       "expected_tools": [
         "gstack_benchmark"
@@ -422,6 +548,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "documentation_boundary",
+      "expected_args_contains": {
+        "request": "Update README, architecture docs, and changelog"
+      },
       "expected_outcome": "The selected tool is gstack_document_release.",
       "expected_tools": [
         "gstack_document_release"
@@ -443,6 +574,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "documentation_boundary",
+      "expected_args_contains": {
+        "request": "Summarize what shipped this week across"
+      },
       "expected_outcome": "The selected tool is gstack_retro.",
       "expected_tools": [
         "gstack_retro"
@@ -464,6 +600,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "environment_setup",
+      "expected_args_contains": {
+        "request": "Launch my real Chrome with the"
+      },
       "expected_outcome": "The selected tool is gstack_connect_chrome.",
       "expected_tools": [
         "gstack_connect_chrome"
@@ -485,6 +626,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "environment_setup",
+      "expected_args_contains": {
+        "request": "Import cookies from my real browser"
+      },
       "expected_outcome": "The selected tool is gstack_setup_browser_cookies.",
       "expected_tools": [
         "gstack_setup_browser_cookies"
@@ -506,6 +652,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "safety_guardrail",
+      "expected_args_contains": {
+        "request": "Be careful while touching production and"
+      },
       "expected_outcome": "The selected tool is gstack_careful.",
       "expected_tools": [
         "gstack_careful"
@@ -527,6 +678,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "safety_guardrail",
+      "expected_args_contains": {
+        "request": "Only edit files under packages/api while"
+      },
       "expected_outcome": "The selected tool is gstack_freeze.",
       "expected_tools": [
         "gstack_freeze"
@@ -548,6 +704,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "safety_guardrail",
+      "expected_args_contains": {
+        "request": "Lock edits to this directory and"
+      },
       "expected_outcome": "The selected tool is gstack_guard.",
       "expected_tools": [
         "gstack_guard"
@@ -569,6 +730,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "safety_guardrail",
+      "expected_args_contains": {
+        "request": "Remove the edit restriction so changes"
+      },
       "expected_outcome": "The selected tool is gstack_unfreeze.",
       "expected_tools": [
         "gstack_unfreeze"
@@ -590,6 +756,11 @@
       }
     },
     {
+      "allow_no_tool": false,
+      "check_family": "maintenance",
+      "expected_args_contains": {
+        "request": "Upgrade gstack to the latest version"
+      },
       "expected_outcome": "The selected tool is gstack_upgrade.",
       "expected_tools": [
         "gstack_upgrade"
@@ -611,10 +782,10 @@
       }
     },
     {
+      "allow_no_tool": true,
+      "check_family": "no_tool_safety",
       "expected_outcome": "The selected tool is NO_TOOL.",
-      "expected_tools": [
-        "NO_TOOL"
-      ],
+      "expected_tools": [],
       "forbidden_tools": [
         "gstack_gstack",
         "gstack_autoplan",
@@ -660,6 +831,25 @@
       }
     }
   ],
+  "coverage": {
+    "required_check_families": [
+      "browser_boundary",
+      "code_review_boundary",
+      "compat_alias",
+      "design_boundary",
+      "documentation_boundary",
+      "environment_setup",
+      "maintenance",
+      "no_tool_safety",
+      "plan_review_boundary",
+      "product_planning",
+      "qa_boundary",
+      "release_ops",
+      "runtime_monitoring",
+      "safety_guardrail",
+      "security_boundary"
+    ]
+  },
   "description": "Cross-provider skill-routing matrix for the pinned gstack Codex-compatible skill catalog.",
   "instruction_variants": [
     {
@@ -2971,9 +3161,22 @@
     }
   ],
   "value_bar": {
-    "adversarial_check": "Adjacent gstack skills must not be interchangeable: qa versus qa-only, browse versus connect-chrome, review versus cso, ship versus land-and-deploy, and careful versus freeze versus guard.",
-    "baseline": "Unvalidated skill catalogs can route requests to broad aliases or adjacent workflows.",
+    "adversarial_review": {
+      "challenge": "Adjacent gstack skills must not be interchangeable: qa versus qa-only, browse versus connect-chrome, review versus cso, ship versus land-and-deploy, and careful versus freeze versus guard.",
+      "failed_to_disprove": true,
+      "open_objections": [],
+      "reviewer": "gstack skills-as-tools matrix"
+    },
+    "baseline": {
+      "score": 0.0,
+      "source": "unvalidated skill catalogs can route requests to broad aliases or adjacent workflows"
+    },
+    "candidate": {
+      "score": 1.0,
+      "source": "generated gstack skill-routing matrix with adjacent-boundary and NO_TOOL cases"
+    },
     "claim": "The matrix adds value if it exposes or confirms skill-routing boundaries across providers and harnesses for a pinned gstack version.",
-    "minimum_improvement": "Boundary-tuned descriptions should match or outperform stock descriptions without masking NO_TOOL safety cases."
+    "metric": "model_matrix.score",
+    "minimum_delta": 0.01
   }
 }

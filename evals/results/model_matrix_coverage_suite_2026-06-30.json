@@ -14319,6 +14319,1564 @@
         "variant_surface_mismatches": []
       },
       "warnings": []
+    },
+    {
+      "boundary_pairs": [
+        {
+          "cases": [
+            "auto-plan-review"
+          ],
+          "expected_tool": "gstack_autoplan",
+          "forbidden_tool": "gstack_plan_ceo_review"
+        },
+        {
+          "cases": [
+            "auto-plan-review"
+          ],
+          "expected_tool": "gstack_autoplan",
+          "forbidden_tool": "gstack_plan_eng_review"
+        },
+        {
+          "cases": [
+            "performance-regression"
+          ],
+          "expected_tool": "gstack_benchmark",
+          "forbidden_tool": "gstack_canary"
+        },
+        {
+          "cases": [
+            "performance-regression"
+          ],
+          "expected_tool": "gstack_benchmark",
+          "forbidden_tool": "gstack_qa"
+        },
+        {
+          "cases": [
+            "browser-headless"
+          ],
+          "expected_tool": "gstack_browse",
+          "forbidden_tool": "gstack_connect_chrome"
+        },
+        {
+          "cases": [
+            "browser-headless"
+          ],
+          "expected_tool": "gstack_browse",
+          "forbidden_tool": "gstack_gstack"
+        },
+        {
+          "cases": [
+            "browser-headless"
+          ],
+          "expected_tool": "gstack_browse",
+          "forbidden_tool": "gstack_qa"
+        },
+        {
+          "cases": [
+            "post-deploy-monitor"
+          ],
+          "expected_tool": "gstack_canary",
+          "forbidden_tool": "gstack_benchmark"
+        },
+        {
+          "cases": [
+            "post-deploy-monitor"
+          ],
+          "expected_tool": "gstack_canary",
+          "forbidden_tool": "gstack_qa"
+        },
+        {
+          "cases": [
+            "careful-mode"
+          ],
+          "expected_tool": "gstack_careful",
+          "forbidden_tool": "gstack_freeze"
+        },
+        {
+          "cases": [
+            "careful-mode"
+          ],
+          "expected_tool": "gstack_careful",
+          "forbidden_tool": "gstack_guard"
+        },
+        {
+          "cases": [
+            "real-chrome"
+          ],
+          "expected_tool": "gstack_connect_chrome",
+          "forbidden_tool": "gstack_browse"
+        },
+        {
+          "cases": [
+            "real-chrome"
+          ],
+          "expected_tool": "gstack_connect_chrome",
+          "forbidden_tool": "gstack_setup_browser_cookies"
+        },
+        {
+          "cases": [
+            "security-audit"
+          ],
+          "expected_tool": "gstack_cso",
+          "forbidden_tool": "gstack_careful"
+        },
+        {
+          "cases": [
+            "security-audit"
+          ],
+          "expected_tool": "gstack_cso",
+          "forbidden_tool": "gstack_review"
+        },
+        {
+          "cases": [
+            "design-system"
+          ],
+          "expected_tool": "gstack_design_consultation",
+          "forbidden_tool": "gstack_design_shotgun"
+        },
+        {
+          "cases": [
+            "design-system"
+          ],
+          "expected_tool": "gstack_design_consultation",
+          "forbidden_tool": "gstack_plan_design_review"
+        },
+        {
+          "cases": [
+            "implemented-design-polish"
+          ],
+          "expected_tool": "gstack_design_review",
+          "forbidden_tool": "gstack_design_consultation"
+        },
+        {
+          "cases": [
+            "implemented-design-polish"
+          ],
+          "expected_tool": "gstack_design_review",
+          "forbidden_tool": "gstack_plan_design_review"
+        },
+        {
+          "cases": [
+            "design-variants"
+          ],
+          "expected_tool": "gstack_design_shotgun",
+          "forbidden_tool": "gstack_design_consultation"
+        },
+        {
+          "cases": [
+            "design-variants"
+          ],
+          "expected_tool": "gstack_design_shotgun",
+          "forbidden_tool": "gstack_design_review"
+        },
+        {
+          "cases": [
+            "docs-after-release"
+          ],
+          "expected_tool": "gstack_document_release",
+          "forbidden_tool": "gstack_retro"
+        },
+        {
+          "cases": [
+            "docs-after-release"
+          ],
+          "expected_tool": "gstack_document_release",
+          "forbidden_tool": "gstack_ship"
+        },
+        {
+          "cases": [
+            "freeze-edits"
+          ],
+          "expected_tool": "gstack_freeze",
+          "forbidden_tool": "gstack_careful"
+        },
+        {
+          "cases": [
+            "freeze-edits"
+          ],
+          "expected_tool": "gstack_freeze",
+          "forbidden_tool": "gstack_guard"
+        },
+        {
+          "cases": [
+            "browser-compat-alias"
+          ],
+          "expected_tool": "gstack_gstack",
+          "forbidden_tool": "gstack_browse"
+        },
+        {
+          "cases": [
+            "browser-compat-alias"
+          ],
+          "expected_tool": "gstack_gstack",
+          "forbidden_tool": "gstack_connect_chrome"
+        },
+        {
+          "cases": [
+            "full-guard-mode"
+          ],
+          "expected_tool": "gstack_guard",
+          "forbidden_tool": "gstack_careful"
+        },
+        {
+          "cases": [
+            "full-guard-mode"
+          ],
+          "expected_tool": "gstack_guard",
+          "forbidden_tool": "gstack_freeze"
+        },
+        {
+          "cases": [
+            "root-cause-debug"
+          ],
+          "expected_tool": "gstack_investigate",
+          "forbidden_tool": "gstack_cso"
+        },
+        {
+          "cases": [
+            "root-cause-debug"
+          ],
+          "expected_tool": "gstack_investigate",
+          "forbidden_tool": "gstack_review"
+        },
+        {
+          "cases": [
+            "land-and-deploy"
+          ],
+          "expected_tool": "gstack_land_and_deploy",
+          "forbidden_tool": "gstack_canary"
+        },
+        {
+          "cases": [
+            "land-and-deploy"
+          ],
+          "expected_tool": "gstack_land_and_deploy",
+          "forbidden_tool": "gstack_ship"
+        },
+        {
+          "cases": [
+            "product-brainstorm"
+          ],
+          "expected_tool": "gstack_office_hours",
+          "forbidden_tool": "gstack_plan_ceo_review"
+        },
+        {
+          "cases": [
+            "product-brainstorm"
+          ],
+          "expected_tool": "gstack_office_hours",
+          "forbidden_tool": "gstack_spec_qa"
+        },
+        {
+          "cases": [
+            "ceo-scope-review"
+          ],
+          "expected_tool": "gstack_plan_ceo_review",
+          "forbidden_tool": "gstack_autoplan"
+        },
+        {
+          "cases": [
+            "ceo-scope-review"
+          ],
+          "expected_tool": "gstack_plan_ceo_review",
+          "forbidden_tool": "gstack_plan_eng_review"
+        },
+        {
+          "cases": [
+            "design-plan-review"
+          ],
+          "expected_tool": "gstack_plan_design_review",
+          "forbidden_tool": "gstack_design_review"
+        },
+        {
+          "cases": [
+            "design-plan-review"
+          ],
+          "expected_tool": "gstack_plan_design_review",
+          "forbidden_tool": "gstack_plan_eng_review"
+        },
+        {
+          "cases": [
+            "engineering-plan-review"
+          ],
+          "expected_tool": "gstack_plan_eng_review",
+          "forbidden_tool": "gstack_plan_ceo_review"
+        },
+        {
+          "cases": [
+            "engineering-plan-review"
+          ],
+          "expected_tool": "gstack_plan_eng_review",
+          "forbidden_tool": "gstack_review"
+        },
+        {
+          "cases": [
+            "qa-fix"
+          ],
+          "expected_tool": "gstack_qa",
+          "forbidden_tool": "gstack_browse"
+        },
+        {
+          "cases": [
+            "qa-fix"
+          ],
+          "expected_tool": "gstack_qa",
+          "forbidden_tool": "gstack_qa_only"
+        },
+        {
+          "cases": [
+            "qa-report-only"
+          ],
+          "expected_tool": "gstack_qa_only",
+          "forbidden_tool": "gstack_browse"
+        },
+        {
+          "cases": [
+            "qa-report-only"
+          ],
+          "expected_tool": "gstack_qa_only",
+          "forbidden_tool": "gstack_qa"
+        },
+        {
+          "cases": [
+            "weekly-retro"
+          ],
+          "expected_tool": "gstack_retro",
+          "forbidden_tool": "gstack_document_release"
+        },
+        {
+          "cases": [
+            "weekly-retro"
+          ],
+          "expected_tool": "gstack_retro",
+          "forbidden_tool": "gstack_review"
+        },
+        {
+          "cases": [
+            "pre-landing-review"
+          ],
+          "expected_tool": "gstack_review",
+          "forbidden_tool": "gstack_cso"
+        },
+        {
+          "cases": [
+            "pre-landing-review"
+          ],
+          "expected_tool": "gstack_review",
+          "forbidden_tool": "gstack_investigate"
+        },
+        {
+          "cases": [
+            "auth-cookies"
+          ],
+          "expected_tool": "gstack_setup_browser_cookies",
+          "forbidden_tool": "gstack_browse"
+        },
+        {
+          "cases": [
+            "auth-cookies"
+          ],
+          "expected_tool": "gstack_setup_browser_cookies",
+          "forbidden_tool": "gstack_connect_chrome"
+        },
+        {
+          "cases": [
+            "configure-deploy"
+          ],
+          "expected_tool": "gstack_setup_deploy",
+          "forbidden_tool": "gstack_land_and_deploy"
+        },
+        {
+          "cases": [
+            "configure-deploy"
+          ],
+          "expected_tool": "gstack_setup_deploy",
+          "forbidden_tool": "gstack_ship"
+        },
+        {
+          "cases": [
+            "ship-pr"
+          ],
+          "expected_tool": "gstack_ship",
+          "forbidden_tool": "gstack_land_and_deploy"
+        },
+        {
+          "cases": [
+            "ship-pr"
+          ],
+          "expected_tool": "gstack_ship",
+          "forbidden_tool": "gstack_setup_deploy"
+        },
+        {
+          "cases": [
+            "spec-plus-browser-validation"
+          ],
+          "expected_tool": "gstack_spec_qa",
+          "forbidden_tool": "gstack_office_hours"
+        },
+        {
+          "cases": [
+            "spec-plus-browser-validation"
+          ],
+          "expected_tool": "gstack_spec_qa",
+          "forbidden_tool": "gstack_qa"
+        },
+        {
+          "cases": [
+            "unfreeze-edits"
+          ],
+          "expected_tool": "gstack_unfreeze",
+          "forbidden_tool": "gstack_freeze"
+        },
+        {
+          "cases": [
+            "unfreeze-edits"
+          ],
+          "expected_tool": "gstack_unfreeze",
+          "forbidden_tool": "gstack_guard"
+        },
+        {
+          "cases": [
+            "upgrade-gstack"
+          ],
+          "expected_tool": "gstack_upgrade",
+          "forbidden_tool": "gstack_setup_deploy"
+        },
+        {
+          "cases": [
+            "upgrade-gstack"
+          ],
+          "expected_tool": "gstack_upgrade",
+          "forbidden_tool": "gstack_ship"
+        }
+      ],
+      "cases": [
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "compat_alias",
+          "expected_tools": [
+            "gstack_gstack"
+          ],
+          "forbidden_tools": [
+            "gstack_browse",
+            "gstack_connect_chrome"
+          ],
+          "name": "browser-compat-alias",
+          "task": "Use the legacy gstack workflow alias for a quick headless browser dogfood run against http://localhost:3000."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "browser_boundary",
+          "expected_tools": [
+            "gstack_browse"
+          ],
+          "forbidden_tools": [
+            "gstack_gstack",
+            "gstack_connect_chrome",
+            "gstack_qa"
+          ],
+          "name": "browser-headless",
+          "task": "Open http://localhost:3000, click through the signup flow, and capture screenshots of any bug evidence."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "qa_boundary",
+          "expected_tools": [
+            "gstack_qa"
+          ],
+          "forbidden_tools": [
+            "gstack_qa_only",
+            "gstack_browse"
+          ],
+          "name": "qa-fix",
+          "task": "QA this staging site, fix the bugs you find, add regression tests, and commit each fix atomically."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "qa_boundary",
+          "expected_tools": [
+            "gstack_qa_only"
+          ],
+          "forbidden_tools": [
+            "gstack_qa",
+            "gstack_browse"
+          ],
+          "name": "qa-report-only",
+          "task": "Test this app and give me a bug report with repro steps, but do not edit any files."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "design_boundary",
+          "expected_tools": [
+            "gstack_design_review"
+          ],
+          "forbidden_tools": [
+            "gstack_plan_design_review",
+            "gstack_design_consultation"
+          ],
+          "name": "implemented-design-polish",
+          "task": "Audit the implemented dashboard UI for spacing, hierarchy, and visual slop, then fix the issues."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "design_boundary",
+          "expected_tools": [
+            "gstack_plan_design_review"
+          ],
+          "forbidden_tools": [
+            "gstack_design_review",
+            "gstack_plan_eng_review"
+          ],
+          "name": "design-plan-review",
+          "task": "Review this UI plan before implementation and score the design dimensions with recommendations."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "design_boundary",
+          "expected_tools": [
+            "gstack_design_consultation"
+          ],
+          "forbidden_tools": [
+            "gstack_design_shotgun",
+            "gstack_plan_design_review"
+          ],
+          "name": "design-system",
+          "task": "Create a design system and DESIGN.md for a new B2B workflow product."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "design_boundary",
+          "expected_tools": [
+            "gstack_design_shotgun"
+          ],
+          "forbidden_tools": [
+            "gstack_design_consultation",
+            "gstack_design_review"
+          ],
+          "name": "design-variants",
+          "task": "Show me several visual directions for this feature and let me compare options before choosing."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "product_planning",
+          "expected_tools": [
+            "gstack_office_hours"
+          ],
+          "forbidden_tools": [
+            "gstack_spec_qa",
+            "gstack_plan_ceo_review"
+          ],
+          "name": "product-brainstorm",
+          "task": "I have an idea for a restaurant waitlist tool. Help me pressure-test whether it is worth building."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "product_planning",
+          "expected_tools": [
+            "gstack_spec_qa"
+          ],
+          "forbidden_tools": [
+            "gstack_office_hours",
+            "gstack_qa"
+          ],
+          "name": "spec-plus-browser-validation",
+          "task": "Turn this rough feature request into a spec, pressure-test it, then validate the critical path in the browser."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "plan_review_boundary",
+          "expected_tools": [
+            "gstack_plan_ceo_review"
+          ],
+          "forbidden_tools": [
+            "gstack_plan_eng_review",
+            "gstack_autoplan"
+          ],
+          "name": "ceo-scope-review",
+          "task": "Rethink this plan from a founder perspective and tell me whether the scope is ambitious enough."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "plan_review_boundary",
+          "expected_tools": [
+            "gstack_plan_eng_review"
+          ],
+          "forbidden_tools": [
+            "gstack_plan_ceo_review",
+            "gstack_review"
+          ],
+          "name": "engineering-plan-review",
+          "task": "Review the architecture, data flow, edge cases, and test plan before implementation."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "plan_review_boundary",
+          "expected_tools": [
+            "gstack_autoplan"
+          ],
+          "forbidden_tools": [
+            "gstack_plan_ceo_review",
+            "gstack_plan_eng_review"
+          ],
+          "name": "auto-plan-review",
+          "task": "Run CEO, design, and engineering plan reviews automatically and surface only the key decisions."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "code_review_boundary",
+          "expected_tools": [
+            "gstack_review"
+          ],
+          "forbidden_tools": [
+            "gstack_cso",
+            "gstack_investigate"
+          ],
+          "name": "pre-landing-review",
+          "task": "Review this PR before merge for SQL safety, trust boundaries, and production bugs."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "code_review_boundary",
+          "expected_tools": [
+            "gstack_investigate"
+          ],
+          "forbidden_tools": [
+            "gstack_review",
+            "gstack_cso"
+          ],
+          "name": "root-cause-debug",
+          "task": "Debug why this job started failing and do not patch anything until you find the root cause."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "security_boundary",
+          "expected_tools": [
+            "gstack_cso"
+          ],
+          "forbidden_tools": [
+            "gstack_review",
+            "gstack_careful"
+          ],
+          "name": "security-audit",
+          "task": "Run an infrastructure-first security audit with secrets, dependency supply chain, OWASP, and STRIDE coverage."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "release_ops",
+          "expected_tools": [
+            "gstack_ship"
+          ],
+          "forbidden_tools": [
+            "gstack_land_and_deploy",
+            "gstack_setup_deploy"
+          ],
+          "name": "ship-pr",
+          "task": "Sync main, run tests, update changelog, push this branch, and create a PR."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "release_ops",
+          "expected_tools": [
+            "gstack_land_and_deploy"
+          ],
+          "forbidden_tools": [
+            "gstack_ship",
+            "gstack_canary"
+          ],
+          "name": "land-and-deploy",
+          "task": "Merge the approved PR, wait for CI and deploy, then verify production health."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "release_ops",
+          "expected_tools": [
+            "gstack_setup_deploy"
+          ],
+          "forbidden_tools": [
+            "gstack_land_and_deploy",
+            "gstack_ship"
+          ],
+          "name": "configure-deploy",
+          "task": "Detect our deploy platform and write the production URL, health checks, and deploy commands into project docs."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "runtime_monitoring",
+          "expected_tools": [
+            "gstack_canary"
+          ],
+          "forbidden_tools": [
+            "gstack_benchmark",
+            "gstack_qa"
+          ],
+          "name": "post-deploy-monitor",
+          "task": "Watch the live app after deploy for console errors, page failures, and regressions."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "runtime_monitoring",
+          "expected_tools": [
+            "gstack_benchmark"
+          ],
+          "forbidden_tools": [
+            "gstack_canary",
+            "gstack_qa"
+          ],
+          "name": "performance-regression",
+          "task": "Establish a page-load and Core Web Vitals baseline and compare this PR against it."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "documentation_boundary",
+          "expected_tools": [
+            "gstack_document_release"
+          ],
+          "forbidden_tools": [
+            "gstack_retro",
+            "gstack_ship"
+          ],
+          "name": "docs-after-release",
+          "task": "Update README, architecture docs, and changelog to match what just shipped."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "documentation_boundary",
+          "expected_tools": [
+            "gstack_retro"
+          ],
+          "forbidden_tools": [
+            "gstack_document_release",
+            "gstack_review"
+          ],
+          "name": "weekly-retro",
+          "task": "Summarize what shipped this week across commits, tests, and team work patterns."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "environment_setup",
+          "expected_tools": [
+            "gstack_connect_chrome"
+          ],
+          "forbidden_tools": [
+            "gstack_browse",
+            "gstack_setup_browser_cookies"
+          ],
+          "name": "real-chrome",
+          "task": "Launch my real Chrome with the side panel so I can watch the agent operate in the browser."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "environment_setup",
+          "expected_tools": [
+            "gstack_setup_browser_cookies"
+          ],
+          "forbidden_tools": [
+            "gstack_connect_chrome",
+            "gstack_browse"
+          ],
+          "name": "auth-cookies",
+          "task": "Import cookies from my real browser so the headless browser can test authenticated pages."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "safety_guardrail",
+          "expected_tools": [
+            "gstack_careful"
+          ],
+          "forbidden_tools": [
+            "gstack_freeze",
+            "gstack_guard"
+          ],
+          "name": "careful-mode",
+          "task": "Be careful while touching production and warn me before destructive shell commands."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "safety_guardrail",
+          "expected_tools": [
+            "gstack_freeze"
+          ],
+          "forbidden_tools": [
+            "gstack_careful",
+            "gstack_guard"
+          ],
+          "name": "freeze-edits",
+          "task": "Only edit files under packages/api while debugging this issue."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "safety_guardrail",
+          "expected_tools": [
+            "gstack_guard"
+          ],
+          "forbidden_tools": [
+            "gstack_careful",
+            "gstack_freeze"
+          ],
+          "name": "full-guard-mode",
+          "task": "Lock edits to this directory and warn before destructive commands."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "safety_guardrail",
+          "expected_tools": [
+            "gstack_unfreeze"
+          ],
+          "forbidden_tools": [
+            "gstack_freeze",
+            "gstack_guard"
+          ],
+          "name": "unfreeze-edits",
+          "task": "Remove the edit restriction so changes can touch the whole repo again."
+        },
+        {
+          "allow_no_tool": false,
+          "argument_checks": [
+            "request"
+          ],
+          "check_family": "maintenance",
+          "expected_tools": [
+            "gstack_upgrade"
+          ],
+          "forbidden_tools": [
+            "gstack_ship",
+            "gstack_setup_deploy"
+          ],
+          "name": "upgrade-gstack",
+          "task": "Upgrade gstack to the latest version and show me what changed."
+        },
+        {
+          "allow_no_tool": true,
+          "argument_checks": [],
+          "check_family": "no_tool_safety",
+          "expected_tools": [],
+          "forbidden_tools": [
+            "gstack_gstack",
+            "gstack_autoplan",
+            "gstack_benchmark",
+            "gstack_browse",
+            "gstack_canary",
+            "gstack_careful",
+            "gstack_connect_chrome",
+            "gstack_cso",
+            "gstack_design_consultation",
+            "gstack_design_review",
+            "gstack_design_shotgun",
+            "gstack_document_release",
+            "gstack_freeze",
+            "gstack_guard",
+            "gstack_investigate",
+            "gstack_land_and_deploy",
+            "gstack_office_hours",
+            "gstack_plan_ceo_review",
+            "gstack_plan_design_review",
+            "gstack_plan_eng_review",
+            "gstack_qa",
+            "gstack_qa_only",
+            "gstack_retro",
+            "gstack_review",
+            "gstack_setup_browser_cookies",
+            "gstack_setup_deploy",
+            "gstack_ship",
+            "gstack_spec_qa",
+            "gstack_unfreeze",
+            "gstack_upgrade"
+          ],
+          "name": "no-tool-general-answer",
+          "task": "Explain what a monorepo is in two paragraphs. Do not run a workflow."
+        }
+      ],
+      "check_families": {
+        "browser_boundary": [
+          "browser-headless"
+        ],
+        "code_review_boundary": [
+          "pre-landing-review",
+          "root-cause-debug"
+        ],
+        "compat_alias": [
+          "browser-compat-alias"
+        ],
+        "design_boundary": [
+          "implemented-design-polish",
+          "design-plan-review",
+          "design-system",
+          "design-variants"
+        ],
+        "documentation_boundary": [
+          "docs-after-release",
+          "weekly-retro"
+        ],
+        "environment_setup": [
+          "real-chrome",
+          "auth-cookies"
+        ],
+        "maintenance": [
+          "upgrade-gstack"
+        ],
+        "no_tool_safety": [
+          "no-tool-general-answer"
+        ],
+        "plan_review_boundary": [
+          "ceo-scope-review",
+          "engineering-plan-review",
+          "auto-plan-review"
+        ],
+        "product_planning": [
+          "product-brainstorm",
+          "spec-plus-browser-validation"
+        ],
+        "qa_boundary": [
+          "qa-fix",
+          "qa-report-only"
+        ],
+        "release_ops": [
+          "ship-pr",
+          "land-and-deploy",
+          "configure-deploy"
+        ],
+        "runtime_monitoring": [
+          "post-deploy-monitor",
+          "performance-regression"
+        ],
+        "safety_guardrail": [
+          "careful-mode",
+          "freeze-edits",
+          "full-guard-mode",
+          "unfreeze-edits"
+        ],
+        "security_boundary": [
+          "security-audit"
+        ]
+      },
+      "coverage": {
+        "required_check_families": [
+          "browser_boundary",
+          "code_review_boundary",
+          "compat_alias",
+          "design_boundary",
+          "documentation_boundary",
+          "environment_setup",
+          "maintenance",
+          "no_tool_safety",
+          "plan_review_boundary",
+          "product_planning",
+          "qa_boundary",
+          "release_ops",
+          "runtime_monitoring",
+          "safety_guardrail",
+          "security_boundary"
+        ]
+      },
+      "matrix": "gstack skill-routing matrix",
+      "matrix_path": "evals/targets/gstack/gstack_skill_selection_matrix.json",
+      "passed": true,
+      "source": {
+        "commit": "cd66fc2f890982351e3178925be563681d0ab2c5",
+        "generated_surface_hash": "68d60eeefdde254818b03ee310bf1c4c9aaf0efee8d6db35141fe9cb7da8ae12",
+        "package_name": "gstack",
+        "package_version": "0.13.3.0",
+        "remote": "git@github.com:garrytan/gstack.git",
+        "source_path": "/Users/admin/dev/gstack",
+        "target_surface": ".agents/skills/*/SKILL.md generated skill files",
+        "target_surface_dirty": false,
+        "worktree_dirty": true
+      },
+      "summary": {
+        "argument_case_count": 30,
+        "boundary_pair_count": 61,
+        "case_count": 31,
+        "case_count_with_check_family": 31,
+        "case_expectation_gap_count": 0,
+        "forbidden_tool_coverage": 1.0,
+        "identity_gap_count": 0,
+        "instruction_variant_count": 2,
+        "no_tool_case_count": 1,
+        "profile_count": 8,
+        "required_check_family_count": 15,
+        "required_check_family_coverage": 1.0,
+        "tool_count": 30,
+        "tool_expected_coverage": 1.0,
+        "tool_variant_count": 2,
+        "value_bar_count": 1,
+        "value_bar_gap_count": 0,
+        "variant_surface_parity": 1.0
+      },
+      "tool_variants": [
+        {
+          "name": "gstack_stock_skill_descriptions",
+          "tool_count": 31
+        },
+        {
+          "name": "gstack_boundary_tuned_skill_descriptions",
+          "tool_count": 31
+        }
+      ],
+      "tools": [
+        {
+          "argument_cases": [
+            "browser-compat-alias"
+          ],
+          "expected_cases": [
+            "browser-compat-alias"
+          ],
+          "forbidden_cases": [
+            "browser-headless",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_gstack"
+        },
+        {
+          "argument_cases": [
+            "auto-plan-review"
+          ],
+          "expected_cases": [
+            "auto-plan-review"
+          ],
+          "forbidden_cases": [
+            "ceo-scope-review",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_autoplan"
+        },
+        {
+          "argument_cases": [
+            "performance-regression"
+          ],
+          "expected_cases": [
+            "performance-regression"
+          ],
+          "forbidden_cases": [
+            "post-deploy-monitor",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_benchmark"
+        },
+        {
+          "argument_cases": [
+            "browser-headless"
+          ],
+          "expected_cases": [
+            "browser-headless"
+          ],
+          "forbidden_cases": [
+            "browser-compat-alias",
+            "qa-fix",
+            "qa-report-only",
+            "real-chrome",
+            "auth-cookies",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_browse"
+        },
+        {
+          "argument_cases": [
+            "post-deploy-monitor"
+          ],
+          "expected_cases": [
+            "post-deploy-monitor"
+          ],
+          "forbidden_cases": [
+            "land-and-deploy",
+            "performance-regression",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_canary"
+        },
+        {
+          "argument_cases": [
+            "careful-mode"
+          ],
+          "expected_cases": [
+            "careful-mode"
+          ],
+          "forbidden_cases": [
+            "security-audit",
+            "freeze-edits",
+            "full-guard-mode",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_careful"
+        },
+        {
+          "argument_cases": [
+            "real-chrome"
+          ],
+          "expected_cases": [
+            "real-chrome"
+          ],
+          "forbidden_cases": [
+            "browser-compat-alias",
+            "browser-headless",
+            "auth-cookies",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_connect_chrome"
+        },
+        {
+          "argument_cases": [
+            "security-audit"
+          ],
+          "expected_cases": [
+            "security-audit"
+          ],
+          "forbidden_cases": [
+            "pre-landing-review",
+            "root-cause-debug",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_cso"
+        },
+        {
+          "argument_cases": [
+            "design-system"
+          ],
+          "expected_cases": [
+            "design-system"
+          ],
+          "forbidden_cases": [
+            "implemented-design-polish",
+            "design-variants",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_design_consultation"
+        },
+        {
+          "argument_cases": [
+            "implemented-design-polish"
+          ],
+          "expected_cases": [
+            "implemented-design-polish"
+          ],
+          "forbidden_cases": [
+            "design-plan-review",
+            "design-variants",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_design_review"
+        },
+        {
+          "argument_cases": [
+            "design-variants"
+          ],
+          "expected_cases": [
+            "design-variants"
+          ],
+          "forbidden_cases": [
+            "design-system",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_design_shotgun"
+        },
+        {
+          "argument_cases": [
+            "docs-after-release"
+          ],
+          "expected_cases": [
+            "docs-after-release"
+          ],
+          "forbidden_cases": [
+            "weekly-retro",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_document_release"
+        },
+        {
+          "argument_cases": [
+            "freeze-edits"
+          ],
+          "expected_cases": [
+            "freeze-edits"
+          ],
+          "forbidden_cases": [
+            "careful-mode",
+            "full-guard-mode",
+            "unfreeze-edits",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_freeze"
+        },
+        {
+          "argument_cases": [
+            "full-guard-mode"
+          ],
+          "expected_cases": [
+            "full-guard-mode"
+          ],
+          "forbidden_cases": [
+            "careful-mode",
+            "freeze-edits",
+            "unfreeze-edits",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_guard"
+        },
+        {
+          "argument_cases": [
+            "root-cause-debug"
+          ],
+          "expected_cases": [
+            "root-cause-debug"
+          ],
+          "forbidden_cases": [
+            "pre-landing-review",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_investigate"
+        },
+        {
+          "argument_cases": [
+            "land-and-deploy"
+          ],
+          "expected_cases": [
+            "land-and-deploy"
+          ],
+          "forbidden_cases": [
+            "ship-pr",
+            "configure-deploy",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_land_and_deploy"
+        },
+        {
+          "argument_cases": [
+            "product-brainstorm"
+          ],
+          "expected_cases": [
+            "product-brainstorm"
+          ],
+          "forbidden_cases": [
+            "spec-plus-browser-validation",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_office_hours"
+        },
+        {
+          "argument_cases": [
+            "ceo-scope-review"
+          ],
+          "expected_cases": [
+            "ceo-scope-review"
+          ],
+          "forbidden_cases": [
+            "product-brainstorm",
+            "engineering-plan-review",
+            "auto-plan-review",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_plan_ceo_review"
+        },
+        {
+          "argument_cases": [
+            "design-plan-review"
+          ],
+          "expected_cases": [
+            "design-plan-review"
+          ],
+          "forbidden_cases": [
+            "implemented-design-polish",
+            "design-system",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_plan_design_review"
+        },
+        {
+          "argument_cases": [
+            "engineering-plan-review"
+          ],
+          "expected_cases": [
+            "engineering-plan-review"
+          ],
+          "forbidden_cases": [
+            "design-plan-review",
+            "ceo-scope-review",
+            "auto-plan-review",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_plan_eng_review"
+        },
+        {
+          "argument_cases": [
+            "qa-fix"
+          ],
+          "expected_cases": [
+            "qa-fix"
+          ],
+          "forbidden_cases": [
+            "browser-headless",
+            "qa-report-only",
+            "spec-plus-browser-validation",
+            "post-deploy-monitor",
+            "performance-regression",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_qa"
+        },
+        {
+          "argument_cases": [
+            "qa-report-only"
+          ],
+          "expected_cases": [
+            "qa-report-only"
+          ],
+          "forbidden_cases": [
+            "qa-fix",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_qa_only"
+        },
+        {
+          "argument_cases": [
+            "weekly-retro"
+          ],
+          "expected_cases": [
+            "weekly-retro"
+          ],
+          "forbidden_cases": [
+            "docs-after-release",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_retro"
+        },
+        {
+          "argument_cases": [
+            "pre-landing-review"
+          ],
+          "expected_cases": [
+            "pre-landing-review"
+          ],
+          "forbidden_cases": [
+            "engineering-plan-review",
+            "root-cause-debug",
+            "security-audit",
+            "weekly-retro",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_review"
+        },
+        {
+          "argument_cases": [
+            "auth-cookies"
+          ],
+          "expected_cases": [
+            "auth-cookies"
+          ],
+          "forbidden_cases": [
+            "real-chrome",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_setup_browser_cookies"
+        },
+        {
+          "argument_cases": [
+            "configure-deploy"
+          ],
+          "expected_cases": [
+            "configure-deploy"
+          ],
+          "forbidden_cases": [
+            "ship-pr",
+            "upgrade-gstack",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_setup_deploy"
+        },
+        {
+          "argument_cases": [
+            "ship-pr"
+          ],
+          "expected_cases": [
+            "ship-pr"
+          ],
+          "forbidden_cases": [
+            "land-and-deploy",
+            "configure-deploy",
+            "docs-after-release",
+            "upgrade-gstack",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_ship"
+        },
+        {
+          "argument_cases": [
+            "spec-plus-browser-validation"
+          ],
+          "expected_cases": [
+            "spec-plus-browser-validation"
+          ],
+          "forbidden_cases": [
+            "product-brainstorm",
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_spec_qa"
+        },
+        {
+          "argument_cases": [
+            "unfreeze-edits"
+          ],
+          "expected_cases": [
+            "unfreeze-edits"
+          ],
+          "forbidden_cases": [
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_unfreeze"
+        },
+        {
+          "argument_cases": [
+            "upgrade-gstack"
+          ],
+          "expected_cases": [
+            "upgrade-gstack"
+          ],
+          "forbidden_cases": [
+            "no-tool-general-answer"
+          ],
+          "has_quality_checks": true,
+          "name": "gstack_upgrade"
+        },
+        {
+          "argument_cases": [],
+          "expected_cases": [],
+          "forbidden_cases": [],
+          "has_quality_checks": true,
+          "name": "NO_TOOL"
+        }
+      ],
+      "uncovered": {
+        "case_expectation_gaps": [],
+        "cases_without_check_family": [],
+        "cases_without_forbidden": [],
+        "duplicate_tool_names": [],
+        "expected_without_argument_check": [],
+        "identity_gaps": [],
+        "missing_quality_checks": [],
+        "missing_required_check_families": [],
+        "never_expected": [],
+        "never_forbidden": [],
+        "source_tool_count_mismatch": [],
+        "unknown_expected_tools": [],
+        "unknown_forbidden_tools": [],
+        "value_bar_gaps": [],
+        "variant_surface_mismatches": []
+      },
+      "warnings": []
     }
   ],
   "matrix_paths": [
@@ -14339,22 +15897,23 @@
     "evals/model_matrix/screenpipe_mcp_tool_selection.json",
     "evals/model_matrix/slack_mcp_tool_selection.json",
     "evals/model_matrix/supabase_mcp_database_tool_selection.json",
-    "evals/model_matrix/zymtrace_mcp_tool_selection.json"
+    "evals/model_matrix/zymtrace_mcp_tool_selection.json",
+    "evals/targets/gstack/gstack_skill_selection_matrix.json"
   ],
   "passed": true,
   "summary": {
     "failed_matrices": 0,
-    "matrix_count": 18,
-    "passed_matrices": 18,
-    "total_argument_cases": 180,
-    "total_boundary_pairs": 805,
+    "matrix_count": 19,
+    "passed_matrices": 19,
+    "total_argument_cases": 210,
+    "total_boundary_pairs": 866,
     "total_case_expectation_gaps": 0,
-    "total_cases": 199,
+    "total_cases": 230,
     "total_identity_gaps": 0,
-    "total_instruction_variants": 21,
-    "total_profiles": 49,
-    "total_tools": 152,
+    "total_instruction_variants": 23,
+    "total_profiles": 57,
+    "total_tools": 182,
     "total_value_bar_gaps": 0,
-    "total_value_bars": 3
+    "total_value_bars": 4
   }
 }

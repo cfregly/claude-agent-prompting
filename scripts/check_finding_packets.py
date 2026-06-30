@@ -5,14 +5,21 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from claude_agent_harness_opt.matrix_coverage import audit_matrix_coverage  # noqa: E402
+
 FINDINGS_DIR = ROOT / "docs" / "findings"
 PR_PACKETS_DIR = ROOT / "evals" / "pr_packets"
 RESULTS_DIR = ROOT / "evals" / "results"
+TARGETS_DIR = ROOT / "evals" / "targets"
 REPO_LINK_RE = re.compile(
     r"https://github\.com/cfregly/claude-agent-harness-opt/(?:blob|tree)/main/([^)\s]+)"
 )
@@ -68,6 +75,7 @@ def check_finding_packets() -> list[str]:
     failures.extend(_check_repo_links(ROOT / "docs" / "confirmed-improvements.md", ledger_text))
     failures.extend(_check_pr_packet_dirs())
     failures.extend(_check_result_artifacts())
+    failures.extend(_check_matrix_surface_coverage())
     return failures
 
 
@@ -260,6 +268,48 @@ def _check_result_artifacts() -> list[str]:
         else:
             failures.append(f"{path.relative_to(ROOT)}: unsupported result artifact type")
     return failures
+
+
+def _check_matrix_surface_coverage() -> list[str]:
+    failures: list[str] = []
+    paths = _matrix_surface_paths()
+    if not paths:
+        return ["evals: no matrix surfaces found"]
+    for path in paths:
+        rel = path.relative_to(ROOT)
+        try:
+            audit = audit_matrix_coverage(path)
+        except Exception as exc:  # noqa: BLE001 - surface gates should report all malformed matrices.
+            failures.append(f"{rel}: matrix coverage audit crashed: {exc}")
+            continue
+        if not audit["passed"]:
+            warnings = "; ".join(audit.get("warnings", []))
+            failures.append(f"{rel}: matrix coverage failed: {warnings}")
+    return failures
+
+
+def _matrix_surface_paths() -> list[Path]:
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    for path in sorted((ROOT / "evals" / "model_matrix").glob("*.json")):
+        seen.add(path)
+        paths.append(path)
+    if TARGETS_DIR.exists():
+        for path in sorted(TARGETS_DIR.rglob("*.json")):
+            if path in seen:
+                continue
+            if _looks_like_matrix(path):
+                seen.add(path)
+                paths.append(path)
+    return paths
+
+
+def _looks_like_matrix(path: Path) -> bool:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    return isinstance(payload, dict) and {"cases", "profiles", "tool_variants"}.issubset(payload)
 
 
 def _check_result_json(path: Path) -> list[str]:

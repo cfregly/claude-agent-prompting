@@ -5,6 +5,7 @@ import unittest
 
 from scripts.check_finding_packets import (
     ROOT,
+    _check_matrix_surface_coverage,
     _check_pr_packet_evidence,
     _check_result_json,
     _check_result_markdown,
@@ -130,6 +131,45 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         joined = "\n".join(failures)
         self.assertIn("missing Passed summary", joined)
         self.assertIn("missing review section", joined)
+
+    def test_matrix_surface_coverage_reports_target_matrix_gaps(self):
+        target_dir = ROOT / "evals" / "targets" / "temporary_bad_matrix"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        path = target_dir / "bad_matrix.json"
+        path.write_text(
+            """
+{
+  "cases": [
+    {
+      "expected_tools": ["lookup"],
+      "forbidden_tools": [],
+      "name": "lookup case",
+      "task": "Lookup a value."
+    }
+  ],
+  "profiles": [{"harnesses": ["prompt_json"], "provider": "trace_fixture"}],
+  "tool_variants": [
+    {
+      "name": "sample",
+      "tools": [
+        {"name": "lookup", "purpose": "Lookup values.", "quality_checks": ["Check ids."]},
+        {"name": "fallback", "purpose": "Fallback safely.", "quality_checks": ["Check fallback."]}
+      ]
+    }
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_matrix_surface_coverage()
+        finally:
+            path.unlink()
+            target_dir.rmdir()
+
+        joined = "\n".join(failures)
+        self.assertIn("evals/targets/temporary_bad_matrix/bad_matrix.json", joined)
+        self.assertIn("matrix coverage failed", joined)
 
 
 if __name__ == "__main__":

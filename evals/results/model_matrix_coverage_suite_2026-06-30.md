@@ -1,18 +1,18 @@
 # Matrix Coverage Suite
 
 Passed: yes
-Matrices: 18
-Passed matrices: 18
+Matrices: 19
+Passed matrices: 19
 Failed matrices: 0
-Total tools: 152
-Total cases: 199
-Total profiles: 49
-Total instruction variants: 21
-Total argument cases: 180
-Total boundary pairs: 805
+Total tools: 182
+Total cases: 230
+Total profiles: 57
+Total instruction variants: 23
+Total argument cases: 210
+Total boundary pairs: 866
 Total case expectation gaps: 0
 Total identity gaps: 0
-Total value bars: 3
+Total value bars: 4
 Total value-bar gaps: 0
 
 ## Matrix Summary
@@ -37,3 +37,4 @@ Total value-bar gaps: 0
 | slack mcp tool-selection matrix | yes | 8 | 8 | 1.000 | 1.000 | 8 | 8 | 1.000 | 1.000 | 56 |
 | supabase mcp database tool-selection matrix | yes | 5 | 12 | 1.000 | 1.000 | 12 | 12 | 1.000 | 1.000 | 14 |
 | zymtrace mcp tool-selection matrix | yes | 25 | 34 | 1.000 | 1.000 | 33 | 34 | 1.000 | 1.000 | 85 |
+| gstack skill-routing matrix | yes | 30 | 31 | 1.000 | 1.000 | 30 | 31 | 1.000 | 1.000 | 61 |

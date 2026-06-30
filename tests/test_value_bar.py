@@ -40,6 +40,27 @@ class ValueBarTests(unittest.TestCase):
         self.assertFalse(result.passed)
         self.assertLess(result.score, 1.0)
 
+    def test_value_bar_fails_without_crashing_on_malformed_scores(self):
+        result = evaluate_value_bar(
+            {
+                "adversarial_review": {
+                    "challenge": "Malformed evidence should be reported, not crash the audit.",
+                    "failed_to_disprove": True,
+                    "open_objections": [],
+                },
+                "baseline": "old prose-only baseline",
+                "candidate": {"score": "high"},
+                "claim": "The matrix adds value.",
+                "metric": "model_matrix.score",
+                "minimum_delta": "some improvement",
+            }
+        )
+
+        self.assertFalse(result.passed)
+        self.assertIn("baseline score must be numeric", result.details)
+        self.assertIn("candidate score must be numeric", result.details)
+        self.assertIn("minimum_delta must be numeric", result.details)
+
 
 if __name__ == "__main__":
     unittest.main()
