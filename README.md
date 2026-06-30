@@ -186,6 +186,98 @@ The optimizer checks that every tool has a distinct purpose, `use_when`, `avoid_
 failures back to concrete changes like stronger avoid rules, argument schemas, examples, or stop
 criteria. `audit-agent --claude-judge` includes this optimizer automatically.
 
+## How Prompts And Tools Are Chosen
+
+The process is a bounded search, not a random prompt sweep.
+
+Start by inventorying the surface under test:
+
+- public docs and source pins
+- MCP `tools/list` and resource list
+- installed skills and project rules
+- live smoke calls when credentials are available
+- existing traces or user reports that show bad tool choice
+
+Then build a boundary map. A good boundary is one where the first wrong tool call changes cost,
+safety, correctness, or recoverability. Common boundaries are:
+
+- adjacent tools that sound similar
+- required arguments that models often omit
+- resource-first paths versus direct tool fallback
+- broad search versus exact lookup
+- discovery calls versus value-query calls
+- metadata discovery versus full payload fetch
+- no-tool safety cases where any tool call is wrong
+- workflow rules supplied by a skill or `CLAUDE.md`
+
+That is the "hill descent" part. We deliberately walk toward likely failure valleys by writing
+adversarial prompts that make one boundary measurable. Each case names the expected tool,
+confusable alternatives, and any required argument checks. The point is to find a small prompt where
+the transcript can be judged without taste.
+
+After baseline failures repeat, the "hill climb" part starts:
+
+1. Run `model-matrix` on the baseline tool surface.
+2. Cluster failures by tool, argument, provider, harness, and instruction variant.
+3. Draft the smallest candidate change that explains those failures.
+4. Rerun the same live cells against baseline and candidate.
+5. Rerun held-out cases that should not have been tailored to the failure.
+6. Promote only when the candidate beats the threshold and held-out cells do not regress.
+7. Store the result JSON and upstream packet so another maintainer can rerun or challenge it.
+
+`grind-harness` automates that climb for simple description and harness variants:
+
+```bash
+python -m claude_agent_harness_opt grind-harness evals/model_matrix/coding_tool_selection.json \
+  --env-file .env \
+  --live \
+  --require-live \
+  --providers anthropic,openai,gemini \
+  --harnesses native_tools,prompt_json \
+  --instruction-variants boundary_rules \
+  --cases "investigate trace review flow,map model matrix implementation" \
+  --heldout-cases "find python files,read known file" \
+  --min-improvement 0.05 \
+  --max-live-calls 80 \
+  --concurrency 8 \
+  --markdown
+```
+
+For richer MCP surfaces, the same loop is often run manually first because the fix may span tool
+descriptions, resource guidance, generated OpenAPI schemas, and skill instructions.
+
+Zymtrace is the concrete example. The inspected MCP surface exposed 25 tools and 3 resources, while
+the installed skills added CPU, GPU, allocation, resource-first, default-project, and bounded
+`hot_traces` rules. That produced boundary cases such as:
+
+- use default project `00000000-0000-0000-0000-000000000000` instead of searching projects
+- discover metrics with `project_metrics_activity_aggr` before querying values
+- start GPU and inference investigations with GPU, CPU, and framework metrics
+- use `topentities` or `topfunctions` for rank-first CPU requests
+- use MCP resources first for `topfunctions`, `topentities`, and `flamegraph`
+- use `hot_traces` metadata first with `meta_only=true` and a small limit
+- fetch a full trace only with a selected `prefix_hash`, `meta_only=false`, and `limit=1`
+
+The expanded Zymtrace live run used those boundaries across Anthropic, OpenAI, and Gemini:
+
+```bash
+python -m claude_agent_harness_opt model-matrix evals/model_matrix/zymtrace_mcp_tool_selection.json \
+  --env-file .env \
+  --live \
+  --require-live \
+  --providers anthropic,openai,gemini \
+  --harnesses prompt_json \
+  --variants stock_zymtrace_mcp,tuned_zymtrace_mcp_boundaries \
+  --instruction-variants zymtrace_host_and_skill_rules \
+  --cases "default project metrics discovery skips search,cpu rank first containerized apps,gpu inference workflow starts with metrics,gpu call tree uses hot traces,selected trace drilldown is bounded,full trace error recovers to discovery,hot trace discovery is bounded,resource fallback hot functions" \
+  --concurrency 3 \
+  --out /tmp/zymtrace-live.json
+```
+
+The stock Zymtrace surface passed 14 of 24 selected cells. The tuned surface passed 24 of 24. That
+is why the Zymtrace finding was promoted and packaged under
+[docs/findings/zymtrace](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/zymtrace).
+
 ## Model Matrix
 
 Use `model-matrix` when tuning tool descriptions or `CLAUDE.md` style instructions for a new model,
