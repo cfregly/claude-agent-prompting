@@ -43,12 +43,41 @@ def validate_matrix(matrix: dict[str, Any]) -> None:
     missing = sorted(required - set(matrix))
     if missing:
         raise ModelMatrixError(f"matrix missing required fields: {', '.join(missing)}")
-    if not matrix["cases"]:
-        raise ModelMatrixError("matrix.cases must not be empty")
-    if not matrix["profiles"]:
-        raise ModelMatrixError("matrix.profiles must not be empty")
-    if not matrix["tool_variants"]:
-        raise ModelMatrixError("matrix.tool_variants must not be empty")
+    for field in sorted(required):
+        _require_object_list(matrix, field)
+    if "instruction_variants" in matrix:
+        _require_object_list(matrix, "instruction_variants", allow_empty=True)
+    for index, profile in enumerate(matrix["profiles"]):
+        harnesses = profile.get("harnesses")
+        if harnesses is not None and not isinstance(harnesses, list):
+            raise ModelMatrixError(f"matrix.profiles[{index}].harnesses must be a list")
+    for index, tool_variant in enumerate(matrix["tool_variants"]):
+        tools = tool_variant.get("tools")
+        if tools is None:
+            raise ModelMatrixError(f"matrix.tool_variants[{index}].tools must be present")
+        if not isinstance(tools, list):
+            raise ModelMatrixError(f"matrix.tool_variants[{index}].tools must be a list")
+        for tool_index, tool in enumerate(tools):
+            if not isinstance(tool, dict):
+                raise ModelMatrixError(
+                    f"matrix.tool_variants[{index}].tools[{tool_index}] must be an object"
+                )
+
+
+def _require_object_list(
+    matrix: dict[str, Any],
+    field: str,
+    *,
+    allow_empty: bool = False,
+) -> None:
+    value = matrix[field]
+    if not isinstance(value, list):
+        raise ModelMatrixError(f"matrix.{field} must be a list")
+    if not value and not allow_empty:
+        raise ModelMatrixError(f"matrix.{field} must not be empty")
+    for index, item in enumerate(value):
+        if not isinstance(item, dict):
+            raise ModelMatrixError(f"matrix.{field}[{index}] must be an object")
 
 
 def load_env_file(path: str | Path | None) -> dict[str, str]:

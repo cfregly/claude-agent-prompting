@@ -6,8 +6,11 @@ Passed matrices: 18
 Failed matrices: 0
 Total tools: 152
 Total cases: 199
+Total profiles: 49
+Total instruction variants: 21
 Total argument cases: 180
 Total boundary pairs: 805
+Total identity gaps: 0
 
 ## Matrix Summary
 

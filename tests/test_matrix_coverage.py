@@ -285,6 +285,112 @@ class MatrixCoverageTests(unittest.TestCase):
             audit["uncovered"]["source_tool_count_mismatch"],
         )
 
+    def test_audit_fails_unknown_expected_and_forbidden_tools(self):
+        audit = audit_matrix_coverage_data(
+            {
+                "cases": [
+                    {
+                        "check_family": "lookup",
+                        "expected_tools": ["lookup", "missing_tool"],
+                        "forbidden_tools": ["fallback", "typo_forbidden"],
+                        "name": "lookup case",
+                        "task": "Lookup a value.",
+                    },
+                    {
+                        "check_family": "fallback",
+                        "expected_tools": ["fallback"],
+                        "forbidden_tools": ["lookup"],
+                        "name": "fallback case",
+                        "task": "Fallback.",
+                    },
+                ],
+                "coverage": {"required_check_families": ["lookup", "fallback"]},
+                "name": "unknown tool matrix",
+                "profiles": [{"harnesses": ["prompt_json"], "provider": "trace_fixture"}],
+                "tool_variants": [
+                    {
+                        "name": "sample",
+                        "tools": [
+                            {"name": "lookup", "purpose": "Lookup.", "quality_checks": ["Check ids."]},
+                            {"name": "fallback", "purpose": "Fallback.", "quality_checks": ["Check fallback."]},
+                        ],
+                    }
+                ],
+            }
+        )
+
+        self.assertFalse(audit["passed"])
+        self.assertIn(
+            "some expected tool names are not in the matrix catalog",
+            audit["warnings"],
+        )
+        self.assertIn(
+            "some forbidden tool names are not in the matrix catalog or external allow-list",
+            audit["warnings"],
+        )
+        self.assertEqual(["missing_tool"], audit["uncovered"]["unknown_expected_tools"])
+        self.assertEqual(["typo_forbidden"], audit["uncovered"]["unknown_forbidden_tools"])
+
+    def test_audit_reports_matrix_identity_gaps(self):
+        audit = audit_matrix_coverage_data(
+            {
+                "cases": [
+                    {
+                        "check_family": "lookup",
+                        "expected_tools": "lookup",
+                        "forbidden_tools": ["fallback"],
+                        "name": "duplicate case",
+                        "task": "Lookup a value.",
+                    },
+                    {
+                        "allow_no_tool": True,
+                        "check_family": "no_tool",
+                        "expected_tools": [],
+                        "forbidden_tools": [],
+                        "name": "duplicate case",
+                        "task": "",
+                    },
+                ],
+                "coverage": {"allow_variant_tool_delta": True},
+                "instruction_variants": [
+                    {"name": "", "instructions": ""},
+                    {"name": "rules", "instructions": "Use rules."},
+                    {"name": "rules", "instructions": "Duplicate rules."},
+                ],
+                "name": "identity gap matrix",
+                "profiles": [
+                    {"harnesses": ["prompt_json", "prompt_json"], "provider": "trace_fixture"},
+                    {"harnesses": [], "provider": ""},
+                ],
+                "tool_variants": [
+                    {
+                        "name": "sample",
+                        "tools": [
+                            {"name": "lookup", "purpose": "Lookup.", "quality_checks": ["Check ids."]},
+                        ],
+                    },
+                    {
+                        "name": "sample",
+                        "tools": [
+                            {"name": "fallback", "purpose": "Fallback.", "quality_checks": ["Check fallback."]},
+                        ],
+                    },
+                ],
+            }
+        )
+
+        self.assertFalse(audit["passed"])
+        self.assertIn("some matrix identities or case definitions are ambiguous", audit["warnings"])
+        fields = {gap["field"] for gap in audit["uncovered"]["identity_gaps"]}
+        self.assertIn("cases.name", fields)
+        self.assertIn("cases.task", fields)
+        self.assertIn("cases.expected_tools", fields)
+        self.assertIn("tool_variants.name", fields)
+        self.assertIn("instruction_variants.name", fields)
+        self.assertIn("profiles.provider", fields)
+        self.assertIn("profiles.harnesses", fields)
+        self.assertGreater(audit["summary"]["identity_gap_count"], 0)
+
     def test_suite_audit_summarizes_multiple_matrices(self):
         suite = audit_matrix_coverage_suite(
             [
@@ -371,6 +477,9 @@ class MatrixCoverageTests(unittest.TestCase):
                 "total_argument_cases": 0,
                 "total_boundary_pairs": 2,
                 "total_cases": 3,
+                "total_identity_gaps": 0,
+                "total_instruction_variants": 2,
+                "total_profiles": 2,
                 "total_tools": 3,
             },
         }

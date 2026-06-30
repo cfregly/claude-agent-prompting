@@ -4,6 +4,7 @@ import unittest
 
 from claude_agent_harness_opt.model_matrix import (
     MatrixFilters,
+    ModelMatrixError,
     _first_openai_response_function_call,
     _openai_response_reasoning_summary,
     _openai_response_text,
@@ -11,6 +12,7 @@ from claude_agent_harness_opt.model_matrix import (
     evaluate_model_choice,
     load_env_file,
     run_model_matrix,
+    validate_matrix,
 )
 
 
@@ -28,6 +30,50 @@ class ModelMatrixTests(unittest.TestCase):
             values = load_env_file(env_path)
         self.assertEqual("test-anthropic", values["ANTHROPIC_API_KEY"])
         self.assertEqual("test-openai", values["OPENAI_API_KEY"])
+
+    def test_validate_matrix_rejects_non_list_required_fields(self):
+        with self.assertRaisesRegex(ModelMatrixError, "matrix.cases must be a list"):
+            validate_matrix(
+                {
+                    "cases": "not-a-list",
+                    "profiles": [{"provider": "trace_fixture"}],
+                    "tool_variants": [{"name": "tools", "tools": []}],
+                }
+            )
+
+    def test_validate_matrix_rejects_non_object_list_items(self):
+        with self.assertRaisesRegex(ModelMatrixError, r"matrix\.profiles\[0\] must be an object"):
+            validate_matrix(
+                {
+                    "cases": [{"name": "case"}],
+                    "profiles": ["trace_fixture"],
+                    "tool_variants": [{"name": "tools", "tools": []}],
+                }
+            )
+
+    def test_validate_matrix_rejects_malformed_nested_surfaces(self):
+        with self.assertRaisesRegex(
+            ModelMatrixError,
+            r"matrix\.profiles\[0\]\.harnesses must be a list",
+        ):
+            validate_matrix(
+                {
+                    "cases": [{"name": "case"}],
+                    "profiles": [{"harnesses": "prompt_json", "provider": "trace_fixture"}],
+                    "tool_variants": [{"name": "tools", "tools": []}],
+                }
+            )
+        with self.assertRaisesRegex(
+            ModelMatrixError,
+            r"matrix\.tool_variants\[0\]\.tools must be a list",
+        ):
+            validate_matrix(
+                {
+                    "cases": [{"name": "case"}],
+                    "profiles": [{"harnesses": ["prompt_json"], "provider": "trace_fixture"}],
+                    "tool_variants": [{"name": "tools", "tools": "not-a-list"}],
+                }
+            )
 
     def test_evaluate_model_choice_checks_expected_forbidden_and_args(self):
         result = evaluate_model_choice(
