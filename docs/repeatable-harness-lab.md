@@ -103,8 +103,9 @@ python -m claude_agent_harness_opt mcp-e2e evals/e2e/clickhouse_cloud_readonly.j
 python -m claude_agent_harness_opt mcp-e2e evals/e2e/stripe_readonly.json --env-file .env
 ```
 
-CI runs these specs with `--dry-run`, so it validates shape without needing secrets. Local runs use
-keys from `.env`. Specs should stay read-only unless the task explicitly requires a mutation.
+CI runs `python scripts/check_eval_surfaces.py`, which dry-runs every spec in `evals/e2e` without
+needing secrets. Local runs use keys from `.env`. Specs should stay read-only unless the task
+explicitly requires a mutation.
 
 ## Report Results
 

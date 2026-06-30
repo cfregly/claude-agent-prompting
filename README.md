@@ -106,6 +106,10 @@ points only at local evidence artifacts that still exist, and validates committe
 fixtures later, and audits every retained matrix surface under `evals/model_matrix` plus
 matrix-shaped targets under `evals/targets`.
 
+`scripts/check_eval_surfaces.py` keeps the other eval fixtures honest. It dry-runs every retained
+read-only E2E spec, dry-runs every live harness spec without credentials, runs every trace suite,
+and validates the harness-check catalogs.
+
 | Target | Result | Packet |
 |---|---|---|
 | InsForge | Confirmed improvement | [InsForge](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge) |
@@ -500,7 +504,7 @@ python -m claude_agent_harness_opt normalize-runtime evals/examples/cursor_trace
 python -m claude_agent_harness_opt import-run evals/examples/import_run_cursor_export.json --adapter cursor --out-dir /tmp/imported-run
 python -m claude_agent_harness_opt audit-agent /tmp/imported-run/agent_audit_bundle.json
 python -m claude_agent_harness_opt snapshot-surface --matrix evals/model_matrix/harness_trace_adapters.json --bundle evals/examples/agent_audit_bundle.json --skill .claude/skills/agent-audit/SKILL.md --out /tmp/surface-snapshot.json
-python -m claude_agent_harness_opt mcp-e2e evals/e2e/github_readonly.json --dry-run --out /tmp/github-e2e.json
+python scripts/check_eval_surfaces.py
 python -m claude_agent_harness_opt trace-suite evals/suites/agent_trace_suite.json
 python -m claude_agent_harness_opt audit-agent evals/examples/agent_audit_bundle.json
 python -m claude_agent_harness_opt audit-agent evals/examples/agent_audit_bundle.json --claude-judge
