@@ -147,6 +147,10 @@ VHS-generated `demo.gif` against `demo.tape`, checks the tape's referenced files
 to stay public from the README, and makes sure committed result receipts are reachable from public
 docs or PR packet text.
 
+`scripts/check_optimize_shortcuts.py` protects the public MCP shortcut runner. It validates every
+`make optimize mcp=...` target in `scripts/optimize_mcp.py` against its stored matrix, variants,
+instruction rules, provider and harness defaults, public docs, Makefile help, and dry selected cells.
+
 | Target | Result | Packet |
 |---|---|---|
 | InsForge | Confirmed improvement | [InsForge](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge) |
@@ -228,6 +232,12 @@ make optimize mcp=insforge
 make optimize mcp=humwork
 make optimize mcp=openwork
 make optimize mcp=screenpipe
+make optimize mcp=firecrawl
+make optimize mcp=supabase
+make optimize mcp=zymtrace
+make optimize mcp=clickhouse
+make optimize mcp=github
+make optimize mcp=context7
 make optimize url=https://github.com/InsForge/insforge-mcp
 ```
 
@@ -543,6 +553,7 @@ python scripts/check_command_surfaces.py
 python scripts/check_secret_hygiene.py
 python scripts/check_docs_navigation.py
 python scripts/check_artifact_surfaces.py
+python scripts/check_optimize_shortcuts.py
 python -m claude_agent_harness_opt judge-prompt evals/examples/search_answer.json > /tmp/judge-prompt.txt
 python -m claude_agent_harness_opt eval evals/examples/search_answer.json
 python -m claude_agent_harness_opt review-trace evals/examples/agent_trace_good.json
