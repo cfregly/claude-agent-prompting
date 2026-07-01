@@ -266,7 +266,7 @@ smoke invocation in `.github/workflows/ci.yml`.
 | Trace review | [Trace Review](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/trace-review.md) |
 | Model matrix | [Model Matrix](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/model-matrix.md) |
 | Upstream PR packets | [Upstream PR Flywheel](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/upstream-pr-flywheel.md) |
-| Harness grinding | [Autoresearch Hill Climbing](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/autoresearch-hill-climbing.md) |
+| Failure discovery and optimization | [Autoresearch Hill Descent And Climbing](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/autoresearch-hill-climbing.md) |
 | Harness imports | [Repeatable Harness Lab](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/repeatable-harness-lab.md) |
 | Live CLI harnesses | [Live Harness Hardening](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/live-harness-hardening.md) |
 | SDK harnesses | [SDK Harness Coverage](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/sdk-harness-coverage.md) |
