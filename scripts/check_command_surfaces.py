@@ -34,6 +34,7 @@ DOC_COMMAND_PATHS = (
     ROOT / ".github" / "workflows" / "ci.yml",
     ROOT / ".claude" / "skills",
     ROOT / "docs",
+    ROOT / "docs" / "tool_tuning_demo_sample.txt",
     ROOT / "evals" / "pr_packets",
 )
 

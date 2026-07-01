@@ -49,6 +49,7 @@ REQUIRED_SURFACES = (
             "CLAUDE.md",
             "AGENTS.md",
             "docs/**/*.md",
+            "docs/tool_tuning_demo_sample.txt",
             "evals/pr_packets/**/*.md",
             ".github/workflows/ci.yml",
         ),
