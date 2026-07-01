@@ -1014,6 +1014,24 @@ def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]
             continue
         if parsed != expected:
             failures.append(f"{rel}: {label} summary does not match Results table")
+    expected_scores = {
+        "Baseline score": _variant_score(rows, {baseline}) if baseline else None,
+        "Optimized score": _variant_score(rows, optimized) if optimized else None,
+    }
+    for label, expected in expected_scores.items():
+        if expected is None:
+            continue
+        value = _markdown_summary_value(text, label)
+        if not value:
+            failures.append(f"{rel}: missing {label} summary")
+            continue
+        try:
+            parsed = float(value)
+        except ValueError:
+            failures.append(f"{rel}: {label} summary is not numeric")
+            continue
+        if round(parsed, 3) != round(expected, 3):
+            failures.append(f"{rel}: {label} summary does not match Results table")
     return failures
 
 
@@ -1023,6 +1041,14 @@ def _variant_failure_count(rows: list[list[str]], variants: set[str]) -> int:
         for row in rows
         if len(row) > 6 and row[3] in variants and row[6].casefold() != "passed"
     )
+
+
+def _variant_score(rows: list[list[str]], variants: set[str]) -> float | None:
+    selected = [row for row in rows if len(row) > 6 and row[3] in variants]
+    if not selected:
+        return None
+    passed = sum(1 for row in selected if row[6].casefold() == "passed")
+    return passed / len(selected)
 
 
 def _single_variant_name(value: str) -> str:

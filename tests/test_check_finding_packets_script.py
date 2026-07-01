@@ -391,6 +391,8 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
             "Passed: yes\n"
             "Optimized variants: `tuned`, `missing_tuned`\n"
             "Baseline variant: `stock`\n"
+            "Baseline score: 1.000\n"
+            "Optimized score: 0.000\n"
             "Baseline failures: 0\n"
             "Optimized failures: 1\n\n"
             "## Raw Matrix\n\n"
@@ -415,6 +417,8 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("Optimized variant 'missing_tuned' is not present in Results table", joined)
         self.assertIn("Baseline failures summary does not match Results table", joined)
         self.assertIn("Optimized failures summary does not match Results table", joined)
+        self.assertIn("Baseline score summary does not match Results table", joined)
+        self.assertIn("Optimized score summary does not match Results table", joined)
 
     def test_matrix_surface_coverage_reports_target_matrix_gaps(self):
         target_dir = ROOT / "evals" / "targets" / "temporary_bad_matrix"
