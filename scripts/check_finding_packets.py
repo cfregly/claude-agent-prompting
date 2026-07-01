@@ -1790,11 +1790,13 @@ def _check_coverage_markdown_matrix_summary_table(
     payload: dict[str, Any],
 ) -> list[str]:
     section_text = _markdown_section_text(text, "Matrix Summary")
-    if not section_text:
-        return []
     failures: list[str] = []
     rel = path.relative_to(ROOT)
     audits = payload.get("audits")
+    if not section_text:
+        if isinstance(audits, list) and audits:
+            return [f"{rel}: missing Matrix Summary section"]
+        return []
     if not isinstance(audits, list):
         return [f"{rel}: Matrix Summary table present but sibling JSON receipt has no audits list"]
     expected = {
@@ -1871,11 +1873,13 @@ def _check_coverage_markdown_tool_table(
     payload: dict[str, Any],
 ) -> list[str]:
     section_text = _markdown_section_text(text, "Tool Coverage")
-    if not section_text:
-        return []
     failures: list[str] = []
     rel = path.relative_to(ROOT)
     tools = payload.get("tools")
+    if not section_text:
+        if isinstance(tools, list) and tools:
+            return [f"{rel}: missing Tool Coverage section"]
+        return []
     if not isinstance(tools, list):
         return [f"{rel}: Tool Coverage table present but sibling JSON receipt has no tools list"]
     expected = {
@@ -1924,11 +1928,13 @@ def _check_coverage_markdown_check_family_table(
     payload: dict[str, Any],
 ) -> list[str]:
     section_text = _markdown_section_text(text, "Check Families")
-    if not section_text:
-        return []
     failures: list[str] = []
     rel = path.relative_to(ROOT)
     check_families = payload.get("check_families")
+    if not section_text:
+        if isinstance(check_families, dict) and check_families:
+            return [f"{rel}: missing Check Families section"]
+        return []
     if not isinstance(check_families, dict):
         return [f"{rel}: Check Families table present but sibling JSON receipt has no check_families object"]
     expected = {

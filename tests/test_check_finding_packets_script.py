@@ -1184,6 +1184,99 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("Gaps has unknown label 'Typo gap'", joined)
         self.assertIn("Gaps missing label 'Never forbidden'", joined)
 
+    def test_coverage_markdown_requires_tables_backed_by_sibling_json(self):
+        path = ROOT / "evals" / "results" / "bad_coverage_missing_tables.md"
+        json_path = path.with_suffix(".json")
+        gap_lines = "\n".join(
+            [
+                "- Never expected: none",
+                "- Never forbidden: none",
+                "- Case expectation gaps: none",
+                "- Expected without argument checks: none",
+                "- Duplicate tool names: none",
+                "- Identity gaps: none",
+                "- Missing quality checks: none",
+                "- Missing required check families: none",
+                "- Variant surface mismatches: none",
+                "- Source tool count mismatch: none",
+                "- Cases without forbidden tools: none",
+                "- Cases without check_family: none",
+                "- Unknown expected tools: none",
+                "- Unknown forbidden tools: none",
+                "- Value-bar gaps: none",
+            ]
+        )
+        path.write_text(
+            "# Matrix Coverage\n\n"
+            "Passed: yes\n"
+            "Tools: 1\n"
+            "Cases: 1\n\n"
+            "## Gaps\n\n"
+            f"{gap_lines}\n",
+            encoding="utf-8",
+        )
+        json_path.write_text(
+            """
+{
+  "passed": true,
+  "summary": {"tool_count": 1, "case_count": 1},
+  "tools": [
+    {
+      "name": "lookup",
+      "expected_cases": ["first"],
+      "forbidden_cases": [],
+      "argument_cases": [],
+      "has_quality_checks": true
+    }
+  ],
+  "check_families": {"lookup": ["first"]},
+  "uncovered": {}
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_markdown(path)
+        finally:
+            path.unlink()
+            json_path.unlink()
+
+        suite_path = ROOT / "evals" / "results" / "bad_coverage_suite_missing_matrix_summary.md"
+        suite_json_path = suite_path.with_suffix(".json")
+        suite_path.write_text(
+            "# Matrix Coverage Suite\n\n"
+            "Passed: yes\n"
+            "Matrices: 1\n",
+            encoding="utf-8",
+        )
+        suite_json_path.write_text(
+            """
+{
+  "passed": true,
+  "summary": {"matrix_count": 1},
+  "audits": [
+    {
+      "matrix": "first matrix",
+      "matrix_path": "evals/model_matrix/first.json",
+      "passed": true,
+      "summary": {"tool_count": 1, "case_count": 1}
+    }
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            suite_failures = _check_result_markdown(suite_path)
+        finally:
+            suite_path.unlink()
+            suite_json_path.unlink()
+
+        joined = "\n".join(failures + suite_failures)
+        self.assertIn("missing Tool Coverage section", joined)
+        self.assertIn("missing Check Families section", joined)
+        self.assertIn("missing Matrix Summary section", joined)
+
     def test_coverage_suite_markdown_matrix_summary_must_match_sibling_json(self):
         path = ROOT / "evals" / "results" / "bad_coverage_suite_table_receipt.md"
         json_path = path.with_suffix(".json")
