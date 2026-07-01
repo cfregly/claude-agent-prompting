@@ -110,11 +110,11 @@ COMMANDS = (
     ),
     DemoCommand(
         title="5. Print the shareable public bundle",
-        display="python -c 'print(\"Supabase finding: https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/supabase\")'",
+        display="python -c 'print(\"Supabase PR/evidence bundle: https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/supabase_mcp_database_tool_tuning_2026-06-25\")'",
         args=(
             sys.executable,
             "-c",
-            "print('Supabase finding: https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/supabase')",
+            "print('Supabase PR/evidence bundle: https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/supabase_mcp_database_tool_tuning_2026-06-25')",
         ),
         keep_lines=4,
         output_hold=8,

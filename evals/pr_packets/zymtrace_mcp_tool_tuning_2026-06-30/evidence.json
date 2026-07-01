@@ -1412,6 +1412,7 @@
       }
     ]
   },
+  "packet_type": "improvement",
   "result": {
     "case_definitions": [
       {

@@ -30,10 +30,10 @@ The expanded held-out prompt JSON run moved from 4/8 to 8/8 on Anthropic, 5/8 to
 
 The new result is packaged here:
 
-- matrix result: `evals/results/zymtrace_mcp_matrix_live_2026-06-30.json`
-- coverage audit: `evals/results/zymtrace_mcp_coverage_2026-06-30.md`
-- upstream PR packet: `evals/pr_packets/zymtrace_mcp_tool_tuning_2026-06-30/`
-- generated title: `Tighten Zymtrace MCP retrieval routing with live evals`
+- Matrix result: [zymtrace_mcp_matrix_live_2026-06-30.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/zymtrace_mcp_matrix_live_2026-06-30.json)
+- Coverage audit: [zymtrace_mcp_coverage_2026-06-30.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/zymtrace_mcp_coverage_2026-06-30.md)
+- Upstream PR packet: [zymtrace_mcp_tool_tuning_2026-06-30](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/zymtrace_mcp_tool_tuning_2026-06-30)
+- Generated title: `Tighten Zymtrace MCP retrieval routing with live evals`
 
 After the first live result, `matrix-coverage` exposed untested generated REST helpers. The hardened
 matrix now has 34 cases, 25 of 25 expected-tool coverage, 25 of 25 forbidden-tool coverage, 85

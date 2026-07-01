@@ -10,12 +10,16 @@ change request.
 
 ## Full Bundle
 
-Bundle folder: [OpenWork guardrail bundle](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/openwork)
+Bundle folder: [OpenWork retained guardrail bundle](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28)
 
+- Finding folder: [OpenWork finding](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/openwork)
+- No-change packet: [PR_BODY.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28/PR_BODY.md)
+- Reproduction doc: [REPRODUCTION.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28/REPRODUCTION.md)
+- Evidence JSON: [evidence.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28/evidence.json)
 - Matrix: [openwork_ui_mcp_tool_selection.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/model_matrix/openwork_ui_mcp_tool_selection.json)
 - Receipt: [openwork_ui_mcp_tool_selection_2026-06-28.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/openwork_ui_mcp_tool_selection_2026-06-28.md)
 - Sweep: [YC P2026 MCP Sweep](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/yc-p2026-mcp-sweep.md)
-- Reproduce: [OpenWork reproduce command](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/openwork#reproduce)
+- Reproduce: [OpenWork reproduction doc](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28/REPRODUCTION.md)
 
 ## Result
 
@@ -42,6 +46,7 @@ The slice covered:
 - Source: [OpenWork repo](https://github.com/different-ai/openwork)
 - Matrix: [openwork_ui_mcp_tool_selection.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/model_matrix/openwork_ui_mcp_tool_selection.json)
 - Receipt: [openwork_ui_mcp_tool_selection_2026-06-28.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/openwork_ui_mcp_tool_selection_2026-06-28.md)
+- Guardrail packet: [openwork_ui_mcp_guardrail_2026-06-28](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/openwork_ui_mcp_guardrail_2026-06-28)
 - YC sweep: [YC P2026 MCP Sweep](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/yc-p2026-mcp-sweep.md)
 
 ## Reproduce

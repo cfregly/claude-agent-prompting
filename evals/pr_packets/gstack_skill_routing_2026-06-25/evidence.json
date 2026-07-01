@@ -3273,6 +3273,7 @@
       "minimum_improvement": "Boundary-tuned descriptions should match or outperform stock descriptions without masking NO_TOOL safety cases."
     }
   },
+  "packet_type": "improvement",
   "result": {
     "case_definitions": [
       {

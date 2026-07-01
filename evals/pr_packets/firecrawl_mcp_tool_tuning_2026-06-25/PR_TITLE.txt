@@ -1,0 +1,1 @@
+Clarify Firecrawl scrape versus extract for one known URL

@@ -39,6 +39,7 @@ REQUIRED_PACKET_ARTIFACT_PREFIXES = (
     "evals/pr_packets/",
 )
 REQUIRED_PR_PACKET_FILES = ("README.md", "PR_TITLE.txt", "PR_BODY.md", "REPRODUCTION.md", "evidence.json")
+ALLOWED_PR_PACKET_TYPES = {"improvement", "guardrail"}
 REQUIRED_COMPARISON_FIELDS = (
     "baseline_score",
     "baseline_variant",
@@ -135,6 +136,23 @@ def _check_packet_dir(packet_dir: Path, index_text: str, ledger_text: str) -> li
         failures.append(f"{rel_dir}: missing from docs/confirmed-improvements.md")
 
     local_refs = _local_refs(text)
+    pr_packet_dirs = sorted(
+        {
+            ref.split("#", 1)[0].rstrip("/")
+            for ref in local_refs
+            if ref.startswith("evals/pr_packets/") and (ROOT / ref.split("#", 1)[0].rstrip("/")).is_dir()
+        }
+    )
+    if not pr_packet_dirs:
+        failures.append(f"{rel_readme}: missing retained PR packet folder link")
+    for ref in pr_packet_dirs:
+        packet_readme = ROOT / ref / "README.md"
+        if not packet_readme.exists():
+            failures.append(f"{rel_readme}: retained PR packet README missing: {ref}/README.md")
+            continue
+        packet_text = packet_readme.read_text(encoding="utf-8")
+        if f"docs/findings/{slug}" not in packet_text:
+            failures.append(f"{packet_readme.relative_to(ROOT)}: missing backlink to docs/findings/{slug}")
     evidence_refs = [
         ref
         for ref in local_refs
@@ -230,6 +248,11 @@ def _check_pr_packet_dir(packet_dir: Path) -> list[str]:
 def _check_pr_packet_evidence(path: Path, evidence: dict[str, Any]) -> list[str]:
     failures: list[str] = []
     rel = path.relative_to(ROOT)
+    packet_type = str(evidence.get("packet_type", "improvement")).strip() or "improvement"
+    if packet_type not in ALLOWED_PR_PACKET_TYPES:
+        failures.append(
+            f"{rel}: packet_type must be one of {', '.join(sorted(ALLOWED_PR_PACKET_TYPES))}"
+        )
     cases = evidence.get("cases")
     if not isinstance(cases, list) or not cases:
         failures.append(f"{rel}: cases must be a nonempty list")
@@ -245,9 +268,14 @@ def _check_pr_packet_evidence(path: Path, evidence: dict[str, Any]) -> list[str]
     for field in ("baseline_score", "candidate_score", "delta", "minimum_delta"):
         if field in comparison and not isinstance(comparison[field], (int, float)):
             failures.append(f"{rel}: comparison.{field} must be numeric")
-    if comparison.get("promote") is not True:
-        failures.append(f"{rel}: comparison.promote must be true for committed PR packets")
+    if packet_type == "guardrail":
+        if comparison.get("promote") is not False:
+            failures.append(f"{rel}: comparison.promote must be false for guardrail packets")
+    elif comparison.get("promote") is not True:
+        failures.append(f"{rel}: comparison.promote must be true for improvement packets")
     if (
+        packet_type != "guardrail"
+        and
         isinstance(comparison.get("delta"), (int, float))
         and isinstance(comparison.get("minimum_delta"), (int, float))
         and comparison["delta"] < comparison["minimum_delta"]

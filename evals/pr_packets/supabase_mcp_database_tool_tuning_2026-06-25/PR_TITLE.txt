@@ -1,0 +1,1 @@
+Route Supabase schema-changing SQL through migrations

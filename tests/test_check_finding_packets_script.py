@@ -60,6 +60,72 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("result.live must be true", joined)
         self.assertIn("comparison variant missing from matrix: tuned", joined)
 
+    def test_pr_packet_evidence_allows_guardrail_without_delta(self):
+        failures = _check_pr_packet_evidence(
+            ROOT / "evals" / "pr_packets" / "guardrail" / "evidence.json",
+            {
+                "packet_type": "guardrail",
+                "cases": [{"name": "already routed safely"}],
+                "comparison": {
+                    "baseline_score": 1.0,
+                    "baseline_variant": "stock",
+                    "candidate_score": 1.0,
+                    "candidate_variant": "tuned",
+                    "delta": 0.0,
+                    "minimum_delta": 0.1,
+                    "promote": False,
+                },
+                "matrix": {
+                    "tool_variants": [
+                        {"name": "stock", "tools": []},
+                        {"name": "tuned", "tools": []},
+                    ]
+                },
+                "result": {
+                    "cells": [
+                        {
+                            "provider": "anthropic",
+                            "harness": "prompt_json",
+                            "tool_variant": "stock",
+                            "instruction_variant": "default",
+                        },
+                        {
+                            "provider": "anthropic",
+                            "harness": "prompt_json",
+                            "tool_variant": "tuned",
+                            "instruction_variant": "default",
+                        },
+                    ],
+                    "live": True,
+                    "matrix_path": "evals/model_matrix/humwork_mcp_tool_selection.json",
+                    "results": [
+                        {
+                            "case": "already routed safely",
+                            "provider": "anthropic",
+                            "harness": "prompt_json",
+                            "tool_variant": "stock",
+                            "instruction_variant": "default",
+                            "status": "passed",
+                            "passed": True,
+                        },
+                        {
+                            "case": "already routed safely",
+                            "provider": "anthropic",
+                            "harness": "prompt_json",
+                            "tool_variant": "tuned",
+                            "instruction_variant": "default",
+                            "status": "passed",
+                            "passed": True,
+                        },
+                    ],
+                    "summary": {"total": 2},
+                },
+                "source": {"repo": "example"},
+            },
+        )
+
+        self.assertEqual([], failures)
+
     def test_result_json_rejects_unknown_receipt_shape(self):
         path = ROOT / "evals" / "results" / "unknown_shape.json"
         path.parent.mkdir(parents=True, exist_ok=True)

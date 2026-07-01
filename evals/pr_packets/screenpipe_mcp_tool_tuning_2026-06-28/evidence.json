@@ -1,0 +1,1380 @@
+{
+  "cases": [
+    {
+      "check_family": "activity_summary",
+      "expected_args_contains": {
+        "start_time": "2026-06-30T08:00:00Z"
+      },
+      "expected_tools": [
+        "activity-summary"
+      ],
+      "forbidden_tools": [
+        "search-content",
+        "keyword-search",
+        "search-elements",
+        "export-video",
+        "list-meetings"
+      ],
+      "name": "broad morning recap starts summary",
+      "task": "What was I doing from 2026-06-30T08:00:00Z to 2026-06-30T12:00:00Z across apps and meetings?"
+    },
+    {
+      "check_family": "keyword_search",
+      "expected_args_contains": {
+        "q": "Stripe webhook"
+      },
+      "expected_tools": [
+        "keyword-search"
+      ],
+      "forbidden_tools": [
+        "activity-summary",
+        "search-elements",
+        "export-video",
+        "list-meetings"
+      ],
+      "name": "exact keyword uses keyword search",
+      "task": "Find every screen or transcript where I typed or saw the exact phrase \"Stripe webhook\" yesterday."
+    },
+    {
+      "check_family": "content_search",
+      "expected_args_contains": {
+        "speaker_name": "John"
+      },
+      "expected_tools": [
+        "search-content"
+      ],
+      "forbidden_tools": [
+        "activity-summary",
+        "keyword-search",
+        "search-elements",
+        "export-video",
+        "list-meetings"
+      ],
+      "name": "speaker transcript uses content search",
+      "task": "Find what John said about the database in audio transcripts from the last hour."
+    },
+    {
+      "check_family": "element_search",
+      "expected_args_contains": {
+        "q": "submit"
+      },
+      "expected_tools": [
+        "search-elements"
+      ],
+      "forbidden_tools": [
+        "search-content",
+        "activity-summary",
+        "keyword-search",
+        "frame-context",
+        "export-video"
+      ],
+      "name": "ui button lookup uses elements",
+      "task": "Find submit buttons I saw in Chrome today."
+    },
+    {
+      "check_family": "frame_context",
+      "expected_args_contains": {
+        "frame_id": "91234"
+      },
+      "expected_tools": [
+        "frame-context"
+      ],
+      "forbidden_tools": [
+        "search-content",
+        "get-frame-elements",
+        "activity-summary",
+        "export-video",
+        "list-meetings"
+      ],
+      "name": "known frame detail uses frame context",
+      "task": "For frame_id 91234, get the full context: visible text, parsed tree nodes, and URLs."
+    },
+    {
+      "check_family": "pipe_create",
+      "expected_args_contains": {
+        "name": "daily-work-summary"
+      },
+      "expected_tools": [
+        "create-pipe"
+      ],
+      "forbidden_tools": [
+        "run-pipe",
+        "pipe-logs",
+        "activity-summary"
+      ],
+      "name": "create recurring automation uses pipe",
+      "task": "Create a daily 6pm automation that summarizes today's work and sends me a notification."
+    },
+    {
+      "check_family": "pipe_logs",
+      "expected_args_contains": {
+        "name": "daily-time-report"
+      },
+      "expected_tools": [
+        "pipe-logs"
+      ],
+      "forbidden_tools": [
+        "create-pipe",
+        "run-pipe",
+        "activity-summary"
+      ],
+      "name": "verify pipe output uses logs",
+      "task": "I just ran the daily-time-report pipe. Show me its recent output and errors."
+    }
+  ],
+  "comparison": {
+    "baseline_score": 0.8571428571428571,
+    "baseline_variant": "readme_screenpipe_mcp",
+    "candidate_score": 1.0,
+    "candidate_variant": "source_tuned_screenpipe_mcp",
+    "delta": 0.1428571428571429,
+    "minimum_delta": 0.01,
+    "promote": true
+  },
+  "matrix": {
+    "cases": [
+      {
+        "check_family": "activity_summary",
+        "expected_args_contains": {
+          "start_time": "2026-06-30T08:00:00Z"
+        },
+        "expected_tools": [
+          "activity-summary"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "keyword-search",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "broad morning recap starts summary",
+        "task": "What was I doing from 2026-06-30T08:00:00Z to 2026-06-30T12:00:00Z across apps and meetings?"
+      },
+      {
+        "check_family": "keyword_search",
+        "expected_args_contains": {
+          "q": "Stripe webhook"
+        },
+        "expected_tools": [
+          "keyword-search"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "exact keyword uses keyword search",
+        "task": "Find every screen or transcript where I typed or saw the exact phrase \"Stripe webhook\" yesterday."
+      },
+      {
+        "check_family": "content_search",
+        "expected_args_contains": {
+          "speaker_name": "John"
+        },
+        "expected_tools": [
+          "search-content"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "keyword-search",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "speaker transcript uses content search",
+        "task": "Find what John said about the database in audio transcripts from the last hour."
+      },
+      {
+        "check_family": "element_search",
+        "expected_args_contains": {
+          "q": "submit"
+        },
+        "expected_tools": [
+          "search-elements"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "activity-summary",
+          "keyword-search",
+          "frame-context",
+          "export-video"
+        ],
+        "name": "ui button lookup uses elements",
+        "task": "Find submit buttons I saw in Chrome today."
+      },
+      {
+        "check_family": "frame_context",
+        "expected_args_contains": {
+          "frame_id": "91234"
+        },
+        "expected_tools": [
+          "frame-context"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "get-frame-elements",
+          "activity-summary",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "known frame detail uses frame context",
+        "task": "For frame_id 91234, get the full context: visible text, parsed tree nodes, and URLs."
+      },
+      {
+        "check_family": "pipe_create",
+        "expected_args_contains": {
+          "name": "daily-work-summary"
+        },
+        "expected_tools": [
+          "create-pipe"
+        ],
+        "forbidden_tools": [
+          "run-pipe",
+          "pipe-logs",
+          "activity-summary"
+        ],
+        "name": "create recurring automation uses pipe",
+        "task": "Create a daily 6pm automation that summarizes today's work and sends me a notification."
+      },
+      {
+        "check_family": "pipe_logs",
+        "expected_args_contains": {
+          "name": "daily-time-report"
+        },
+        "expected_tools": [
+          "pipe-logs"
+        ],
+        "forbidden_tools": [
+          "create-pipe",
+          "run-pipe",
+          "activity-summary"
+        ],
+        "name": "verify pipe output uses logs",
+        "task": "I just ran the daily-time-report pipe. Show me its recent output and errors."
+      },
+      {
+        "check_family": "video_export",
+        "expected_args_contains": {
+          "output_path": "/tmp/demo.mp4",
+          "start_time": "2026-06-30T09:00:00Z"
+        },
+        "expected_tools": [
+          "export-video"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "search-content",
+          "list-meetings"
+        ],
+        "name": "export video uses video export",
+        "task": "Export screen recording video from 2026-06-30T09:00:00Z to 2026-06-30T09:15:00Z into /tmp/demo.mp4."
+      },
+      {
+        "check_family": "meeting_inventory",
+        "expected_args_contains": {
+          "q": "John"
+        },
+        "expected_tools": [
+          "list-meetings"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "search-content",
+          "frame-context"
+        ],
+        "name": "meeting inventory uses list meetings",
+        "task": "List meetings with John from 2026-06-30T08:00:00Z to 2026-06-30T12:00:00Z."
+      },
+      {
+        "check_family": "element_detail",
+        "expected_args_contains": {
+          "frame_id": "91234"
+        },
+        "expected_tools": [
+          "get-frame-elements"
+        ],
+        "forbidden_tools": [
+          "frame-context",
+          "search-elements",
+          "search-content"
+        ],
+        "name": "known frame elements use element tree",
+        "task": "For known frame_id 91234, return only the UI element tree."
+      },
+      {
+        "check_family": "pipe_run",
+        "expected_args_contains": {
+          "name": "daily-time-report"
+        },
+        "expected_tools": [
+          "run-pipe"
+        ],
+        "forbidden_tools": [
+          "create-pipe",
+          "pipe-logs",
+          "activity-summary"
+        ],
+        "name": "manual pipe run uses run pipe",
+        "task": "Run the existing daily-time-report pipe once now."
+      }
+    ],
+    "coverage": {
+      "required_check_families": [
+        "activity_summary",
+        "content_search",
+        "element_detail",
+        "element_search",
+        "frame_context",
+        "keyword_search",
+        "meeting_inventory",
+        "pipe_create",
+        "pipe_logs",
+        "pipe_run",
+        "video_export"
+      ]
+    },
+    "description": "Compare README-level and source-level descriptions for Screenpipe MCP local activity tools.",
+    "instruction_variants": [
+      {
+        "instructions": "Choose the single Screenpipe MCP tool that should be called next. Broad time-range questions about what the user did should start with activity-summary. Specific keyword or exact phrase lookup should use keyword-search. Specific text, transcript lines, screen text, speaker/window filtering, tags, or memories should use search-content. UI controls, buttons, links, fields, or page structure should use search-elements. Full context for a known frame should use frame-context. Specific frame UI elements should use get-frame-elements. Meeting inventory should use list-meetings; a known meeting id should use get-meeting; editing a meeting note should use update-meeting only after preserving existing notes. Scheduled automation creation should use create-pipe only after reading the pipes guide in a resource-capable host; in this tool-only matrix choose create-pipe for the creation step. After create/edit, run-pipe tests and pipe-logs verifies.",
+        "name": "screenpipe_host_rules"
+      }
+    ],
+    "name": "screenpipe mcp tool-selection matrix",
+    "profiles": [
+      {
+        "api_key_env": "ANTHROPIC_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "model": "claude-sonnet-4-5",
+        "model_env": "ANTHROPIC_MATRIX_MODEL",
+        "name": "anthropic-sonnet",
+        "provider": "anthropic"
+      },
+      {
+        "api_key_env": "OPENAI_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "model": "gpt-4.1",
+        "model_env": "OPENAI_MATRIX_MODEL",
+        "name": "openai-default",
+        "provider": "openai"
+      },
+      {
+        "api_key_env": "GEMINI_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "max_tokens": 4096,
+        "model": "gemini-2.5-pro",
+        "model_env": "GEMINI_MATRIX_MODEL",
+        "name": "gemini-default",
+        "provider": "gemini"
+      }
+    ],
+    "source": {
+      "commit": "2de07ff501a63d3d3f0f39a9a602640a833d151f",
+      "package": "screenpipe-mcp",
+      "package_version": "0.18.14",
+      "repo": "https://github.com/screenpipe/screenpipe",
+      "slice": "local screen/audio search, UI element lookup, meeting workflows, and scheduled pipes",
+      "yc": "Screenpipe, YC S26"
+    },
+    "tool_variants": [
+      {
+        "name": "readme_screenpipe_mcp",
+        "tools": [
+          {
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "content_type": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "speaker_name": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "search-content",
+            "purpose": "Search through recorded content with content type filtering."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "end_time": {
+                  "type": "string"
+                },
+                "output_path": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "start_time",
+                "end_time"
+              ],
+              "type": "object"
+            },
+            "name": "export-video",
+            "purpose": "Export screen recordings as video files."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "start_time",
+                "end_time"
+              ],
+              "type": "object"
+            },
+            "name": "activity-summary",
+            "purpose": "Get a lightweight compressed activity overview for a time range."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "end_time": {
+                  "type": "string"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "list-meetings",
+            "purpose": "List detected meetings with duration, app, and attendees."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "search-elements",
+            "purpose": "Search structured UI elements."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "frame_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "frame_id"
+              ],
+              "type": "object"
+            },
+            "name": "get-frame-elements",
+            "purpose": "The whole element tree for one frame, as a compact outline."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "frame_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "frame_id"
+              ],
+              "type": "object"
+            },
+            "name": "frame-context",
+            "purpose": "Get accessibility text, parsed tree nodes, and extracted URLs for a specific frame."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ],
+              "type": "object"
+            },
+            "name": "keyword-search",
+            "purpose": "Fast keyword search across OCR and audio."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "run_now": {
+                  "type": "boolean"
+                },
+                "schedule": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "prompt",
+                "schedule"
+              ],
+              "type": "object"
+            },
+            "name": "create-pipe",
+            "purpose": "Create a scheduled AI automation."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "name": "run-pipe",
+            "purpose": "Run a pipe once immediately."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "name": "pipe-logs",
+            "purpose": "Get a pipe's recent execution logs or output."
+          }
+        ]
+      },
+      {
+        "name": "source_tuned_screenpipe_mcp",
+        "tools": [
+          {
+            "avoid_when": "Avoid for broad questions like what was I doing; use activity-summary. Avoid for targeted UI controls; use search-elements. Avoid for fastest exact keyword lookup; use keyword-search.",
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "content_type": {
+                  "enum": [
+                    "all",
+                    "ocr",
+                    "audio",
+                    "input",
+                    "accessibility",
+                    "memory"
+                  ],
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "max_content_length": {
+                  "type": "integer"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "speaker_name": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "search-content",
+            "purpose": "Search screen text, audio transcriptions, input events, and memories. Returns timestamped results with app context.",
+            "quality_checks": [
+              "Always provide start_time for bounded search.",
+              "Start with limit=5 for exploration.",
+              "Use max_content_length to keep responses compact."
+            ],
+            "use_when": "Use when you need actual text/content of a moment: quotes, OCR or accessibility snippets, transcript lines, speaker/window filters, tags, or memories."
+          },
+          {
+            "avoid_when": "Avoid for summaries, searches, meeting inventory, frame context, or screenshots.",
+            "input_schema": {
+              "properties": {
+                "end_time": {
+                  "type": "string"
+                },
+                "output_path": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "start_time",
+                "end_time"
+              ],
+              "type": "object"
+            },
+            "name": "export-video",
+            "purpose": "Export bounded screen recording ranges as video files.",
+            "quality_checks": [
+              "Require a bounded time range.",
+              "Use output_path when the user names the destination."
+            ],
+            "use_when": "Use when the user explicitly asks to export or save a screen recording clip."
+          },
+          {
+            "avoid_when": "Avoid for finding a specific keyword or UI control.",
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "start_time",
+                "end_time"
+              ],
+              "type": "object"
+            },
+            "name": "activity-summary",
+            "purpose": "Rich activity overview with app usage, windows and tabs, key text, and audio transcriptions.",
+            "quality_checks": [
+              "Requires bounded start_time and end_time.",
+              "Usually sufficient before follow-up searches."
+            ],
+            "use_when": "Use first for broad time-range questions such as what was I doing, recap my morning, how long on X, or which apps."
+          },
+          {
+            "avoid_when": "Avoid for structured filtering by content type, speaker, window, or broad activity questions.",
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ],
+              "type": "object"
+            },
+            "name": "keyword-search",
+            "purpose": "Fast FTS5 keyword search across OCR plus audio combined.",
+            "quality_checks": [
+              "Use quoted phrases for exact text.",
+              "Keep time bounded where possible."
+            ],
+            "use_when": "Use when the user gives a specific keyword or exact phrase and wants the fastest hit list."
+          },
+          {
+            "avoid_when": "Avoid for general content, transcript text, broad activity recaps, or keyword lookup.",
+            "input_schema": {
+              "properties": {
+                "app_name": {
+                  "type": "string"
+                },
+                "end_time": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "source": {
+                  "enum": [
+                    "accessibility",
+                    "ocr"
+                  ],
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "search-elements",
+            "purpose": "Search UI elements such as buttons, links, and text fields from accessibility tree or OCR blocks.",
+            "quality_checks": [
+              "Prefer accessibility source when available.",
+              "Start with limit 10-20."
+            ],
+            "use_when": "Use for specific UI controls or page-structure questions."
+          },
+          {
+            "avoid_when": "Avoid before a frame_id is known.",
+            "input_schema": {
+              "properties": {
+                "frame_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "frame_id"
+              ],
+              "type": "object"
+            },
+            "name": "frame-context",
+            "purpose": "Get full accessibility text, parsed tree nodes, and URLs for a specific frame ID.",
+            "quality_checks": [
+              "Use only real frame IDs from prior results."
+            ],
+            "use_when": "Use after search-content when you need detailed context for a specific moment."
+          },
+          {
+            "avoid_when": "Avoid for full moment context or unknown frame lookup.",
+            "input_schema": {
+              "properties": {
+                "frame_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "frame_id"
+              ],
+              "type": "object"
+            },
+            "name": "get-frame-elements",
+            "purpose": "Get all UI elements for one known frame.",
+            "quality_checks": [
+              "Use only real frame IDs from prior results."
+            ],
+            "use_when": "Use when the user already has frame_id and asks for UI elements or element tree."
+          },
+          {
+            "avoid_when": "Avoid when a specific meeting ID is already known and details are needed.",
+            "input_schema": {
+              "properties": {
+                "end_time": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "q": {
+                  "type": "string"
+                },
+                "start_time": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "list-meetings",
+            "purpose": "List detected meetings with duration, app, attendees, and optional substring filtering.",
+            "quality_checks": [
+              "Use q for attendee/title filters.",
+              "Use get-meeting for known meeting IDs."
+            ],
+            "use_when": "Use to find meetings in a time range or by attendee/title substring."
+          },
+          {
+            "avoid_when": "Avoid before reading the screenpipe://guide/pipes resource in a resource-capable host. Avoid for just running or reading an existing pipe.",
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "run_now": {
+                  "type": "boolean"
+                },
+                "schedule": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "prompt",
+                "schedule"
+              ],
+              "type": "object"
+            },
+            "name": "create-pipe",
+            "purpose": "Create a scheduled AI automation that runs a markdown prompt on a schedule.",
+            "quality_checks": [
+              "Use kebab-case name.",
+              "Write one bounded job.",
+              "Run once and then inspect pipe-logs."
+            ],
+            "use_when": "Use when the user wants to automate a recurring task such as a daily summary, report, monitor, or sync."
+          },
+          {
+            "avoid_when": "Avoid for creating a new scheduled automation.",
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "name": "run-pipe",
+            "purpose": "Run an existing pipe once immediately for a test.",
+            "quality_checks": [
+              "Read pipe-logs after running."
+            ],
+            "use_when": "Use after creating or editing a pipe, or when the user asks to run a pipe now."
+          },
+          {
+            "avoid_when": "Avoid before a pipe exists or before a run has started.",
+            "input_schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "name": "pipe-logs",
+            "purpose": "Get recent execution logs and output for a pipe.",
+            "quality_checks": [
+              "Use after create-pipe or run-pipe."
+            ],
+            "use_when": "Use to verify a new test run or debug a misbehaving pipe."
+          }
+        ]
+      }
+    ]
+  },
+  "packet_type": "improvement",
+  "result": {
+    "case_definitions": [
+      {
+        "check_family": "activity_summary",
+        "expected_args_contains": {
+          "start_time": "2026-06-30T08:00:00Z"
+        },
+        "expected_tools": [
+          "activity-summary"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "keyword-search",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "broad morning recap starts summary",
+        "task": "What was I doing from 2026-06-30T08:00:00Z to 2026-06-30T12:00:00Z across apps and meetings?"
+      },
+      {
+        "check_family": "pipe_create",
+        "expected_args_contains": {
+          "name": "daily-work-summary"
+        },
+        "expected_tools": [
+          "create-pipe"
+        ],
+        "forbidden_tools": [
+          "run-pipe",
+          "pipe-logs",
+          "activity-summary"
+        ],
+        "name": "create recurring automation uses pipe",
+        "task": "Create a daily 6pm automation that summarizes today's work and sends me a notification."
+      },
+      {
+        "check_family": "keyword_search",
+        "expected_args_contains": {
+          "q": "Stripe webhook"
+        },
+        "expected_tools": [
+          "keyword-search"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "exact keyword uses keyword search",
+        "task": "Find every screen or transcript where I typed or saw the exact phrase \"Stripe webhook\" yesterday."
+      },
+      {
+        "check_family": "frame_context",
+        "expected_args_contains": {
+          "frame_id": "91234"
+        },
+        "expected_tools": [
+          "frame-context"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "get-frame-elements",
+          "activity-summary",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "known frame detail uses frame context",
+        "task": "For frame_id 91234, get the full context: visible text, parsed tree nodes, and URLs."
+      },
+      {
+        "check_family": "content_search",
+        "expected_args_contains": {
+          "speaker_name": "John"
+        },
+        "expected_tools": [
+          "search-content"
+        ],
+        "forbidden_tools": [
+          "activity-summary",
+          "keyword-search",
+          "search-elements",
+          "export-video",
+          "list-meetings"
+        ],
+        "name": "speaker transcript uses content search",
+        "task": "Find what John said about the database in audio transcripts from the last hour."
+      },
+      {
+        "check_family": "element_search",
+        "expected_args_contains": {
+          "q": "submit"
+        },
+        "expected_tools": [
+          "search-elements"
+        ],
+        "forbidden_tools": [
+          "search-content",
+          "activity-summary",
+          "keyword-search",
+          "frame-context",
+          "export-video"
+        ],
+        "name": "ui button lookup uses elements",
+        "task": "Find submit buttons I saw in Chrome today."
+      },
+      {
+        "check_family": "pipe_logs",
+        "expected_args_contains": {
+          "name": "daily-time-report"
+        },
+        "expected_tools": [
+          "pipe-logs"
+        ],
+        "forbidden_tools": [
+          "create-pipe",
+          "run-pipe",
+          "activity-summary"
+        ],
+        "name": "verify pipe output uses logs",
+        "task": "I just ran the daily-time-report pipe. Show me its recent output and errors."
+      }
+    ],
+    "cells": [
+      {
+        "errors": 0,
+        "failed": 1,
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "passed": 6,
+        "provider": "anthropic",
+        "score": 0.857,
+        "skipped": 0,
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "errors": 0,
+        "failed": 0,
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "passed": 7,
+        "provider": "anthropic",
+        "score": 1.0,
+        "skipped": 0,
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      }
+    ],
+    "description": "Screenpipe prompt-json live result",
+    "filters": {},
+    "live": true,
+    "matrix": "screenpipe mcp tool-selection matrix",
+    "matrix_path": "evals/model_matrix/screenpipe_mcp_tool_selection.json",
+    "passed": false,
+    "results": [
+      {
+        "case": "broad morning recap starts summary",
+        "choice": {
+          "tool_name": "activity-summary"
+        },
+        "chosen_tools": [
+          "activity-summary"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "exact keyword uses keyword search",
+        "choice": {
+          "tool_name": "search-content"
+        },
+        "chosen_tools": [
+          "search-content"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [
+          "keyword-search"
+        ],
+        "model": "claude-sonnet-4-5",
+        "passed": false,
+        "provider": "anthropic",
+        "status": "failed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "speaker transcript uses content search",
+        "choice": {
+          "tool_name": "search-content"
+        },
+        "chosen_tools": [
+          "search-content"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "ui button lookup uses elements",
+        "choice": {
+          "tool_name": "search-elements"
+        },
+        "chosen_tools": [
+          "search-elements"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "known frame detail uses frame context",
+        "choice": {
+          "tool_name": "frame-context"
+        },
+        "chosen_tools": [
+          "frame-context"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "create recurring automation uses pipe",
+        "choice": {
+          "tool_name": "create-pipe"
+        },
+        "chosen_tools": [
+          "create-pipe"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "verify pipe output uses logs",
+        "choice": {
+          "tool_name": "pipe-logs"
+        },
+        "chosen_tools": [
+          "pipe-logs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_screenpipe_mcp"
+      },
+      {
+        "case": "broad morning recap starts summary",
+        "choice": {
+          "tool_name": "activity-summary"
+        },
+        "chosen_tools": [
+          "activity-summary"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "exact keyword uses keyword search",
+        "choice": {
+          "tool_name": "keyword-search"
+        },
+        "chosen_tools": [
+          "keyword-search"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "speaker transcript uses content search",
+        "choice": {
+          "tool_name": "search-content"
+        },
+        "chosen_tools": [
+          "search-content"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "ui button lookup uses elements",
+        "choice": {
+          "tool_name": "search-elements"
+        },
+        "chosen_tools": [
+          "search-elements"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "known frame detail uses frame context",
+        "choice": {
+          "tool_name": "frame-context"
+        },
+        "chosen_tools": [
+          "frame-context"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "create recurring automation uses pipe",
+        "choice": {
+          "tool_name": "create-pipe"
+        },
+        "chosen_tools": [
+          "create-pipe"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      },
+      {
+        "case": "verify pipe output uses logs",
+        "choice": {
+          "tool_name": "pipe-logs"
+        },
+        "chosen_tools": [
+          "pipe-logs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "screenpipe_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_screenpipe_mcp"
+      }
+    ],
+    "source": {
+      "commit": "2de07ff501a63d3d3f0f39a9a602640a833d151f",
+      "package": "screenpipe-mcp",
+      "package_version": "0.18.14",
+      "repo": "https://github.com/screenpipe/screenpipe",
+      "slice": "local screen/audio search, UI element lookup, meeting workflows, and scheduled pipes",
+      "yc": "Screenpipe, YC S26"
+    },
+    "summary": {
+      "errors": 0,
+      "failed_cases": 1,
+      "passed_cases": 13,
+      "planned": 14,
+      "score": 0.929,
+      "skipped": 0,
+      "total": 14
+    }
+  },
+  "source": {
+    "commit": "2de07ff501a63d3d3f0f39a9a602640a833d151f",
+    "package": "screenpipe-mcp",
+    "package_version": "0.18.14",
+    "repo": "https://github.com/screenpipe/screenpipe",
+    "slice": "local screen/audio search, UI element lookup, meeting workflows, and scheduled pipes",
+    "yc": "Screenpipe, YC S26"
+  }
+}

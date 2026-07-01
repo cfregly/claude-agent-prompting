@@ -74,6 +74,37 @@ class CheckHumanDocsScriptTests(unittest.TestCase):
         joined = "\n".join(failures)
         self.assertIn("docs/findings/sample/README.md: missing ## Human Summary before artifact links", joined)
 
+    def test_allows_findings_index_shareable_bundle_table_before_llm_details(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            _write_readme(root)
+            findings = root / "docs" / "findings"
+            findings.mkdir(parents=True)
+            (findings / "README.md").write_text(
+                "# Founder Findings\n\n"
+                "These folders are share links.\n\n"
+                "## Shareable Bundles\n\n"
+                "| Target | Full bundle | Matrix | Result / coverage |\n"
+                "|---|---|---|---|\n"
+                + "\n".join(
+                    "| Sample | "
+                    "[Bundle](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/sample) | "
+                    "[Matrix](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/model_matrix/sample.json) | "
+                    "[Receipt](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/sample.md) |"
+                    for _ in range(12)
+                )
+                + "\n\n"
+                "<details>\n"
+                "<summary>LLM / Machine-readable details</summary>\n\n"
+                "`scripts/check_finding_packets.py` enforces retained PR packets.\n\n"
+                "</details>\n",
+                encoding="utf-8",
+            )
+
+            failures = check_human_docs(root)
+
+        self.assertEqual([], failures)
+
 
 def _write_readme(root: Path, *, extra_before_details: str = "") -> None:
     root.mkdir(parents=True, exist_ok=True)

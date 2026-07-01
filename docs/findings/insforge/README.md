@@ -10,12 +10,16 @@ relative deployment paths before `create-deployment`, because that tool requires
 
 ## Full Bundle
 
-Bundle folder: [InsForge finding bundle](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge)
+Bundle folder: [InsForge full PR/evidence bundle](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28)
 
+- Finding folder: [InsForge finding](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge)
+- PR body: [PR_BODY.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28/PR_BODY.md)
+- Reproduction doc: [REPRODUCTION.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28/REPRODUCTION.md)
+- Evidence JSON: [evidence.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28/evidence.json)
 - Matrix: [insforge_mcp_tool_selection.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/model_matrix/insforge_mcp_tool_selection.json)
 - Receipt: [insforge_mcp_tool_selection_2026-06-28.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/insforge_mcp_tool_selection_2026-06-28.md)
 - Detailed note: [InsForge MCP Tool Tuning](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/insforge-mcp-tool-tuning.md)
-- Reproduce: [InsForge reproduce command](https://github.com/cfregly/claude-agent-harness-opt/tree/main/docs/findings/insforge#reproduce)
+- Reproduce: [InsForge reproduction doc](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28/REPRODUCTION.md)
 
 ## Result
 
@@ -54,6 +58,7 @@ prepared deployment id in remote mode.
 - Source: [InsForge MCP repo](https://github.com/InsForge/insforge-mcp)
 - Matrix: [insforge_mcp_tool_selection.json](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/model_matrix/insforge_mcp_tool_selection.json)
 - Receipt: [insforge_mcp_tool_selection_2026-06-28.md](https://github.com/cfregly/claude-agent-harness-opt/blob/main/evals/results/insforge_mcp_tool_selection_2026-06-28.md)
+- PR packet: [insforge_mcp_tool_tuning_2026-06-28](https://github.com/cfregly/claude-agent-harness-opt/tree/main/evals/pr_packets/insforge_mcp_tool_tuning_2026-06-28)
 - Detailed note: [InsForge MCP Tool Tuning](https://github.com/cfregly/claude-agent-harness-opt/blob/main/docs/insforge-mcp-tool-tuning.md)
 
 ## Reproduce

@@ -1,0 +1,2234 @@
+{
+  "cases": [
+    {
+      "check_family": "product_docs",
+      "expected_args_contains": {
+        "docType": "instructions"
+      },
+      "expected_tools": [
+        "fetch-docs"
+      ],
+      "forbidden_tools": [
+        "download-template",
+        "get-backend-metadata",
+        "run-raw-sql",
+        "fetch-sdk-docs"
+      ],
+      "name": "new project setup reads instructions",
+      "task": "I just connected a new InsForge project. Before building anything, fetch the mandatory setup instructions."
+    },
+    {
+      "check_family": "template_bootstrap",
+      "expected_args_contains": {
+        "frame": "next"
+      },
+      "expected_tools": [
+        "download-template"
+      ],
+      "forbidden_tools": [
+        "fetch-docs",
+        "create-deployment",
+        "get-backend-metadata"
+      ],
+      "name": "new app bootstrap uses template",
+      "task": "Create a new Next.js starter app for InsForge named founder-dashboard."
+    },
+    {
+      "check_family": "backend_metadata",
+      "expected_tools": [
+        "get-backend-metadata"
+      ],
+      "forbidden_tools": [
+        "get-table-schema",
+        "run-raw-sql",
+        "list-buckets",
+        "get-anon-key"
+      ],
+      "name": "backend inventory uses metadata",
+      "task": "InsForge is my backend platform. What is my current backend structure across tables, buckets, and functions?"
+    },
+    {
+      "check_family": "table_schema",
+      "expected_args_contains": {
+        "tableName": "accounts"
+      },
+      "expected_tools": [
+        "get-table-schema"
+      ],
+      "forbidden_tools": [
+        "get-backend-metadata",
+        "run-raw-sql"
+      ],
+      "name": "known table details use schema",
+      "task": "Show me the RLS policies, indexes, constraints, and columns for the known table accounts."
+    },
+    {
+      "check_family": "sql_execution",
+      "expected_args_contains": {
+        "query": "accounts"
+      },
+      "expected_tools": [
+        "run-raw-sql"
+      ],
+      "forbidden_tools": [
+        "get-table-schema",
+        "get-backend-metadata",
+        "bulk-upsert"
+      ],
+      "name": "explicit sql uses raw sql",
+      "task": "Run this SQL now: SELECT count(*) FROM accounts WHERE status = 'active'."
+    },
+    {
+      "check_family": "bulk_import",
+      "expected_args_contains": {
+        "filePath": "/tmp/accounts.csv",
+        "table": "accounts"
+      },
+      "expected_tools": [
+        "bulk-upsert"
+      ],
+      "forbidden_tools": [
+        "run-raw-sql",
+        "create-bucket"
+      ],
+      "name": "csv import uses bulk upsert",
+      "task": "Bulk upsert /tmp/accounts.csv into the accounts table using account_id as the unique key."
+    },
+    {
+      "check_family": "storage_list",
+      "expected_tools": [
+        "list-buckets"
+      ],
+      "forbidden_tools": [
+        "get-backend-metadata",
+        "create-bucket",
+        "delete-bucket"
+      ],
+      "name": "storage inventory lists buckets",
+      "task": "Which storage buckets exist in this InsForge project?"
+    },
+    {
+      "check_family": "storage_create",
+      "expected_args_contains": {
+        "bucketName": "avatars"
+      },
+      "expected_tools": [
+        "create-bucket"
+      ],
+      "forbidden_tools": [
+        "list-buckets",
+        "delete-bucket"
+      ],
+      "name": "create storage bucket uses create bucket",
+      "task": "Create a public storage bucket named avatars."
+    },
+    {
+      "check_family": "function_read",
+      "expected_args_contains": {
+        "slug": "webhook-handler"
+      },
+      "expected_tools": [
+        "get-function"
+      ],
+      "forbidden_tools": [
+        "create-function",
+        "update-function",
+        "delete-function",
+        "get-container-logs"
+      ],
+      "name": "read function uses get function",
+      "task": "Get the code and metadata for the existing edge function webhook-handler."
+    },
+    {
+      "check_family": "function_update",
+      "expected_args_contains": {
+        "codeFile": "webhook-handler.js",
+        "slug": "webhook-handler"
+      },
+      "expected_tools": [
+        "update-function"
+      ],
+      "forbidden_tools": [
+        "create-function",
+        "get-function",
+        "delete-function"
+      ],
+      "name": "update function uses update function",
+      "task": "Update existing edge function webhook-handler from local file /Users/me/app/functions/webhook-handler.js."
+    },
+    {
+      "check_family": "runtime_logs",
+      "expected_args_contains": {
+        "source": "function.logs"
+      },
+      "expected_tools": [
+        "get-container-logs"
+      ],
+      "forbidden_tools": [
+        "get-function",
+        "run-raw-sql"
+      ],
+      "name": "function logs use container logs",
+      "task": "Show me the last 50 edge function runtime logs."
+    },
+    {
+      "check_family": "sdk_docs",
+      "expected_args_contains": {
+        "sdkFeature": "storage",
+        "sdkLanguage": "JavaScript"
+      },
+      "expected_tools": [
+        "fetch-sdk-docs"
+      ],
+      "forbidden_tools": [
+        "fetch-docs",
+        "list-buckets"
+      ],
+      "name": "sdk docs use sdk docs",
+      "task": "Show the JavaScript SDK documentation for InsForge storage uploads."
+    },
+    {
+      "check_family": "client_token",
+      "expected_args_contains": {
+        "apiKey": "api"
+      },
+      "expected_tools": [
+        "get-anon-key"
+      ],
+      "forbidden_tools": [
+        "fetch-docs",
+        "get-backend-metadata"
+      ],
+      "name": "client token uses anon key",
+      "task": "Generate the public anonymous token my browser app should use for InsForge client-side access."
+    },
+    {
+      "check_family": "deployment_prepare",
+      "expected_args_contains": {
+        "sourceDirectory": "/Users/me/founder-dashboard"
+      },
+      "expected_tools": [
+        "create-deployment"
+      ],
+      "forbidden_tools": [
+        "download-template",
+        "start-deployment"
+      ],
+      "name": "absolute source deploy uses create deployment",
+      "task": "Deploy the source tree at /Users/me/founder-dashboard to InsForge."
+    },
+    {
+      "check_family": "deployment_start",
+      "expected_args_contains": {
+        "deploymentId": "dep_123"
+      },
+      "expected_tools": [
+        "start-deployment"
+      ],
+      "forbidden_tools": [
+        "create-deployment",
+        "download-template"
+      ],
+      "name": "prepared remote upload starts deployment",
+      "task": "The upload commands for deployment dep_123 are complete. Trigger the deployment build now."
+    },
+    {
+      "allow_no_tool": true,
+      "check_family": "no_tool_safety",
+      "expected_tools": [],
+      "forbidden_tools": [
+        "create-deployment",
+        "start-deployment",
+        "download-template"
+      ],
+      "name": "relative deploy path avoids tool",
+      "task": "Deploy my current directory . to InsForge now."
+    }
+  ],
+  "comparison": {
+    "baseline_score": 0.9375,
+    "baseline_variant": "readme_insforge_mcp",
+    "candidate_score": 1.0,
+    "candidate_variant": "source_tuned_insforge_mcp",
+    "delta": 0.0625,
+    "minimum_delta": 0.01,
+    "promote": true
+  },
+  "matrix": {
+    "cases": [
+      {
+        "check_family": "product_docs",
+        "expected_args_contains": {
+          "docType": "instructions"
+        },
+        "expected_tools": [
+          "fetch-docs"
+        ],
+        "forbidden_tools": [
+          "download-template",
+          "get-backend-metadata",
+          "run-raw-sql",
+          "fetch-sdk-docs"
+        ],
+        "name": "new project setup reads instructions",
+        "task": "I just connected a new InsForge project. Before building anything, fetch the mandatory setup instructions."
+      },
+      {
+        "check_family": "template_bootstrap",
+        "expected_args_contains": {
+          "frame": "next"
+        },
+        "expected_tools": [
+          "download-template"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "create-deployment",
+          "get-backend-metadata"
+        ],
+        "name": "new app bootstrap uses template",
+        "task": "Create a new Next.js starter app for InsForge named founder-dashboard."
+      },
+      {
+        "check_family": "backend_metadata",
+        "expected_tools": [
+          "get-backend-metadata"
+        ],
+        "forbidden_tools": [
+          "get-table-schema",
+          "run-raw-sql",
+          "list-buckets",
+          "get-anon-key"
+        ],
+        "name": "backend inventory uses metadata",
+        "task": "InsForge is my backend platform. What is my current backend structure across tables, buckets, and functions?"
+      },
+      {
+        "check_family": "table_schema",
+        "expected_args_contains": {
+          "tableName": "accounts"
+        },
+        "expected_tools": [
+          "get-table-schema"
+        ],
+        "forbidden_tools": [
+          "get-backend-metadata",
+          "run-raw-sql"
+        ],
+        "name": "known table details use schema",
+        "task": "Show me the RLS policies, indexes, constraints, and columns for the known table accounts."
+      },
+      {
+        "check_family": "sql_execution",
+        "expected_args_contains": {
+          "query": "accounts"
+        },
+        "expected_tools": [
+          "run-raw-sql"
+        ],
+        "forbidden_tools": [
+          "get-table-schema",
+          "get-backend-metadata",
+          "bulk-upsert"
+        ],
+        "name": "explicit sql uses raw sql",
+        "task": "Run this SQL now: SELECT count(*) FROM accounts WHERE status = 'active'."
+      },
+      {
+        "check_family": "bulk_import",
+        "expected_args_contains": {
+          "filePath": "/tmp/accounts.csv",
+          "table": "accounts"
+        },
+        "expected_tools": [
+          "bulk-upsert"
+        ],
+        "forbidden_tools": [
+          "run-raw-sql",
+          "create-bucket"
+        ],
+        "name": "csv import uses bulk upsert",
+        "task": "Bulk upsert /tmp/accounts.csv into the accounts table using account_id as the unique key."
+      },
+      {
+        "check_family": "storage_list",
+        "expected_tools": [
+          "list-buckets"
+        ],
+        "forbidden_tools": [
+          "get-backend-metadata",
+          "create-bucket",
+          "delete-bucket"
+        ],
+        "name": "storage inventory lists buckets",
+        "task": "Which storage buckets exist in this InsForge project?"
+      },
+      {
+        "check_family": "storage_create",
+        "expected_args_contains": {
+          "bucketName": "avatars"
+        },
+        "expected_tools": [
+          "create-bucket"
+        ],
+        "forbidden_tools": [
+          "list-buckets",
+          "delete-bucket"
+        ],
+        "name": "create storage bucket uses create bucket",
+        "task": "Create a public storage bucket named avatars."
+      },
+      {
+        "check_family": "function_read",
+        "expected_args_contains": {
+          "slug": "webhook-handler"
+        },
+        "expected_tools": [
+          "get-function"
+        ],
+        "forbidden_tools": [
+          "create-function",
+          "update-function",
+          "delete-function",
+          "get-container-logs"
+        ],
+        "name": "read function uses get function",
+        "task": "Get the code and metadata for the existing edge function webhook-handler."
+      },
+      {
+        "check_family": "function_update",
+        "expected_args_contains": {
+          "codeFile": "webhook-handler.js",
+          "slug": "webhook-handler"
+        },
+        "expected_tools": [
+          "update-function"
+        ],
+        "forbidden_tools": [
+          "create-function",
+          "get-function",
+          "delete-function"
+        ],
+        "name": "update function uses update function",
+        "task": "Update existing edge function webhook-handler from local file /Users/me/app/functions/webhook-handler.js."
+      },
+      {
+        "check_family": "runtime_logs",
+        "expected_args_contains": {
+          "source": "function.logs"
+        },
+        "expected_tools": [
+          "get-container-logs"
+        ],
+        "forbidden_tools": [
+          "get-function",
+          "run-raw-sql"
+        ],
+        "name": "function logs use container logs",
+        "task": "Show me the last 50 edge function runtime logs."
+      },
+      {
+        "check_family": "sdk_docs",
+        "expected_args_contains": {
+          "sdkFeature": "storage",
+          "sdkLanguage": "JavaScript"
+        },
+        "expected_tools": [
+          "fetch-sdk-docs"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "list-buckets"
+        ],
+        "name": "sdk docs use sdk docs",
+        "task": "Show the JavaScript SDK documentation for InsForge storage uploads."
+      },
+      {
+        "check_family": "client_token",
+        "expected_args_contains": {
+          "apiKey": "api"
+        },
+        "expected_tools": [
+          "get-anon-key"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "get-backend-metadata"
+        ],
+        "name": "client token uses anon key",
+        "task": "Generate the public anonymous token my browser app should use for InsForge client-side access."
+      },
+      {
+        "check_family": "deployment_prepare",
+        "expected_args_contains": {
+          "sourceDirectory": "/Users/me/founder-dashboard"
+        },
+        "expected_tools": [
+          "create-deployment"
+        ],
+        "forbidden_tools": [
+          "download-template",
+          "start-deployment"
+        ],
+        "name": "absolute source deploy uses create deployment",
+        "task": "Deploy the source tree at /Users/me/founder-dashboard to InsForge."
+      },
+      {
+        "check_family": "deployment_start",
+        "expected_args_contains": {
+          "deploymentId": "dep_123"
+        },
+        "expected_tools": [
+          "start-deployment"
+        ],
+        "forbidden_tools": [
+          "create-deployment",
+          "download-template"
+        ],
+        "name": "prepared remote upload starts deployment",
+        "task": "The upload commands for deployment dep_123 are complete. Trigger the deployment build now."
+      },
+      {
+        "allow_no_tool": true,
+        "check_family": "no_tool_safety",
+        "expected_tools": [],
+        "forbidden_tools": [
+          "create-deployment",
+          "start-deployment",
+          "download-template"
+        ],
+        "name": "relative deploy path avoids tool",
+        "task": "Deploy my current directory . to InsForge now."
+      },
+      {
+        "check_family": "storage_delete",
+        "expected_args_contains": {
+          "bucketName": "old-avatars"
+        },
+        "expected_tools": [
+          "delete-bucket"
+        ],
+        "forbidden_tools": [
+          "list-buckets",
+          "create-bucket",
+          "get-backend-metadata"
+        ],
+        "name": "delete storage bucket uses delete bucket",
+        "task": "Delete the specific storage bucket named old-avatars from this InsForge project."
+      },
+      {
+        "check_family": "function_create",
+        "expected_args_contains": {
+          "codeFile": "hello-world.js",
+          "slug": "hello-world"
+        },
+        "expected_tools": [
+          "create-function"
+        ],
+        "forbidden_tools": [
+          "get-function",
+          "update-function",
+          "delete-function"
+        ],
+        "name": "create function uses create function",
+        "task": "Create a new edge function slug hello-world from local file /Users/me/app/functions/hello-world.js."
+      },
+      {
+        "check_family": "function_delete",
+        "expected_args_contains": {
+          "slug": "legacy-webhook"
+        },
+        "expected_tools": [
+          "delete-function"
+        ],
+        "forbidden_tools": [
+          "create-function",
+          "get-function",
+          "update-function"
+        ],
+        "name": "delete function uses delete function",
+        "task": "Delete the specific edge function slug legacy-webhook from InsForge."
+      }
+    ],
+    "coverage": {
+      "required_check_families": [
+        "backend_metadata",
+        "bulk_import",
+        "client_token",
+        "deployment_prepare",
+        "deployment_start",
+        "function_create",
+        "function_delete",
+        "function_read",
+        "function_update",
+        "no_tool_safety",
+        "product_docs",
+        "runtime_logs",
+        "sdk_docs",
+        "sql_execution",
+        "storage_create",
+        "storage_delete",
+        "storage_list",
+        "table_schema",
+        "template_bootstrap"
+      ]
+    },
+    "description": "Compare README-level and source-level descriptions for InsForge backend MCP routing.",
+    "instruction_variants": [
+      {
+        "instructions": "Choose the single InsForge MCP tool that should be called next. The tool catalog manages one InsForge backend. If no provided InsForge tool can safely perform the next step, choose NO_TOOL.",
+        "name": "insforge_host_rules"
+      }
+    ],
+    "name": "insforge mcp tool-selection matrix",
+    "profiles": [
+      {
+        "api_key_env": "ANTHROPIC_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "model": "claude-sonnet-4-5",
+        "model_env": "ANTHROPIC_MATRIX_MODEL",
+        "name": "anthropic-sonnet",
+        "provider": "anthropic"
+      },
+      {
+        "api_key_env": "OPENAI_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "model": "gpt-4.1",
+        "model_env": "OPENAI_MATRIX_MODEL",
+        "name": "openai-default",
+        "provider": "openai"
+      },
+      {
+        "api_key_env": "GEMINI_API_KEY",
+        "harnesses": [
+          "prompt_json"
+        ],
+        "max_tokens": 4096,
+        "model": "gemini-2.5-pro",
+        "model_env": "GEMINI_MATRIX_MODEL",
+        "name": "gemini-default",
+        "provider": "gemini"
+      }
+    ],
+    "source": {
+      "commit": "dad794d445d05e7df2efcb8280dba59682b97a87",
+      "package": "@insforge/mcp",
+      "package_version": "1.2.10",
+      "repo": "https://github.com/InsForge/insforge-mcp",
+      "slice": "backend metadata, database operations, starter templates, storage, edge functions, deployments, logs, docs, and public client tokens",
+      "yc": "InsForge, YC P2026"
+    },
+    "tool_variants": [
+      {
+        "name": "readme_insforge_mcp",
+        "tools": [
+          {
+            "input_schema": {
+              "properties": {
+                "docType": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "docType"
+              ],
+              "type": "object"
+            },
+            "name": "fetch-docs",
+            "purpose": "Fetch InsForge documentation."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "sdkFeature": {
+                  "type": "string"
+                },
+                "sdkLanguage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sdkFeature",
+                "sdkLanguage"
+              ],
+              "type": "object"
+            },
+            "name": "fetch-sdk-docs",
+            "purpose": "Fetch InsForge SDK documentation for a feature and language."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "apiKey": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "get-anon-key",
+            "purpose": "Generate an anonymous JWT token for client-side applications."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "limit": {
+                  "type": "integer"
+                },
+                "source": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source"
+              ],
+              "type": "object"
+            },
+            "name": "get-container-logs",
+            "purpose": "Get latest logs from a container or service."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "tableName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tableName"
+              ],
+              "type": "object"
+            },
+            "name": "get-table-schema",
+            "purpose": "Return detailed schema of a specific table."
+          },
+          {
+            "input_schema": {
+              "properties": {},
+              "type": "object"
+            },
+            "name": "get-backend-metadata",
+            "purpose": "Index all backend metadata."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "params": {
+                  "items": {},
+                  "type": "array"
+                },
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            },
+            "name": "run-raw-sql",
+            "purpose": "Execute raw SQL query with optional parameters."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "frame": {
+                  "type": "string"
+                },
+                "projectName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "frame"
+              ],
+              "type": "object"
+            },
+            "name": "download-template",
+            "purpose": "Download a pre-configured starter template."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "filePath": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "upsertKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "table",
+                "filePath"
+              ],
+              "type": "object"
+            },
+            "name": "bulk-upsert",
+            "purpose": "Bulk insert or update data from CSV or JSON file."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "bucketName": {
+                  "type": "string"
+                },
+                "isPublic": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "bucketName"
+              ],
+              "type": "object"
+            },
+            "name": "create-bucket",
+            "purpose": "Create new storage bucket."
+          },
+          {
+            "input_schema": {
+              "properties": {},
+              "type": "object"
+            },
+            "name": "list-buckets",
+            "purpose": "List all storage buckets."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "bucketName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "bucketName"
+              ],
+              "type": "object"
+            },
+            "name": "delete-bucket",
+            "purpose": "Delete a storage bucket."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "codeFile": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "create-function",
+            "purpose": "Create a new edge function."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "get-function",
+            "purpose": "Get details of a specific edge function."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "codeFile": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "update-function",
+            "purpose": "Update an existing edge function."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "delete-function",
+            "purpose": "Delete an edge function permanently."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "envVars": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "sourceDirectory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sourceDirectory"
+              ],
+              "type": "object"
+            },
+            "name": "create-deployment",
+            "purpose": "Create or prepare a source-code deployment."
+          },
+          {
+            "input_schema": {
+              "properties": {
+                "deploymentId": {
+                  "type": "string"
+                },
+                "envVars": {
+                  "additionalProperties": true,
+                  "type": "object"
+                }
+              },
+              "required": [
+                "deploymentId"
+              ],
+              "type": "object"
+            },
+            "name": "start-deployment",
+            "purpose": "Trigger a deployment build after uploading source code."
+          }
+        ]
+      },
+      {
+        "name": "source_tuned_insforge_mcp",
+        "tools": [
+          {
+            "avoid_when": "Avoid for live backend inventory, schema lookup, SQL execution, starter-template download, SDK syntax, logs, or mutation tasks.",
+            "input_schema": {
+              "properties": {
+                "docType": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "docType"
+              ],
+              "type": "object"
+            },
+            "name": "fetch-docs",
+            "purpose": "Fetch InsForge product documentation. Use instructions for essential backend setup before building against a new project.",
+            "quality_checks": [
+              "Use docType instructions as the first documentation step for a new project."
+            ],
+            "use_when": "Use when the agent needs setup instructions or product docs for database, auth, storage, functions, AI integration, or general InsForge behavior."
+          },
+          {
+            "avoid_when": "Avoid for backend state, source deployment, container logs, or general setup instructions.",
+            "input_schema": {
+              "properties": {
+                "sdkFeature": {
+                  "type": "string"
+                },
+                "sdkLanguage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sdkFeature",
+                "sdkLanguage"
+              ],
+              "type": "object"
+            },
+            "name": "fetch-sdk-docs",
+            "purpose": "Fetch SDK documentation for one InsForge feature and language pair.",
+            "quality_checks": [
+              "Require both sdkFeature and sdkLanguage.",
+              "Use product docs for general setup questions."
+            ],
+            "use_when": "Use when the user asks how to call database, auth, storage, functions, or AI integration from a specific SDK language."
+          },
+          {
+            "avoid_when": "Avoid for admin credentials, server-side secrets, backend metadata, or OAuth setup.",
+            "input_schema": {
+              "properties": {
+                "apiKey": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "get-anon-key",
+            "purpose": "Generate a public anonymous token for client-side applications from the admin backend.",
+            "quality_checks": [
+              "Do not print or store admin API keys in generated artifacts."
+            ],
+            "use_when": "Use when wiring browser/client app access that needs the InsForge anon token."
+          },
+          {
+            "avoid_when": "Avoid for schema discovery, code retrieval, deployment status tables, or application-level data queries.",
+            "input_schema": {
+              "properties": {
+                "limit": {
+                  "type": "integer"
+                },
+                "source": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source"
+              ],
+              "type": "object"
+            },
+            "name": "get-container-logs",
+            "purpose": "Read recent logs from an InsForge service container.",
+            "quality_checks": [
+              "Use a concrete log source such as function.logs.",
+              "Keep limit bounded for first reads."
+            ],
+            "use_when": "Use for runtime debugging of insforge.logs, postgREST.logs, postgres.logs, or function.logs."
+          },
+          {
+            "avoid_when": "Avoid for whole-backend inventory, SQL execution, or unknown table discovery.",
+            "input_schema": {
+              "properties": {
+                "tableName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tableName"
+              ],
+              "type": "object"
+            },
+            "name": "get-table-schema",
+            "purpose": "Return detailed schema, RLS, indexes, and constraints for one known table.",
+            "quality_checks": [
+              "Use only for a known table name.",
+              "Use backend metadata when the table is unknown."
+            ],
+            "use_when": "Use when the table name is known and the task asks about columns, policies, constraints, indexes, or table-specific metadata."
+          },
+          {
+            "avoid_when": "Avoid when a specific table schema, SQL query, function body, bucket operation, or deployment action is requested.",
+            "input_schema": {
+              "properties": {},
+              "type": "object"
+            },
+            "name": "get-backend-metadata",
+            "purpose": "Index the full InsForge backend metadata across tables, storage, functions, and capabilities.",
+            "quality_checks": [
+              "Use for inventory before unknown table, bucket, or function work.",
+              "Avoid when a narrower known-object tool applies."
+            ],
+            "use_when": "Use when the user asks what exists in the backend, asks for current structure, or when the relevant table/function/bucket is unknown."
+          },
+          {
+            "avoid_when": "Avoid for metadata discovery, table schema lookup, file import, storage buckets, or tasks that are unsafe or not yet authorized.",
+            "input_schema": {
+              "properties": {
+                "params": {
+                  "items": {},
+                  "type": "array"
+                },
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            },
+            "name": "run-raw-sql",
+            "purpose": "Execute raw SQL with optional parameters against the InsForge database. It can read or modify data.",
+            "quality_checks": [
+              "Prefer metadata tools before writing exploratory SQL.",
+              "Confirm destructive SQL intent before calling in an interactive host."
+            ],
+            "use_when": "Use for explicit SQL execution, data queries, DDL, DML, or admin database operations after the user has asked for SQL to run."
+          },
+          {
+            "avoid_when": "Avoid for existing backend inventory, SDK reference docs, deployment of an existing source tree, or non-React/Next.js projects.",
+            "input_schema": {
+              "properties": {
+                "frame": {
+                  "type": "string"
+                },
+                "projectName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "frame"
+              ],
+              "type": "object"
+            },
+            "name": "download-template",
+            "purpose": "Bootstrap a pre-configured React or Next.js starter template for a new InsForge app.",
+            "quality_checks": [
+              "Keep projectName to one safe directory name.",
+              "Follow the returned copy/run instructions before editing generated code."
+            ],
+            "use_when": "Use as the first build step when the user asks to start a new InsForge-backed app or scaffold a starter template."
+          },
+          {
+            "avoid_when": "Avoid for ordinary SQL, schema discovery, storage uploads, or when file path/table is missing.",
+            "input_schema": {
+              "properties": {
+                "filePath": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "upsertKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "table",
+                "filePath"
+              ],
+              "type": "object"
+            },
+            "name": "bulk-upsert",
+            "purpose": "Bulk insert or update CSV or JSON file rows into a table, optionally using an upsert key.",
+            "quality_checks": [
+              "Require local filePath and target table.",
+              "Use upsertKey when the user names a unique key."
+            ],
+            "use_when": "Use when the user names a local CSV or JSON file and target table for import or upsert."
+          },
+          {
+            "avoid_when": "Avoid for listing, deleting, file uploads, database tables, or function code.",
+            "input_schema": {
+              "properties": {
+                "bucketName": {
+                  "type": "string"
+                },
+                "isPublic": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "bucketName"
+              ],
+              "type": "object"
+            },
+            "name": "create-bucket",
+            "purpose": "Create a new InsForge storage bucket.",
+            "quality_checks": [
+              "Require bucketName.",
+              "Set isPublic only when the user asked for public access."
+            ],
+            "use_when": "Use when the user asks to create a named bucket and optionally says whether it is public."
+          },
+          {
+            "avoid_when": "Avoid for bucket creation, deletion, file import to database, or backend-wide metadata.",
+            "input_schema": {
+              "properties": {},
+              "type": "object"
+            },
+            "name": "list-buckets",
+            "purpose": "List all InsForge storage buckets.",
+            "quality_checks": [
+              "Use for inventory only.",
+              "Do not create or delete buckets from an inventory request."
+            ],
+            "use_when": "Use when the user asks which buckets exist or needs bucket inventory."
+          },
+          {
+            "avoid_when": "Avoid for listing, clearing files, deleting database data, or vague cleanup requests.",
+            "input_schema": {
+              "properties": {
+                "bucketName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "bucketName"
+              ],
+              "type": "object"
+            },
+            "name": "delete-bucket",
+            "purpose": "Delete a named InsForge storage bucket.",
+            "quality_checks": [
+              "Require an explicit bucketName.",
+              "Use only for specific delete requests."
+            ],
+            "use_when": "Use only when the user explicitly asks to delete a specific bucket."
+          },
+          {
+            "avoid_when": "Avoid for reading, updating, or deleting existing functions, and avoid before code is written to a file in local mode.",
+            "input_schema": {
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "codeFile": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "create-function",
+            "purpose": "Create a new Deno edge function from inline code in remote mode or a local code file in local mode.",
+            "quality_checks": [
+              "Require a slug and code or codeFile.",
+              "Avoid when updating an existing function."
+            ],
+            "use_when": "Use when the user asks to create a new edge function and provides a slug plus function code or code file path."
+          },
+          {
+            "avoid_when": "Avoid for creating, updating, deleting, logs, or unknown function inventory.",
+            "input_schema": {
+              "properties": {
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "get-function",
+            "purpose": "Read details and code for one existing edge function.",
+            "quality_checks": [
+              "Require a known function slug.",
+              "Use logs for runtime output instead of function code."
+            ],
+            "use_when": "Use when the user asks to inspect, retrieve, or review a known function slug."
+          },
+          {
+            "avoid_when": "Avoid for new functions, reading current code, deleting functions, or when the slug is unknown.",
+            "input_schema": {
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "codeFile": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "update-function",
+            "purpose": "Update code or metadata for an existing edge function.",
+            "quality_checks": [
+              "Require a known function slug.",
+              "Use create-function for new functions."
+            ],
+            "use_when": "Use when the user asks to change a known function slug and provides updated code, code file, metadata, or status."
+          },
+          {
+            "avoid_when": "Avoid for disabling, reading, updating, or vague cleanup requests.",
+            "input_schema": {
+              "properties": {
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug"
+              ],
+              "type": "object"
+            },
+            "name": "delete-function",
+            "purpose": "Permanently delete a known edge function.",
+            "quality_checks": [
+              "Require a known function slug.",
+              "Use only for explicit delete requests."
+            ],
+            "use_when": "Use only when the user explicitly asks to delete a specific function slug."
+          },
+          {
+            "avoid_when": "Avoid for relative paths, starter-template creation, deployment status lookup, or triggering a prepared deployment id in remote mode.",
+            "input_schema": {
+              "properties": {
+                "envVars": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "sourceDirectory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sourceDirectory"
+              ],
+              "type": "object"
+            },
+            "name": "create-deployment",
+            "purpose": "Deploy or prepare upload for an existing source directory. Requires an absolute sourceDirectory path.",
+            "quality_checks": [
+              "Reject relative paths before calling.",
+              "Do not include secret env var values in public artifacts."
+            ],
+            "use_when": "Use when the user asks to deploy a local source tree and provides an absolute source directory."
+          },
+          {
+            "avoid_when": "Avoid before preparing/uploading a deployment, for local direct deploy flows, or when deploymentId is missing.",
+            "input_schema": {
+              "properties": {
+                "deploymentId": {
+                  "type": "string"
+                },
+                "envVars": {
+                  "additionalProperties": true,
+                  "type": "object"
+                }
+              },
+              "required": [
+                "deploymentId"
+              ],
+              "type": "object"
+            },
+            "name": "start-deployment",
+            "purpose": "Start a prepared deployment after source upload commands have completed.",
+            "quality_checks": [
+              "Require deploymentId from a prepared upload.",
+              "Avoid for first-step local source deployments."
+            ],
+            "use_when": "Use after create-deployment returned a deployment id and the upload steps are complete."
+          }
+        ]
+      }
+    ]
+  },
+  "packet_type": "improvement",
+  "result": {
+    "case_definitions": [
+      {
+        "check_family": "deployment_prepare",
+        "expected_args_contains": {
+          "sourceDirectory": "/Users/me/founder-dashboard"
+        },
+        "expected_tools": [
+          "create-deployment"
+        ],
+        "forbidden_tools": [
+          "download-template",
+          "start-deployment"
+        ],
+        "name": "absolute source deploy uses create deployment",
+        "task": "Deploy the source tree at /Users/me/founder-dashboard to InsForge."
+      },
+      {
+        "check_family": "backend_metadata",
+        "expected_tools": [
+          "get-backend-metadata"
+        ],
+        "forbidden_tools": [
+          "get-table-schema",
+          "run-raw-sql",
+          "list-buckets",
+          "get-anon-key"
+        ],
+        "name": "backend inventory uses metadata",
+        "task": "InsForge is my backend platform. What is my current backend structure across tables, buckets, and functions?"
+      },
+      {
+        "check_family": "client_token",
+        "expected_args_contains": {
+          "apiKey": "api"
+        },
+        "expected_tools": [
+          "get-anon-key"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "get-backend-metadata"
+        ],
+        "name": "client token uses anon key",
+        "task": "Generate the public anonymous token my browser app should use for InsForge client-side access."
+      },
+      {
+        "check_family": "storage_create",
+        "expected_args_contains": {
+          "bucketName": "avatars"
+        },
+        "expected_tools": [
+          "create-bucket"
+        ],
+        "forbidden_tools": [
+          "list-buckets",
+          "delete-bucket"
+        ],
+        "name": "create storage bucket uses create bucket",
+        "task": "Create a public storage bucket named avatars."
+      },
+      {
+        "check_family": "bulk_import",
+        "expected_args_contains": {
+          "filePath": "/tmp/accounts.csv",
+          "table": "accounts"
+        },
+        "expected_tools": [
+          "bulk-upsert"
+        ],
+        "forbidden_tools": [
+          "run-raw-sql",
+          "create-bucket"
+        ],
+        "name": "csv import uses bulk upsert",
+        "task": "Bulk upsert /tmp/accounts.csv into the accounts table using account_id as the unique key."
+      },
+      {
+        "check_family": "sql_execution",
+        "expected_args_contains": {
+          "query": "accounts"
+        },
+        "expected_tools": [
+          "run-raw-sql"
+        ],
+        "forbidden_tools": [
+          "get-table-schema",
+          "get-backend-metadata",
+          "bulk-upsert"
+        ],
+        "name": "explicit sql uses raw sql",
+        "task": "Run this SQL now: SELECT count(*) FROM accounts WHERE status = 'active'."
+      },
+      {
+        "check_family": "runtime_logs",
+        "expected_args_contains": {
+          "source": "function.logs"
+        },
+        "expected_tools": [
+          "get-container-logs"
+        ],
+        "forbidden_tools": [
+          "get-function",
+          "run-raw-sql"
+        ],
+        "name": "function logs use container logs",
+        "task": "Show me the last 50 edge function runtime logs."
+      },
+      {
+        "check_family": "table_schema",
+        "expected_args_contains": {
+          "tableName": "accounts"
+        },
+        "expected_tools": [
+          "get-table-schema"
+        ],
+        "forbidden_tools": [
+          "get-backend-metadata",
+          "run-raw-sql"
+        ],
+        "name": "known table details use schema",
+        "task": "Show me the RLS policies, indexes, constraints, and columns for the known table accounts."
+      },
+      {
+        "check_family": "template_bootstrap",
+        "expected_args_contains": {
+          "frame": "next"
+        },
+        "expected_tools": [
+          "download-template"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "create-deployment",
+          "get-backend-metadata"
+        ],
+        "name": "new app bootstrap uses template",
+        "task": "Create a new Next.js starter app for InsForge named founder-dashboard."
+      },
+      {
+        "check_family": "product_docs",
+        "expected_args_contains": {
+          "docType": "instructions"
+        },
+        "expected_tools": [
+          "fetch-docs"
+        ],
+        "forbidden_tools": [
+          "download-template",
+          "get-backend-metadata",
+          "run-raw-sql",
+          "fetch-sdk-docs"
+        ],
+        "name": "new project setup reads instructions",
+        "task": "I just connected a new InsForge project. Before building anything, fetch the mandatory setup instructions."
+      },
+      {
+        "check_family": "deployment_start",
+        "expected_args_contains": {
+          "deploymentId": "dep_123"
+        },
+        "expected_tools": [
+          "start-deployment"
+        ],
+        "forbidden_tools": [
+          "create-deployment",
+          "download-template"
+        ],
+        "name": "prepared remote upload starts deployment",
+        "task": "The upload commands for deployment dep_123 are complete. Trigger the deployment build now."
+      },
+      {
+        "check_family": "function_read",
+        "expected_args_contains": {
+          "slug": "webhook-handler"
+        },
+        "expected_tools": [
+          "get-function"
+        ],
+        "forbidden_tools": [
+          "create-function",
+          "update-function",
+          "delete-function",
+          "get-container-logs"
+        ],
+        "name": "read function uses get function",
+        "task": "Get the code and metadata for the existing edge function webhook-handler."
+      },
+      {
+        "allow_no_tool": true,
+        "check_family": "no_tool_safety",
+        "expected_tools": [],
+        "forbidden_tools": [
+          "create-deployment",
+          "start-deployment",
+          "download-template"
+        ],
+        "name": "relative deploy path avoids tool",
+        "task": "Deploy my current directory . to InsForge now."
+      },
+      {
+        "check_family": "sdk_docs",
+        "expected_args_contains": {
+          "sdkFeature": "storage",
+          "sdkLanguage": "JavaScript"
+        },
+        "expected_tools": [
+          "fetch-sdk-docs"
+        ],
+        "forbidden_tools": [
+          "fetch-docs",
+          "list-buckets"
+        ],
+        "name": "sdk docs use sdk docs",
+        "task": "Show the JavaScript SDK documentation for InsForge storage uploads."
+      },
+      {
+        "check_family": "storage_list",
+        "expected_tools": [
+          "list-buckets"
+        ],
+        "forbidden_tools": [
+          "get-backend-metadata",
+          "create-bucket",
+          "delete-bucket"
+        ],
+        "name": "storage inventory lists buckets",
+        "task": "Which storage buckets exist in this InsForge project?"
+      },
+      {
+        "check_family": "function_update",
+        "expected_args_contains": {
+          "codeFile": "webhook-handler.js",
+          "slug": "webhook-handler"
+        },
+        "expected_tools": [
+          "update-function"
+        ],
+        "forbidden_tools": [
+          "create-function",
+          "get-function",
+          "delete-function"
+        ],
+        "name": "update function uses update function",
+        "task": "Update existing edge function webhook-handler from local file /Users/me/app/functions/webhook-handler.js."
+      }
+    ],
+    "cells": [
+      {
+        "errors": 0,
+        "failed": 1,
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "passed": 15,
+        "provider": "anthropic",
+        "score": 0.938,
+        "skipped": 0,
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "errors": 0,
+        "failed": 0,
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "passed": 16,
+        "provider": "anthropic",
+        "score": 1.0,
+        "skipped": 0,
+        "tool_variant": "source_tuned_insforge_mcp"
+      }
+    ],
+    "description": "InsForge prompt-json live result",
+    "filters": {},
+    "live": true,
+    "matrix": "insforge mcp tool-selection matrix",
+    "matrix_path": "evals/model_matrix/insforge_mcp_tool_selection.json",
+    "passed": false,
+    "results": [
+      {
+        "case": "new project setup reads instructions",
+        "choice": {
+          "tool_name": "fetch-docs"
+        },
+        "chosen_tools": [
+          "fetch-docs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "new app bootstrap uses template",
+        "choice": {
+          "tool_name": "download-template"
+        },
+        "chosen_tools": [
+          "download-template"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "backend inventory uses metadata",
+        "choice": {
+          "tool_name": "get-backend-metadata"
+        },
+        "chosen_tools": [
+          "get-backend-metadata"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "known table details use schema",
+        "choice": {
+          "tool_name": "get-table-schema"
+        },
+        "chosen_tools": [
+          "get-table-schema"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "explicit sql uses raw sql",
+        "choice": {
+          "tool_name": "run-raw-sql"
+        },
+        "chosen_tools": [
+          "run-raw-sql"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "csv import uses bulk upsert",
+        "choice": {
+          "tool_name": "bulk-upsert"
+        },
+        "chosen_tools": [
+          "bulk-upsert"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "storage inventory lists buckets",
+        "choice": {
+          "tool_name": "list-buckets"
+        },
+        "chosen_tools": [
+          "list-buckets"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "create storage bucket uses create bucket",
+        "choice": {
+          "tool_name": "create-bucket"
+        },
+        "chosen_tools": [
+          "create-bucket"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "read function uses get function",
+        "choice": {
+          "tool_name": "get-function"
+        },
+        "chosen_tools": [
+          "get-function"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "update function uses update function",
+        "choice": {
+          "tool_name": "update-function"
+        },
+        "chosen_tools": [
+          "update-function"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "function logs use container logs",
+        "choice": {
+          "tool_name": "get-container-logs"
+        },
+        "chosen_tools": [
+          "get-container-logs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "sdk docs use sdk docs",
+        "choice": {
+          "tool_name": "fetch-sdk-docs"
+        },
+        "chosen_tools": [
+          "fetch-sdk-docs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "client token uses anon key",
+        "choice": {
+          "tool_name": "get-anon-key"
+        },
+        "chosen_tools": [
+          "get-anon-key"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "absolute source deploy uses create deployment",
+        "choice": {
+          "tool_name": "create-deployment"
+        },
+        "chosen_tools": [
+          "create-deployment"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "prepared remote upload starts deployment",
+        "choice": {
+          "tool_name": "start-deployment"
+        },
+        "chosen_tools": [
+          "start-deployment"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "relative deploy path avoids tool",
+        "choice": {
+          "tool_name": "create-deployment"
+        },
+        "chosen_tools": [
+          "create-deployment"
+        ],
+        "forbidden_used": [
+          "create-deployment"
+        ],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": false,
+        "provider": "anthropic",
+        "status": "failed",
+        "tool_variant": "readme_insforge_mcp"
+      },
+      {
+        "case": "new project setup reads instructions",
+        "choice": {
+          "tool_name": "fetch-docs"
+        },
+        "chosen_tools": [
+          "fetch-docs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "new app bootstrap uses template",
+        "choice": {
+          "tool_name": "download-template"
+        },
+        "chosen_tools": [
+          "download-template"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "backend inventory uses metadata",
+        "choice": {
+          "tool_name": "get-backend-metadata"
+        },
+        "chosen_tools": [
+          "get-backend-metadata"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "known table details use schema",
+        "choice": {
+          "tool_name": "get-table-schema"
+        },
+        "chosen_tools": [
+          "get-table-schema"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "explicit sql uses raw sql",
+        "choice": {
+          "tool_name": "run-raw-sql"
+        },
+        "chosen_tools": [
+          "run-raw-sql"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "csv import uses bulk upsert",
+        "choice": {
+          "tool_name": "bulk-upsert"
+        },
+        "chosen_tools": [
+          "bulk-upsert"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "storage inventory lists buckets",
+        "choice": {
+          "tool_name": "list-buckets"
+        },
+        "chosen_tools": [
+          "list-buckets"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "create storage bucket uses create bucket",
+        "choice": {
+          "tool_name": "create-bucket"
+        },
+        "chosen_tools": [
+          "create-bucket"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "read function uses get function",
+        "choice": {
+          "tool_name": "get-function"
+        },
+        "chosen_tools": [
+          "get-function"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "update function uses update function",
+        "choice": {
+          "tool_name": "update-function"
+        },
+        "chosen_tools": [
+          "update-function"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "function logs use container logs",
+        "choice": {
+          "tool_name": "get-container-logs"
+        },
+        "chosen_tools": [
+          "get-container-logs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "sdk docs use sdk docs",
+        "choice": {
+          "tool_name": "fetch-sdk-docs"
+        },
+        "chosen_tools": [
+          "fetch-sdk-docs"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "client token uses anon key",
+        "choice": {
+          "tool_name": "get-anon-key"
+        },
+        "chosen_tools": [
+          "get-anon-key"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "absolute source deploy uses create deployment",
+        "choice": {
+          "tool_name": "create-deployment"
+        },
+        "chosen_tools": [
+          "create-deployment"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "prepared remote upload starts deployment",
+        "choice": {
+          "tool_name": "start-deployment"
+        },
+        "chosen_tools": [
+          "start-deployment"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      },
+      {
+        "case": "relative deploy path avoids tool",
+        "choice": {
+          "tool_name": "NO_TOOL"
+        },
+        "chosen_tools": [
+          "NO_TOOL"
+        ],
+        "forbidden_used": [],
+        "harness": "prompt_json",
+        "instruction_variant": "insforge_host_rules",
+        "missing_expected": [],
+        "model": "claude-sonnet-4-5",
+        "passed": true,
+        "provider": "anthropic",
+        "status": "passed",
+        "tool_variant": "source_tuned_insforge_mcp"
+      }
+    ],
+    "source": {
+      "commit": "dad794d445d05e7df2efcb8280dba59682b97a87",
+      "package": "@insforge/mcp",
+      "package_version": "1.2.10",
+      "repo": "https://github.com/InsForge/insforge-mcp",
+      "slice": "backend metadata, database operations, starter templates, storage, edge functions, deployments, logs, docs, and public client tokens",
+      "yc": "InsForge, YC P2026"
+    },
+    "summary": {
+      "errors": 0,
+      "failed_cases": 1,
+      "passed_cases": 31,
+      "planned": 32,
+      "score": 0.969,
+      "skipped": 0,
+      "total": 32
+    }
+  },
+  "source": {
+    "commit": "dad794d445d05e7df2efcb8280dba59682b97a87",
+    "package": "@insforge/mcp",
+    "package_version": "1.2.10",
+    "repo": "https://github.com/InsForge/insforge-mcp",
+    "slice": "backend metadata, database operations, starter templates, storage, edge functions, deployments, logs, docs, and public client tokens",
+    "yc": "InsForge, YC P2026"
+  }
+}

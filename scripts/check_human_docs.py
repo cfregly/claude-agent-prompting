@@ -53,6 +53,8 @@ def check_human_docs(root: Path = ROOT) -> list[str]:
         failures.extend(_check_details_balance(rel, text))
         if rel.as_posix() == "README.md":
             failures.extend(_check_root_readme(rel, text))
+        elif _is_bundle_index(rel):
+            failures.extend(_check_bundle_index(rel, text))
         elif _is_sendable_packet(rel):
             failures.extend(_check_sendable_packet(rel, text))
         else:
@@ -120,6 +122,19 @@ def _check_sendable_packet(rel: Path, text: str) -> list[str]:
     return failures
 
 
+def _check_bundle_index(rel: Path, text: str) -> list[str]:
+    failures: list[str] = []
+    bundles_index = text.find("## Shareable Bundles")
+    summary_index = text.find(LLM_SUMMARY)
+    if bundles_index == -1:
+        failures.append(f"{rel}: missing ## Shareable Bundles")
+    if summary_index == -1:
+        failures.append(f"{rel}: machine-heavy doc must end with LLM / Machine-readable details")
+    elif bundles_index != -1 and bundles_index > summary_index:
+        failures.append(f"{rel}: Shareable Bundles table must appear before LLM details")
+    return failures
+
+
 def _check_machine_detail_placement(rel: Path, text: str) -> list[str]:
     failures: list[str] = []
     signals = _machine_detail_count(text)
@@ -152,6 +167,10 @@ def _is_sendable_packet(rel: Path) -> bool:
     if len(parts) >= 4 and parts[0] == "evals" and parts[1] == "pr_packets" and rel.name == "README.md":
         return True
     return False
+
+
+def _is_bundle_index(rel: Path) -> bool:
+    return rel.as_posix() == "docs/findings/README.md"
 
 
 def _public_markdown_paths(root: Path = ROOT) -> list[Path]:
