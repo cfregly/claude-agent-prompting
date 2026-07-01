@@ -175,6 +175,43 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("summary.planned must match live-harness cells", joined)
         self.assertIn("cells[1].status is not a known live-harness status", joined)
 
+    def test_live_harness_receipt_summary_counts_reject_boolean_values(self):
+        path = ROOT / "evals" / "results" / "bad_live_harness_boolean_summary.json"
+        path.write_text(
+            """
+{
+  "passed": true,
+  "cells": [
+    {
+      "harness": "claude_agent_sdk_python_latest",
+      "case": "sdk custom pwd tool directed smoke",
+      "status": "passed",
+      "directed_thinking_passed": false
+    }
+  ],
+  "summary": {
+    "passed": true,
+    "failed": 0,
+    "errors": 0,
+    "not_installed": 0,
+    "planned": 0,
+    "directed_thinking_visible": 0
+  },
+  "source_spec": "evals/live_harnesses/sdk_agent_smoke.json",
+  "command": "python -m claude_agent_harness_opt live-harness evals/live_harnesses/sdk_agent_smoke.json --harnesses claude_agent_sdk_python_latest --cases 'sdk custom pwd tool directed smoke'"
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_json(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("summary.passed must be an integer", joined)
+        self.assertIn("summary cell counts must equal cells count", joined)
+
     def test_live_harness_receipt_cell_fields_must_be_coherent(self):
         path = ROOT / "evals" / "results" / "bad_live_harness_cell_fields.json"
         path.write_text(
@@ -510,6 +547,66 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("cells[0].passed does not match result rows", joined)
         self.assertIn("cells[0].skipped does not match result rows", joined)
         self.assertIn("cells[0].score does not match result rows", joined)
+
+    def test_model_matrix_receipt_counts_reject_boolean_values(self):
+        path = ROOT / "evals" / "results" / "bad_model_matrix_boolean_counts.json"
+        path.write_text(
+            """
+{
+  "live": true,
+  "passed": true,
+  "results": [
+    {
+      "case": "default project metrics discovery skips search",
+      "provider": "anthropic",
+      "harness": "prompt_json",
+      "tool_variant": "tuned_zymtrace_mcp_boundaries",
+      "instruction_variant": "zymtrace_host_and_skill_rules",
+      "status": "passed",
+      "passed": true,
+      "chosen_tools": ["project_metrics_activity_aggr"]
+    }
+  ],
+  "cells": [
+    {
+      "provider": "anthropic",
+      "harness": "prompt_json",
+      "tool_variant": "tuned_zymtrace_mcp_boundaries",
+      "instruction_variant": "zymtrace_host_and_skill_rules",
+      "passed": true,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "score": 1.0
+    }
+  ],
+  "case_definitions": [
+    {"name": "default project metrics discovery skips search"}
+  ],
+  "summary": {
+    "errors": 0,
+    "failed_cases": 0,
+    "passed_cases": true,
+    "planned": 1,
+    "score": 1.0,
+    "skipped": 0,
+    "total": 1
+  },
+  "matrix_path": "evals/model_matrix/zymtrace_mcp_tool_selection.json",
+  "matrix": "zymtrace mcp tool-selection matrix",
+  "source": {"commit": "sample"}
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_json(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("summary.passed_cases must be an integer", joined)
+        self.assertIn("cells[0].passed must be an integer", joined)
 
     def test_model_matrix_receipt_summary_must_match_rows(self):
         path = ROOT / "evals" / "results" / "bad_model_matrix_summary_receipt.json"

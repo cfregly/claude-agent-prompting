@@ -116,7 +116,7 @@ fixtures later, reconciles Markdown live-matrix result tables with raw-matrix an
 pass/fail, failure, error, skipped, score, result-row identity, and cell-summary tables, checks
 coverage Markdown summaries against sibling JSON receipts, reconciles retained coverage gap bullets
 plus tool and check-family tables with their JSON evidence, checks matrix-coverage receipts, checks
-model-matrix receipt rows and cell summaries plus top-level result summaries against their retained
+model-matrix receipt rows and strict integer cell summaries plus top-level result summaries against their retained
 result rows and source matrices, verifies bounded result-row statuses and status/pass consistency,
 checks aggregate coverage-suite audits and per-matrix summary tables against their retained source
 matrices, checks retained live-harness receipt reproduction commands against their claimed source
@@ -397,7 +397,7 @@ validate result receipt shape, matrix paths, coverage summaries, baseline failur
 candidate evidence, model-matrix result and cell summaries, optimization-gate pass/fail,
 skipped/error counts, JSON result-row status vocabulary and status/pass consistency, Markdown
 result-row shape and identity, Markdown cell summaries, coverage gaps and tables, coverage-suite
-matrix rows, live-harness cell fields and status summaries, and Markdown review sections so future agents can use
+matrix rows, live-harness cell fields and strict integer status summaries, and Markdown review sections so future agents can use
 them as regression fixtures.
 
 For the full repository, the current ledger is stored at

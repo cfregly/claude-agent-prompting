@@ -50,6 +50,10 @@ REQUIRED_COMPARISON_FIELDS = (
 )
 
 
+def _is_plain_int(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
 def main() -> int:
     failures = check_finding_packets()
     if failures:
@@ -438,10 +442,10 @@ def _check_model_matrix_summary(
     }
     for field, expected in expected_counts.items():
         value = summary.get(field)
-        if field == "total" and (not isinstance(value, int) or value <= 0):
+        if field == "total" and (not _is_plain_int(value) or value <= 0):
             failures.append(f"{rel}: summary.total must be a positive integer")
             continue
-        if not isinstance(value, int):
+        if not _is_plain_int(value):
             failures.append(f"{rel}: summary.{field} must be an integer")
             continue
         if value != expected:
@@ -634,13 +638,13 @@ def _check_model_matrix_cell_summary(
         if field not in cell:
             continue
         value = cell.get(field)
-        if not isinstance(value, int):
+        if not _is_plain_int(value):
             failures.append(f"{rel}: {label}.{field} must be an integer")
         elif value != expected[field]:
             failures.append(f"{rel}: {label}.{field} does not match result rows")
     if "skipped" in cell:
         value = cell.get("skipped")
-        if not isinstance(value, int):
+        if not _is_plain_int(value):
             failures.append(f"{rel}: {label}.skipped must be an integer")
         elif value != expected["skipped"]:
             failures.append(f"{rel}: {label}.skipped does not match result rows")
@@ -1025,13 +1029,13 @@ def _check_live_harness_summary(
     counted = sum(
         int(summary.get(field, 0))
         for field in ("passed", "failed", "errors", "not_installed", "planned")
-        if isinstance(summary.get(field, 0), int)
+        if _is_plain_int(summary.get(field, 0))
     )
     if counted != len(cells):
         failures.append(f"{rel}: summary cell counts must equal cells count")
     for field, expected in expected_counts.items():
         value = summary.get(field)
-        if not isinstance(value, int):
+        if not _is_plain_int(value):
             failures.append(f"{rel}: summary.{field} must be an integer")
             continue
         if value != expected:
