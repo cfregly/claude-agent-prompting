@@ -273,6 +273,40 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("summary.failed_matrices must equal failed audit count", joined)
         self.assertIn("summary.total_cases must equal audit case_count sum", joined)
 
+    def test_matrix_coverage_receipt_must_match_current_audit(self):
+        path = ROOT / "evals" / "results" / "bad_matrix_coverage_receipt.json"
+        path.write_text(
+            """
+{
+  "passed": true,
+  "matrix_path": "evals/model_matrix/zymtrace_mcp_tool_selection.json",
+  "tools": [{"name": "stale_tool"}],
+  "cases": [{"name": "stale case"}],
+  "boundary_pairs": [
+    {"expected_tool": "stale_tool", "forbidden_tool": "other_tool", "cases": ["stale case"]}
+  ],
+  "summary": {
+    "tool_count": 1,
+    "case_count": 1,
+    "boundary_pair_count": 1
+  },
+  "uncovered": {}
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_json(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("summary.tool_count does not match current matrix audit", joined)
+        self.assertIn("coverage receipt has stale tool 'stale_tool'", joined)
+        self.assertIn("coverage receipt missing current tool 'flamegraph'", joined)
+        self.assertIn("coverage receipt has stale case 'stale case'", joined)
+        self.assertIn("coverage receipt has stale boundary pair", joined)
+
     def test_result_markdown_requires_summary_and_review_section(self):
         path = ROOT / "evals" / "results" / "bad_receipt.md"
         path.write_text("# Receipt\n\nNo structured result here.\n", encoding="utf-8")

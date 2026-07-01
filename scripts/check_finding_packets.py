@@ -669,9 +669,70 @@ def _check_matrix_coverage_receipt(path: Path, payload: dict[str, Any]) -> list[
     matrix_path = str(payload.get("matrix_path", "")).strip()
     if matrix_path:
         failures.extend(_check_local_ref(rel, matrix_path))
+        if tools and cases and boundary_pairs:
+            failures.extend(
+                _check_matrix_coverage_receipt_against_current_audit(
+                    rel,
+                    matrix_path,
+                    tools,
+                    cases,
+                    boundary_pairs,
+                    summary,
+                )
+            )
     else:
         failures.append(f"{rel}: matrix_path must be present")
     return failures
+
+
+def _check_matrix_coverage_receipt_against_current_audit(
+    rel: Path,
+    matrix_path: str,
+    tools: list[Any],
+    cases: list[Any],
+    boundary_pairs: list[Any],
+    summary: dict[str, Any],
+) -> list[str]:
+    failures: list[str] = []
+    try:
+        audit = audit_matrix_coverage(ROOT / matrix_path)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return failures
+    for field, value in sorted(summary.items()):
+        current = audit.get("summary", {}).get(field)
+        if current is not None and current != value:
+            failures.append(f"{rel}: summary.{field} does not match current matrix audit")
+    current_tools = _named_items(audit.get("tools", []))
+    receipt_tools = _named_items(tools)
+    for name in sorted(receipt_tools - current_tools):
+        failures.append(f"{rel}: coverage receipt has stale tool {name!r}")
+    for name in sorted(current_tools - receipt_tools):
+        failures.append(f"{rel}: coverage receipt missing current tool {name!r}")
+    current_cases = _named_items(audit.get("cases", []))
+    receipt_cases = _named_items(cases)
+    for name in sorted(receipt_cases - current_cases):
+        failures.append(f"{rel}: coverage receipt has stale case {name!r}")
+    for name in sorted(current_cases - receipt_cases):
+        failures.append(f"{rel}: coverage receipt missing current case {name!r}")
+    current_pairs = _boundary_pair_keys(audit.get("boundary_pairs", []))
+    receipt_pairs = _boundary_pair_keys(boundary_pairs)
+    for key in sorted(receipt_pairs - current_pairs):
+        failures.append(f"{rel}: coverage receipt has stale boundary pair {key!r}")
+    for key in sorted(current_pairs - receipt_pairs):
+        failures.append(f"{rel}: coverage receipt missing current boundary pair {key!r}")
+    return failures
+
+
+def _boundary_pair_keys(boundary_pairs: list[Any]) -> set[tuple[str, str, tuple[str, ...]]]:
+    keys: set[tuple[str, str, tuple[str, ...]]] = set()
+    for pair in boundary_pairs:
+        if not isinstance(pair, dict):
+            continue
+        expected_tool = str(pair.get("expected_tool", "")).strip()
+        forbidden_tool = str(pair.get("forbidden_tool", "")).strip()
+        cases = tuple(sorted(str(case).strip() for case in pair.get("cases", []) if str(case).strip()))
+        keys.add((expected_tool, forbidden_tool, cases))
+    return keys
 
 
 def _check_surface_snapshot_receipt(path: Path, payload: dict[str, Any]) -> list[str]:
