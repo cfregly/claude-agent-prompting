@@ -921,6 +921,48 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("boundary_pairs[4].cases[0] must be a nonempty string", joined)
         self.assertIn("boundary_pairs[4].cases[1] must be a nonempty string", joined)
 
+    def test_matrix_coverage_receipt_uncovered_buckets_must_be_known_lists(self):
+        path = ROOT / "evals" / "results" / "bad_matrix_coverage_uncovered.json"
+        path.write_text(
+            """
+{
+  "passed": true,
+  "matrix_path": "evals/model_matrix/zymtrace_mcp_tool_selection.json",
+  "tools": [{"name": "flamegraph"}],
+  "cases": [{"name": "default project metrics discovery skips search"}],
+  "boundary_pairs": [
+    {
+      "expected_tool": "project_metrics_activity_aggr",
+      "forbidden_tool": "search",
+      "cases": ["default project metrics discovery skips search"]
+    }
+  ],
+  "summary": {
+    "tool_count": 1,
+    "case_count": 1,
+    "boundary_pair_count": 1
+  },
+  "uncovered": {
+    "never_expected": "",
+    "never_forbidden": {},
+    "typo_gap": [],
+    "missing_quality_checks": ["flamegraph"]
+  }
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_json(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("uncovered.never_expected must be a list", joined)
+        self.assertIn("uncovered.never_forbidden must be a list", joined)
+        self.assertIn("uncovered.typo_gap is not a known matrix-coverage gap bucket", joined)
+        self.assertIn("uncovered.missing_quality_checks must be empty", joined)
+
     def test_result_markdown_requires_summary_and_review_section(self):
         path = ROOT / "evals" / "results" / "bad_receipt.md"
         path.write_text("# Receipt\n\nNo structured result here.\n", encoding="utf-8")

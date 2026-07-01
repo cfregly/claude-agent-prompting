@@ -48,6 +48,23 @@ REQUIRED_COMPARISON_FIELDS = (
     "minimum_delta",
     "promote",
 )
+MATRIX_COVERAGE_UNCOVERED_FIELDS = {
+    "case_expectation_gaps",
+    "cases_without_check_family",
+    "cases_without_forbidden",
+    "duplicate_tool_names",
+    "expected_without_argument_check",
+    "identity_gaps",
+    "missing_quality_checks",
+    "missing_required_check_families",
+    "never_expected",
+    "never_forbidden",
+    "source_tool_count_mismatch",
+    "unknown_expected_tools",
+    "unknown_forbidden_tools",
+    "value_bar_gaps",
+    "variant_surface_mismatches",
+}
 
 
 def _is_plain_int(value: Any) -> bool:
@@ -827,6 +844,12 @@ def _check_matrix_coverage_receipt(path: Path, payload: dict[str, Any]) -> list[
     uncovered = payload.get("uncovered")
     if isinstance(uncovered, dict):
         for name, entries in sorted(uncovered.items()):
+            if name not in MATRIX_COVERAGE_UNCOVERED_FIELDS:
+                failures.append(f"{rel}: uncovered.{name} is not a known matrix-coverage gap bucket")
+                continue
+            if not isinstance(entries, list):
+                failures.append(f"{rel}: uncovered.{name} must be a list")
+                continue
             if entries:
                 failures.append(f"{rel}: uncovered.{name} must be empty")
     else:
