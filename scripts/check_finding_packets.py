@@ -458,6 +458,7 @@ def _check_model_matrix_receipt_against_matrix(
         name = str(case.get("name", "")).strip()
         if name and matrix_cases and name not in matrix_cases:
             failures.append(f"{rel}: case_definitions[{idx}] unknown matrix case {name!r}")
+    result_cell_summaries = _model_matrix_cell_summaries(results)
     cell_keys: set[tuple[str, str, str, str]] = set()
     for idx, cell in enumerate(cells):
         if not isinstance(cell, dict):
@@ -466,7 +467,8 @@ def _check_model_matrix_receipt_against_matrix(
         harness = str(cell.get("harness", "")).strip()
         tool_variant = str(cell.get("tool_variant", "")).strip()
         instruction_variant = str(cell.get("instruction_variant", "")).strip()
-        cell_keys.add((provider, harness, tool_variant, instruction_variant))
+        cell_key = (provider, harness, tool_variant, instruction_variant)
+        cell_keys.add(cell_key)
         failures.extend(
             _check_matrix_dimensions(
                 rel,
@@ -481,6 +483,11 @@ def _check_model_matrix_receipt_against_matrix(
                 matrix_instruction_variants,
             )
         )
+        expected_cell = result_cell_summaries.get(cell_key)
+        if expected_cell is None:
+            failures.append(f"{rel}: cells[{idx}] has no matching result rows")
+        else:
+            failures.extend(_check_model_matrix_cell_summary(rel, f"cells[{idx}]", cell, expected_cell))
     seen_results: set[tuple[str, str, str, str, str]] = set()
     for idx, result in enumerate(results):
         if not isinstance(result, dict):
@@ -512,6 +519,68 @@ def _check_model_matrix_receipt_against_matrix(
         if result_key in seen_results:
             failures.append(f"{rel}: duplicate matrix result row {case_name!r}/{provider!r}/{harness!r}/{tool_variant!r}/{instruction_variant!r}")
         seen_results.add(result_key)
+    return failures
+
+
+def _model_matrix_cell_summaries(results: list[Any]) -> dict[tuple[str, str, str, str], dict[str, float | int]]:
+    groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = {}
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        key = (
+            str(result.get("provider", "")).strip(),
+            str(result.get("harness", "")).strip(),
+            str(result.get("tool_variant", "")).strip(),
+            str(result.get("instruction_variant", "")).strip(),
+        )
+        groups.setdefault(key, []).append(result)
+    summaries: dict[tuple[str, str, str, str], dict[str, float | int]] = {}
+    for key, items in groups.items():
+        passed = sum(1 for item in items if item.get("status") == "passed")
+        failed = sum(1 for item in items if item.get("status") == "failed")
+        errors = sum(1 for item in items if item.get("status") == "error")
+        skipped = sum(1 for item in items if item.get("status") == "skipped")
+        denominator = passed + failed + errors
+        score = passed / denominator if denominator else 0.0
+        summaries[key] = {
+            "errors": errors,
+            "failed": failed,
+            "passed": passed,
+            "score": round(score, 3),
+            "skipped": skipped,
+        }
+    return summaries
+
+
+def _check_model_matrix_cell_summary(
+    rel: Path,
+    label: str,
+    cell: dict[str, Any],
+    expected: dict[str, float | int],
+) -> list[str]:
+    failures: list[str] = []
+    for field in ("passed", "failed", "errors"):
+        if field not in cell:
+            continue
+        value = cell.get(field)
+        if not isinstance(value, int):
+            failures.append(f"{rel}: {label}.{field} must be an integer")
+        elif value != expected[field]:
+            failures.append(f"{rel}: {label}.{field} does not match result rows")
+    if "skipped" in cell:
+        value = cell.get("skipped")
+        if not isinstance(value, int):
+            failures.append(f"{rel}: {label}.skipped must be an integer")
+        elif value != expected["skipped"]:
+            failures.append(f"{rel}: {label}.skipped does not match result rows")
+    if "score" in cell:
+        try:
+            value = round(float(cell["score"]), 3)
+        except (TypeError, ValueError):
+            failures.append(f"{rel}: {label}.score must be numeric")
+        else:
+            if value != expected["score"]:
+                failures.append(f"{rel}: {label}.score does not match result rows")
     return failures
 
 
@@ -982,12 +1051,14 @@ def _markdown_results_rows(text: str) -> list[list[str]]:
 def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]:
     failures: list[str] = []
     rel = path.relative_to(ROOT)
+    gate_text = _markdown_section_text(text, "Optimization Gate") or text
+    raw_text = _markdown_section_text(text, "Raw Matrix") or text
     rows = _markdown_results_rows(text)
     if not rows:
         return [f"{rel}: Optimization Gate has no result rows"]
     variants = {row[3] for row in rows if len(row) > 6}
-    baseline = _single_variant_name(_markdown_summary_value(text, "Baseline variant"))
-    optimized = _variant_names(_markdown_summary_value(text, "Optimized variants"))
+    baseline = _single_variant_name(_markdown_summary_value(gate_text, "Baseline variant"))
+    optimized = _variant_names(_markdown_summary_value(gate_text, "Optimized variants"))
     if not baseline:
         failures.append(f"{rel}: missing Baseline variant summary")
     elif baseline not in variants:
@@ -996,6 +1067,15 @@ def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]
         failures.append(f"{rel}: missing Optimized variants summary")
     for variant in sorted(optimized - variants):
         failures.append(f"{rel}: Optimized variant {variant!r} is not present in Results table")
+    expected_passed = _optimization_gate_passed(rows, optimized, _markdown_summary_value(raw_text, "Live"))
+    value = _markdown_summary_value(gate_text, "Passed")
+    if expected_passed is not None:
+        if not value:
+            failures.append(f"{rel}: missing Optimization Gate Passed summary")
+        elif value.casefold() not in {"yes", "no"}:
+            failures.append(f"{rel}: Optimization Gate Passed summary must be yes or no")
+        elif (value.casefold() == "yes") != expected_passed:
+            failures.append(f"{rel}: Optimization Gate Passed summary does not match Results table")
     expected_counts = {
         "Baseline failures": _variant_failure_count(rows, {baseline}) if baseline else None,
         "Optimized failures": _variant_failure_count(rows, optimized) if optimized else None,
@@ -1003,9 +1083,28 @@ def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]
     for label, expected in expected_counts.items():
         if expected is None:
             continue
-        value = _markdown_summary_value(text, label)
+        value = _markdown_summary_value(gate_text, label)
         if not value:
             failures.append(f"{rel}: missing {label} summary")
+            continue
+        try:
+            parsed = int(value)
+        except ValueError:
+            failures.append(f"{rel}: {label} summary is not an integer")
+            continue
+        if parsed != expected:
+            failures.append(f"{rel}: {label} summary does not match Results table")
+    optional_counts = {
+        "Baseline errors": _variant_status_count(rows, {baseline}, {"error", "errored"}) if baseline else None,
+        "Baseline skipped": _variant_status_count(rows, {baseline}, {"skipped", "skip"}) if baseline else None,
+        "Optimized errors": _variant_status_count(rows, optimized, {"error", "errored"}) if optimized else None,
+        "Optimized skipped": _variant_status_count(rows, optimized, {"skipped", "skip"}) if optimized else None,
+    }
+    for label, expected in optional_counts.items():
+        if expected is None:
+            continue
+        value = _markdown_summary_value(gate_text, label)
+        if not value:
             continue
         try:
             parsed = int(value)
@@ -1021,7 +1120,7 @@ def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]
     for label, expected in expected_scores.items():
         if expected is None:
             continue
-        value = _markdown_summary_value(text, label)
+        value = _markdown_summary_value(gate_text, label)
         if not value:
             failures.append(f"{rel}: missing {label} summary")
             continue
@@ -1036,19 +1135,39 @@ def _check_optimization_gate_markdown_counts(path: Path, text: str) -> list[str]
 
 
 def _variant_failure_count(rows: list[list[str]], variants: set[str]) -> int:
-    return sum(
-        1
-        for row in rows
-        if len(row) > 6 and row[3] in variants and row[6].casefold() != "passed"
-    )
+    return _variant_status_count(rows, variants, {"failed"})
 
 
 def _variant_score(rows: list[list[str]], variants: set[str]) -> float | None:
     selected = [row for row in rows if len(row) > 6 and row[3] in variants]
     if not selected:
         return None
-    passed = sum(1 for row in selected if row[6].casefold() == "passed")
-    return passed / len(selected)
+    passed = _variant_status_count(rows, variants, {"passed"})
+    denominator = passed + _variant_status_count(rows, variants, {"failed", "error", "errored"})
+    return passed / denominator if denominator else 0.0
+
+
+def _optimization_gate_passed(rows: list[list[str]], variants: set[str], live_value: str) -> bool | None:
+    selected = [row for row in rows if len(row) > 6 and row[3] in variants]
+    if not selected:
+        return None
+    failed = _variant_status_count(rows, variants, {"failed"})
+    errors = _variant_status_count(rows, variants, {"error", "errored"})
+    skipped = _variant_status_count(rows, variants, {"skipped", "skip"})
+    planned = _variant_status_count(rows, variants, {"planned"})
+    if failed or errors or skipped:
+        return False
+    if live_value.casefold() == "yes":
+        return _variant_status_count(rows, variants, {"passed"}) > 0 and planned == 0
+    return True
+
+
+def _variant_status_count(rows: list[list[str]], variants: set[str], statuses: set[str]) -> int:
+    return sum(
+        1
+        for row in rows
+        if len(row) > 6 and row[3] in variants and row[6].casefold() in statuses
+    )
 
 
 def _single_variant_name(value: str) -> str:
@@ -1124,6 +1243,21 @@ def _check_coverage_markdown_json_pair(path: Path, text: str) -> list[str]:
 def _markdown_summary_value(text: str, label: str) -> str:
     match = re.search(rf"^{re.escape(label)}:\s*(.+?)\s*$", text, flags=re.MULTILINE)
     return match.group(1).strip() if match else ""
+
+
+def _markdown_section_text(text: str, title: str) -> str:
+    in_section = False
+    lines: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped == f"## {title}":
+            in_section = True
+            continue
+        if in_section and stripped.startswith("## "):
+            break
+        if in_section:
+            lines.append(line)
+    return "\n".join(lines)
 
 
 def _require_bool(

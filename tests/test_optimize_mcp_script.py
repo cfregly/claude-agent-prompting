@@ -4,6 +4,8 @@ import sys
 import tempfile
 import unittest
 
+from scripts.optimize_mcp import Target, optimization_gate
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,6 +63,42 @@ class OptimizeMcpScriptTests(unittest.TestCase):
             report = out_path.read_text(encoding="utf-8")
 
         self.assertIn('"matrix": "screenpipe mcp tool-selection matrix"', report)
+
+    def test_optimization_gate_rejects_skipped_optimized_cells(self):
+        target = Target(
+            inputs=("sample",),
+            baseline_variant="baseline",
+            default_providers="anthropic",
+            default_harnesses="prompt_json",
+            instruction_variants="rules",
+            matrix="matrix.json",
+            optimized_variants=("candidate",),
+            variants="baseline,candidate",
+        )
+        gate = optimization_gate(
+            {
+                "live": True,
+                "cells": [
+                    {
+                        "errors": 0,
+                        "failed": 0,
+                        "harness": "prompt_json",
+                        "instruction_variant": "rules",
+                        "passed": 1,
+                        "provider": "anthropic",
+                        "score": 1.0,
+                        "skipped": 1,
+                        "tool_variant": "candidate",
+                    }
+                ],
+            },
+            target,
+            {"candidate"},
+        )
+
+        self.assertIsNotNone(gate)
+        self.assertFalse(gate["passed"])
+        self.assertEqual(1, gate["optimized_skipped"])
 
     def test_dry_run_does_not_require_default_env_file(self):
         with tempfile.TemporaryDirectory() as temp_dir:

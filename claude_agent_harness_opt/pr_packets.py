@@ -550,7 +550,7 @@ def _cell_summary_lines(result: dict[str, Any]) -> list[str]:
             continue
         values.append(
             "provider={provider}, harness={harness}, variant={variant}, instruction={instruction}, "
-            "passed={passed}, failed={failed}, errors={errors}, score={score}".format(
+            "passed={passed}, failed={failed}, errors={errors}, skipped={skipped}, score={score}".format(
                 provider=cell.get("provider", ""),
                 harness=cell.get("harness", ""),
                 variant=cell.get("tool_variant", ""),
@@ -558,6 +558,7 @@ def _cell_summary_lines(result: dict[str, Any]) -> list[str]:
                 passed=cell.get("passed", ""),
                 failed=cell.get("failed", ""),
                 errors=cell.get("errors", ""),
+                skipped=cell.get("skipped", 0),
                 score=cell.get("score", ""),
             )
         )

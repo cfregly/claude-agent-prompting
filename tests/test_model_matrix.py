@@ -5,6 +5,7 @@ import unittest
 from claude_agent_harness_opt.model_matrix import (
     MatrixFilters,
     ModelMatrixError,
+    _cell_summary,
     _first_openai_response_function_call,
     _openai_response_reasoning_summary,
     _openai_response_text,
@@ -134,6 +135,31 @@ class ModelMatrixTests(unittest.TestCase):
         self.assertEqual("coding file-tool selection matrix", result["matrix"])
         self.assertTrue(result["matrix_path"].endswith("coding_tool_selection.json"))
         self.assertEqual(2, len(result["case_definitions"]))
+
+    def test_cell_summary_preserves_skipped_counts(self):
+        cells = _cell_summary(
+            [
+                {
+                    "provider": "anthropic",
+                    "harness": "prompt_json",
+                    "tool_variant": "candidate",
+                    "instruction_variant": "rules",
+                    "status": "passed",
+                },
+                {
+                    "provider": "anthropic",
+                    "harness": "prompt_json",
+                    "tool_variant": "candidate",
+                    "instruction_variant": "rules",
+                    "status": "skipped",
+                },
+            ]
+        )
+
+        self.assertEqual(1, len(cells))
+        self.assertEqual(1, cells[0]["passed"])
+        self.assertEqual(1, cells[0]["skipped"])
+        self.assertEqual(1.0, cells[0]["score"])
 
     def test_dry_run_model_matrix_filters_cases(self):
         result = run_model_matrix(

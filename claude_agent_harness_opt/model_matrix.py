@@ -225,14 +225,14 @@ def render_model_matrix_markdown(result: dict[str, Any]) -> str:
                 "",
                 "## Cell Summary",
                 "",
-                "| Provider | Harness | Tool Variant | Instruction Variant | Passed | Failed | Errors | Score |",
-                "|---|---|---|---|---:|---:|---:|---:|",
+                "| Provider | Harness | Tool Variant | Instruction Variant | Passed | Failed | Errors | Skipped | Score |",
+                "|---|---|---|---|---:|---:|---:|---:|---:|",
             ]
         )
         for cell in result["cells"]:
             lines.append(
                 "| {provider} | {harness} | {tool_variant} | {instruction_variant} | "
-                "{passed} | {failed} | {errors} | {score:.3f} |".format(**cell)
+                "{passed} | {failed} | {errors} | {skipped} | {score:.3f} |".format(**cell)
             )
     return "\n".join(lines) + "\n"
 
@@ -971,6 +971,7 @@ def _cell_summary(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
         passed = sum(1 for item in items if item["status"] == "passed")
         failed = sum(1 for item in items if item["status"] == "failed")
         errors = sum(1 for item in items if item["status"] == "error")
+        skipped = sum(1 for item in items if item["status"] == "skipped")
         denominator = passed + failed + errors
         score = passed / denominator if denominator else 0.0
         cells.append(
@@ -982,6 +983,7 @@ def _cell_summary(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "passed": passed,
                 "provider": provider,
                 "score": round(score, 3),
+                "skipped": skipped,
                 "tool_variant": tool_variant,
             }
         )

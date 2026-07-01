@@ -224,6 +224,69 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("results[0] unknown matrix case 'missing case'", joined)
         self.assertIn("results[0] has no matching planned cell", joined)
 
+    def test_model_matrix_receipt_cell_summaries_must_match_rows(self):
+        path = ROOT / "evals" / "results" / "bad_model_matrix_cell_receipt.json"
+        path.write_text(
+            """
+{
+  "live": true,
+  "passed": true,
+  "results": [
+    {
+      "case": "default project metrics discovery skips search",
+      "provider": "anthropic",
+      "harness": "prompt_json",
+      "tool_variant": "tuned_zymtrace_mcp_boundaries",
+      "instruction_variant": "zymtrace_host_and_skill_rules",
+      "status": "passed",
+      "passed": true,
+      "chosen_tools": ["project_metrics_activity_aggr"]
+    },
+    {
+      "case": "default project metrics discovery skips search",
+      "provider": "anthropic",
+      "harness": "prompt_json",
+      "tool_variant": "tuned_zymtrace_mcp_boundaries",
+      "instruction_variant": "zymtrace_host_and_skill_rules",
+      "status": "skipped",
+      "passed": false,
+      "chosen_tools": []
+    }
+  ],
+  "cells": [
+    {
+      "provider": "anthropic",
+      "harness": "prompt_json",
+      "tool_variant": "tuned_zymtrace_mcp_boundaries",
+      "instruction_variant": "zymtrace_host_and_skill_rules",
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "score": 0.5
+    }
+  ],
+  "case_definitions": [
+    {"name": "default project metrics discovery skips search"}
+  ],
+  "summary": {"total": 2, "planned": 2},
+  "matrix_path": "evals/model_matrix/zymtrace_mcp_tool_selection.json",
+  "matrix": "zymtrace mcp tool-selection matrix",
+  "source": {"commit": "sample"}
+}
+""",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_json(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("cells[0].passed does not match result rows", joined)
+        self.assertIn("cells[0].skipped does not match result rows", joined)
+        self.assertIn("cells[0].score does not match result rows", joined)
+
     def test_coverage_suite_receipt_audits_must_match_summary_and_paths(self):
         path = ROOT / "evals" / "results" / "bad_coverage_suite_receipt.json"
         path.write_text(
@@ -419,6 +482,82 @@ class CheckFindingPacketsScriptTests(unittest.TestCase):
         self.assertIn("Optimized failures summary does not match Results table", joined)
         self.assertIn("Baseline score summary does not match Results table", joined)
         self.assertIn("Optimized score summary does not match Results table", joined)
+
+    def test_optimization_gate_markdown_passed_must_match_live_results(self):
+        path = ROOT / "evals" / "results" / "bad_optimization_gate_pass_report.md"
+        path.write_text(
+            "# Matrix Report\n\n"
+            "## Optimization Gate\n\n"
+            "Passed: yes\n"
+            "Optimized variants: `tuned`\n"
+            "Baseline variant: `stock`\n"
+            "Baseline score: 1.000\n"
+            "Optimized score: 0.000\n"
+            "Baseline failures: 0\n"
+            "Baseline errors: 0\n"
+            "Baseline skipped: 0\n"
+            "Optimized failures: 0\n"
+            "Optimized errors: 0\n"
+            "Optimized skipped: 0\n\n"
+            "optimized variants passed every selected cell\n\n"
+            "## Raw Matrix\n\n"
+            "Live: yes\n"
+            "Passed: no\n"
+            "Planned: 2\n"
+            "Passed cases: 1\n"
+            "Failed cases: 0\n"
+            "Errors: 0\n"
+            "Skipped: 1\n\n"
+            "## Results\n\n"
+            "| Provider | Model | Harness | Tool Variant | Instruction Variant | Case | Status | Chosen |\n"
+            "|---|---|---|---|---|---|---|---|\n"
+            "| anthropic | model | prompt_json | stock | rules | first | passed | tool |\n"
+            "| anthropic | model | prompt_json | tuned | rules | first | skipped |  |\n",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_markdown(path)
+        finally:
+            path.unlink()
+
+        joined = "\n".join(failures)
+        self.assertIn("Optimization Gate Passed summary does not match Results table", joined)
+        self.assertIn("Optimized skipped summary does not match Results table", joined)
+
+    def test_optimization_gate_markdown_allows_dry_planned_results(self):
+        path = ROOT / "evals" / "results" / "dry_optimization_gate_report.md"
+        path.write_text(
+            "# Matrix Report\n\n"
+            "## Optimization Gate\n\n"
+            "Passed: yes\n"
+            "Optimized variants: `tuned`\n"
+            "Baseline variant: `stock`\n"
+            "Baseline score: 0.000\n"
+            "Optimized score: 0.000\n"
+            "Baseline failures: 0\n"
+            "Optimized failures: 0\n\n"
+            "optimized variants passed every selected cell\n\n"
+            "## Raw Matrix\n\n"
+            "Live: no\n"
+            "Passed: yes\n"
+            "Planned: 2\n"
+            "Passed cases: 0\n"
+            "Failed cases: 0\n"
+            "Errors: 0\n"
+            "Skipped: 0\n\n"
+            "## Results\n\n"
+            "| Provider | Model | Harness | Tool Variant | Instruction Variant | Case | Status | Chosen |\n"
+            "|---|---|---|---|---|---|---|---|\n"
+            "| anthropic | model | prompt_json | stock | rules | first | planned |  |\n"
+            "| anthropic | model | prompt_json | tuned | rules | first | planned |  |\n",
+            encoding="utf-8",
+        )
+        try:
+            failures = _check_result_markdown(path)
+        finally:
+            path.unlink()
+
+        self.assertEqual([], failures)
 
     def test_matrix_surface_coverage_reports_target_matrix_gaps(self):
         target_dir = ROOT / "evals" / "targets" / "temporary_bad_matrix"
