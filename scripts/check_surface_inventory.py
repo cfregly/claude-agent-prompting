@@ -43,7 +43,14 @@ REQUIRED_SURFACES = (
     ),
     SurfaceContract(
         name="CLI And Command Examples",
-        paths=("claude_agent_harness_opt/cli.py", "README.md", "docs/**/*.md", ".github/workflows/ci.yml"),
+        paths=(
+            "claude_agent_harness_opt/cli.py",
+            "README.md",
+            "CLAUDE.md",
+            "AGENTS.md",
+            "docs/**/*.md",
+            ".github/workflows/ci.yml",
+        ),
         gates=("python scripts/check_command_surfaces.py", "python scripts/check_cli_coverage.py"),
         artifacts=("tests/test_check_command_surfaces_script.py", "tests/test_check_cli_coverage_script.py"),
     ),

@@ -29,6 +29,8 @@ HELP_COMMANDS_RE = re.compile(r"\{([^}]+)\}")
 
 DOC_COMMAND_PATHS = (
     ROOT / "README.md",
+    ROOT / "CLAUDE.md",
+    ROOT / "AGENTS.md",
     ROOT / ".github" / "workflows" / "ci.yml",
     ROOT / ".claude" / "skills",
     ROOT / "docs",

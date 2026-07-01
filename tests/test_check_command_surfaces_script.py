@@ -85,6 +85,41 @@ class CheckCommandSurfacesScriptTests(unittest.TestCase):
         self.assertIn("known_helper.py' has unknown option '--stale-script-flag'", joined)
         self.assertIn("documented script missing: scripts/missing_helper.py", joined)
 
+    def test_command_surface_check_scans_project_instruction_commands(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "scripts").mkdir()
+            (root / "tests").mkdir()
+            (root / ".github" / "workflows").mkdir(parents=True)
+            (root / "scripts" / "check_example.py").write_text("print('ok')\n", encoding="utf-8")
+            (root / "tests" / "test_check_example_script.py").write_text(
+                "def test_sample():\n    assert True\n",
+                encoding="utf-8",
+            )
+            (root / "README.md").write_text(
+                "python scripts/check_example.py\n"
+                "python -m claude_agent_harness_opt known-command\n",
+                encoding="utf-8",
+            )
+            (root / "CLAUDE.md").write_text(
+                "python -m claude_agent_harness_opt stale-project-command\n",
+                encoding="utf-8",
+            )
+            (root / ".github" / "workflows" / "ci.yml").write_text(
+                "steps:\n  - run: python scripts/check_example.py\n",
+                encoding="utf-8",
+            )
+
+            failures = check_command_surfaces(
+                root,
+                cli_commands={"known-command"},
+                cli_options={"known-command": set()},
+            )
+
+        joined = "\n".join(failures)
+        self.assertIn("CLAUDE.md:1", joined)
+        self.assertIn("unknown CLI command 'stale-project-command'", joined)
+
     def test_extract_cli_invocations_handles_multiline_commands(self):
         invocations = _extract_cli_invocations(
             Path("README.md"),
