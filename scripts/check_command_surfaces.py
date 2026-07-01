@@ -75,7 +75,9 @@ class ScriptContract:
     required_positionals: int
     value_options: frozenset[str] = frozenset()
     option_choices: dict[str, frozenset[str]] = field(default_factory=dict)
+    option_types: dict[str, str] = field(default_factory=dict)
     positional_choices: tuple[frozenset[str], ...] = ()
+    positional_types: tuple[str, ...] = ()
 
 
 def main() -> int:
@@ -183,7 +185,9 @@ def _extract_script_contract(path: Path) -> ScriptContract:
     required_positionals = 0
     value_options: set[str] = set()
     option_choices: dict[str, frozenset[str]] = {}
+    option_types: dict[str, str] = {}
     positional_choices: list[frozenset[str]] = []
+    positional_types: list[str] = []
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
@@ -212,6 +216,10 @@ def _extract_script_contract(path: Path) -> ScriptContract:
         if long_options and choices:
             for option in long_options:
                 option_choices[option] = choices
+        value_type = _keyword_type(node, "type")
+        if long_options and value_type:
+            for option in long_options:
+                option_types[option] = value_type
         if long_options and _keyword_bool(node, "required"):
             required_options.update(long_options)
         if not option_strings:
@@ -219,6 +227,7 @@ def _extract_script_contract(path: Path) -> ScriptContract:
                 positional_choices.append(choices)
             else:
                 positional_choices.append(frozenset())
+            positional_types.append(value_type or "")
             if _positional_is_required(node):
                 required_positionals += 1
     return ScriptContract(
@@ -227,7 +236,9 @@ def _extract_script_contract(path: Path) -> ScriptContract:
         required_positionals,
         frozenset(value_options),
         option_choices,
+        option_types,
         tuple(positional_choices),
+        tuple(positional_types),
     )
 
 
@@ -278,6 +289,16 @@ def _keyword_choices(node: ast.Call, name: str) -> frozenset[str]:
             ]
             return frozenset(choices)
     return frozenset()
+
+
+def _keyword_type(node: ast.Call, name: str) -> str:
+    for keyword in node.keywords:
+        if keyword.arg != name:
+            continue
+        value = keyword.value
+        if isinstance(value, ast.Name) and value.id in {"float", "int", "str"}:
+            return value.id
+    return ""
 
 
 def _positional_is_required(node: ast.Call) -> bool:
@@ -508,6 +529,7 @@ def _check_script_invocations(
                 )
             )
             failures.extend(_check_script_required_args(prefix, invocation, contract))
+            failures.extend(_check_script_value_types(prefix, invocation, contract))
             failures.extend(_check_script_choices(prefix, invocation, contract))
         failures.extend(_check_invocation_paths(root, invocation, prefix, argument_start=2))
     return failures
@@ -536,6 +558,44 @@ def _check_script_required_args(
             f"{prefix}: script {invocation.command!r} has {positional_count} positional "
             f"argument(s), expected at least {contract.required_positionals}"
         )
+    return failures
+
+
+def _check_script_value_types(
+    prefix: str,
+    invocation: Invocation,
+    contract: ScriptContract,
+) -> list[str]:
+    failures: list[str] = []
+    option_values = _present_option_values(
+        invocation.tokens,
+        argument_start=2,
+        value_options=set(contract.value_options),
+    )
+    for option, type_name in contract.option_types.items():
+        if option not in option_values:
+            continue
+        value = option_values[option]
+        if not _value_matches_type(value, type_name):
+            failures.append(
+                f"{prefix}: script {invocation.command!r} option {option!r} "
+                f"expects {type_name}, got {value!r}"
+            )
+
+    positionals = _present_positionals(
+        invocation.tokens,
+        argument_start=2,
+        value_options=set(contract.value_options),
+    )
+    for index, type_name in enumerate(contract.positional_types):
+        if not type_name or index >= len(positionals):
+            continue
+        value = positionals[index]
+        if not _value_matches_type(value, type_name):
+            failures.append(
+                f"{prefix}: script {invocation.command!r} positional {index + 1} "
+                f"expects {type_name}, got {value!r}"
+            )
     return failures
 
 
@@ -577,6 +637,22 @@ def _check_script_choices(
                 f"has invalid choice {value!r}; expected one of: {allowed}"
             )
     return failures
+
+
+def _value_matches_type(value: str, type_name: str) -> bool:
+    if type_name == "float":
+        try:
+            float(value)
+        except ValueError:
+            return False
+        return True
+    if type_name == "int":
+        try:
+            int(value)
+        except ValueError:
+            return False
+        return True
+    return True
 
 
 def _present_long_options(tokens: tuple[str, ...], *, argument_start: int) -> set[str]:

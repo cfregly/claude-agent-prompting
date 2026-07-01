@@ -10,6 +10,7 @@ from scripts.check_command_surfaces import (
     _check_cli_parse_contract,
     _check_script_choices,
     _check_script_required_args,
+    _check_script_value_types,
     _extract_cli_invocations,
     _extract_script_contract,
     _extract_script_options,
@@ -182,8 +183,10 @@ class CheckCommandSurfacesScriptTests(unittest.TestCase):
                 "import argparse\n"
                 "parser = argparse.ArgumentParser()\n"
                 "parser.add_argument('target', choices=('alpha', 'beta'))\n"
+                "parser.add_argument('retries', type=int, nargs='?')\n"
                 "parser.add_argument('--required-flag', required=True)\n"
                 "parser.add_argument('--known-flag', choices=('fast', 'slow'))\n"
+                "parser.add_argument('--count', type=int)\n"
                 "parser.add_argument('--boolean-flag', action='store_true')\n"
                 "parser.add_argument('-s', '--second-flag')\n",
                 encoding="utf-8",
@@ -193,17 +196,19 @@ class CheckCommandSurfacesScriptTests(unittest.TestCase):
             contract = _extract_script_contract(path)
 
         self.assertEqual(
-            {"--boolean-flag", "--known-flag", "--required-flag", "--second-flag"},
+            {"--boolean-flag", "--count", "--known-flag", "--required-flag", "--second-flag"},
             options,
         )
         self.assertEqual(1, contract.required_positionals)
         self.assertEqual(frozenset({"--required-flag"}), contract.required_options)
         self.assertEqual(
-            frozenset({"--known-flag", "--required-flag", "--second-flag"}),
+            frozenset({"--count", "--known-flag", "--required-flag", "--second-flag"}),
             contract.value_options,
         )
+        self.assertEqual({"--count": "int"}, contract.option_types)
         self.assertEqual({"--known-flag": frozenset({"fast", "slow"})}, contract.option_choices)
-        self.assertEqual((frozenset({"alpha", "beta"}),), contract.positional_choices)
+        self.assertEqual((frozenset({"alpha", "beta"}), frozenset()), contract.positional_choices)
+        self.assertEqual(("", "int"), contract.positional_types)
 
     def test_script_required_args_rejects_missing_positionals_and_options(self):
         invocation = Invocation(
@@ -264,6 +269,36 @@ class CheckCommandSurfacesScriptTests(unittest.TestCase):
         joined = "\n".join(failures)
         self.assertIn("option '--mode' has invalid choice 'turbo'", joined)
         self.assertIn("positional 1 has invalid choice 'gamma'", joined)
+
+    def test_script_value_types_reject_invalid_documented_values(self):
+        invocation = Invocation(
+            source=Path("README.md"),
+            line=6,
+            raw="python scripts/known_helper.py --count lots target-name nope",
+            command="scripts/known_helper.py",
+            tokens=(
+                "python",
+                "scripts/known_helper.py",
+                "--count",
+                "lots",
+                "target-name",
+                "nope",
+            ),
+        )
+        contract = ScriptContract(
+            options=frozenset({"--count"}),
+            required_options=frozenset(),
+            required_positionals=1,
+            value_options=frozenset({"--count"}),
+            option_types={"--count": "int"},
+            positional_types=("", "int"),
+        )
+
+        failures = _check_script_value_types("README.md:6", invocation, contract)
+
+        joined = "\n".join(failures)
+        self.assertIn("option '--count' expects int, got 'lots'", joined)
+        self.assertIn("positional 2 expects int, got 'nope'", joined)
 
     def test_extract_cli_invocations_stops_at_inline_code_span(self):
         invocations = _extract_cli_invocations(

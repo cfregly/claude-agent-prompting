@@ -138,7 +138,8 @@ options cannot silently disappear from docs. It also
 validates documented `python scripts/...` helper invocations so utility-script examples cannot point
 at missing scripts, stale helper options, missing required helper arguments, or stale repo paths. The
 helper check distinguishes boolean flags from value-consuming flags when counting required
-positionals, and validates documented values for argparse `choices`.
+positionals, validates documented values for argparse `choices`, and checks simple `int` or `float`
+typed helper values.
 
 `scripts/check_ci_surface.py` protects the GitHub Actions contract. It requires push and PR
 triggers, read-only permissions, pinned actions, Python 3.11, compile and unit-test smoke checks,
